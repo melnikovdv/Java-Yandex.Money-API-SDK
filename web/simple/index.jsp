@@ -3,6 +3,8 @@
 <%@ page import="org.apache.http.message.BasicNameValuePair" %>
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="java.util.List" %>
+<%@ page import="org.apache.http.client.methods.HttpPost" %>
+<%@ page import="org.apache.http.client.methods.HttpGet" %>
 <%--
   User: dvmelnikov
 --%>
@@ -46,7 +48,7 @@
     <h3 id="header">Простой перевод</h3>
     <%
         request.setCharacterEncoding("UTF-8");
-        if (request.getMethod().equals("POST")) {
+        if (request.getMethod().equals(HttpPost.METHOD_NAME)) {
             String dest = String.valueOf(request.getParameter(PAR_DEST));
             String sum = request.getParameter(PAR_SUM);
             String title = request.getParameter(PAR_TITLE);
@@ -65,7 +67,7 @@
         }
     %>
 
-    <% if (request.getMethod().equals("GET")) { %>
+    <% if (request.getMethod().equals(HttpGet.METHOD_NAME)) { %>
     <div>
         <form method="POST">
             <div id="inputs">

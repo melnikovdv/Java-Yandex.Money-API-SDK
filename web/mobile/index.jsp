@@ -5,6 +5,8 @@
 <%@ page import="java.util.HashMap" %>
 <%@ page import="ru.yandex.money.api.enums.Status" %>
 <%@ page import="ru.yandex.money.api.enums.MoneySource" %>
+<%@ page import="org.apache.http.client.methods.HttpPost" %>
+<%@ page import="org.apache.http.client.methods.HttpGet" %>
 <%--
   User: dvmelnikov
 --%>
@@ -35,7 +37,7 @@
     <h3 id="header">Оплата мобильного телефона при помощи API Янекс.Денег</h3>
     <%
         request.setCharacterEncoding("UTF-8");
-        if (request.getMethod().equals("POST")) {
+        if (request.getMethod().equals(HttpPost.METHOD_NAME)) {
             String operator = request.getParameter(OPERATOR);
             String sum = request.getParameter(SUM);
             String code = request.getParameter(NUMBER_CODE);
@@ -95,7 +97,7 @@
     %>
 
     <% response.setCharacterEncoding("UTF-8");
-        if (request.getMethod().equals("GET")) { %>
+        if (request.getMethod().equals(HttpGet.METHOD_NAME)) { %>
     <div>
         <form method="POST">
             <div>
