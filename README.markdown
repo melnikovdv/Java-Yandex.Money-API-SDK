@@ -9,7 +9,7 @@ Java Yandex.Money API SDK
 * переводы денег другим пользователям, 
 * оплата в магазины. 
 
-Библиотека представляет собой package ru.yandex.money.api, который содержит:
+Библиотека представляет собой package `ru.yandex.money.api`, который содержит:
 
 * программный интерфейс YandexMoney; 
 * реализацию интерфейса YandexMoneyImpl;
