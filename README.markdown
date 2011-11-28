@@ -96,4 +96,4 @@ Java Yandex.Money API SDK
 
 * зарегистрировать приложение, т.е. получить идентификатор клиента (https://sp-money.yandex.ru/myservices/new.xml) и прописать его в константы примеров (consts.php);
 * установить (если ранее не был установлен) какой-нибудь application server, например Apache Tomcat (http://tomcat.apache.org/);
-* задеплоить веб-архив ym.war.
+* задеплоить веб-архив ym.war (в каталоге war).
