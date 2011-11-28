@@ -63,7 +63,7 @@ Java Yandex.Money API SDK
 
       // Указываем необходимые для работы приложения права 
       // на доступ к счету пользователя
-      Collection<Right> scope = new LinkedList<Right>();
+      Collection<Permission> scope = new LinkedList<Permission>();
       scope.add(new AccountInfo());
       scope.add(new OperationHistory());   
   
