@@ -83,7 +83,7 @@ Java Yandex.Money API SDK
       YandexMoney ym = new YandexMoneyImpl(Consts.CLIENT_ID);
       String token = (String) session.getAttribute("token");      
       try {
-        resp = ym.accountInfo(token);
+        AccountInfoResponse resp = ym.accountInfo(token);
         out.println("Счет: " + resp.getAccount()) ;
         out.println("Баланс: " + resp.getBalance()) ;
         out.println("Валюта: " + resp.getCurrency()) ;
