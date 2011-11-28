@@ -80,14 +80,14 @@ Java Yandex.Money API SDK
 При создании объекта ym ему передается идентификатор приложения, который обычно прописывается в константах приложения (client.Consts в наших примерах). Затем проставляем права scope и делаем вызов полученного URI. 
 Чтобы получить информацию о счете пользователя, можно таким же образом создать объект, а затем вызвать метод, передав ему токен пользователя:
 
-	YandexMoney ym = new YandexMoneyImpl(Consts.CLIENT_ID);
-    String token = (String) session.getAttribute("token");
-    AccountInfoResponse resp = null;
-    try {
-        resp = ym.accountInfo(token);
-    } catch (Exception e) {
-        out.println("При выполнении возникла ошибка: " + e.getMessage());
-    }
+      YandexMoney ym = new YandexMoneyImpl(Consts.CLIENT_ID);
+      String token = (String) session.getAttribute("token");
+      AccountInfoResponse resp = null;
+      try {
+      	resp = ym.accountInfo(token);
+      } catch (Exception e) {
+      	out.println("При выполнении возникла ошибка: " + e.getMessage());
+      }
 
 Информация о счете получена. 
 Примерно так же обстоят дела и с другими вызовами. Предлагаем вам посмотреть (а может, и запустить) более полные примеры использования библиотеки (в архиве с исходниками или на github'е https://github.com/melnikovdv/PHP-Yandex.Money-API-SDK). Среди них вы найдете пример оплаты за мобильную связь и небольшой бонус, который позволяет без исопльзования API создать прямую ссылку для перевода денег на другой счет. 
