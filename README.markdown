@@ -70,12 +70,21 @@ Java Yandex.Money API SDK
       codeReqUri = ym.authorizeUri(scope, Consts.REDIRECT_URI);    
       response.sendRedirect(codeReqUri);
 
+<<<<<<< HEAD
       // Затем на странице редиректа выполняем обмен временного кода на постоянный токен доступа
       String code = request.getParameter("code");
       ReceiveOAuthTokenResponse resp = ym.receiveOAuthToken(code, Consts.REDIRECT_URI);
       if (resp.isSuccess()) {
         out.println("Токен: " + resp.getAccessToken());
       }
+=======
+     	// Затем на странице редиректа выполняем обмен временного кода на постоянный токен доступа
+     	String code = request.getParameter("code");
+     	ReceiveOAuthTokenResponse resp = ym.receiveOAuthToken(code, Consts.REDIRECT_URI);
+     	if (resp.isSuccess()) {
+     		out.println("Токен: " + resp.getAccessToken());
+     	}
+>>>>>>> 6b7d8aea626d1ed0fde3ac653b6434a72f529e93
 
 При создании объекта ym ему передается идентификатор приложения, который обычно прописывается в константах приложения (client.Consts в наших примерах). Затем проставляем права scope и делаем вызов полученного URI. 
 Чтобы получить информацию о счете пользователя, можно таким же образом создать объект, а затем вызвать метод, передав ему токен пользователя:
@@ -84,9 +93,15 @@ Java Yandex.Money API SDK
       String token = (String) session.getAttribute("token");
       AccountInfoResponse resp = null;
       try {
+<<<<<<< HEAD
         resp = ym.accountInfo(token);
       } catch (Exception e) {
         out.println("При выполнении возникла ошибка: " + e.getMessage());
+=======
+      	resp = ym.accountInfo(token);
+      } catch (Exception e) {
+      	out.println("При выполнении возникла ошибка: " + e.getMessage());
+>>>>>>> 6b7d8aea626d1ed0fde3ac653b6434a72f529e93
       }
 
 Информация о счете получена. 
