@@ -9,10 +9,10 @@ Java Yandex.Money API SDK
 * переводы денег другим пользователям, 
 * оплата в магазины. 
 
-Библиотека представляет собой package ru.yandex.money.api, который содержит:
+Библиотека представляет собой package `ru.yandex.money.api`, который содержит:
 
-* программный интерфейс YandexMoney; 
-* реализацию интерфейса YandexMoneyImpl;
+* программный интерфейс `YandexMoney`; 
+* реализацию интерфейса `YandexMoneyImpl`;
 * классы-перечисления;
 * вспомогательные классы (response-объекты вывода результатов запросов к API);
 * исключения.
@@ -24,7 +24,7 @@ Java Yandex.Money API SDK
 
 * `authorizeUri` — метод для получения URI, по которому нужно переидти для инициации OAuth-авторизации.
 На вход принимает список прав доступа и URI редиректа после авторизации.
-Возвращает URI OAuth-авторизации
+Возвращает URI OAuth-авторизации.
 
 * `receiveOAuthToken` — метод для обмена временного кода, полученного от сервера Яндекс.Денег после вызова метода authorize, на постоянный токен доступа к счету пользователя. 
 На вход принимает временный код.
@@ -43,7 +43,7 @@ Java Yandex.Money API SDK
 Возвращает экземпляр класса OperationDetailResponse, который унаследован от объекта Operation и предоставляет расширенную информацию по платежу/зачислению.
 
 * `requestPaymentP2P` — метод перевода средств на счет другого пользователя. 
-На вход принимает токен пользователя, номер счета (или привязанного телефона) назначения, сумму и комментарий.
+На вход принимает токен пользователя, номер счета (или привязанного телефона) получателя, сумму и комментарий.
 Возврашает экземпляр класса RequestPaymentResponse, который содержит ошибку, если таковая произошла, информацию о статусе операции, идентификатор операции, контракт и баланс.
 
 * `requestPaymentShop` — метод оплаты в магазины. 
@@ -63,52 +63,44 @@ Java Yandex.Money API SDK
 
       // Указываем необходимые для работы приложения права 
       // на доступ к счету пользователя
-      Collection<Right> scope = new LinkedList<Right>();
+      Collection<Permission> scope = new LinkedList<Permission>();
       scope.add(new AccountInfo());
       scope.add(new OperationHistory());   
   
       codeReqUri = ym.authorizeUri(scope, Consts.REDIRECT_URI);    
       response.sendRedirect(codeReqUri);
 
-<<<<<<< HEAD
       // Затем на странице редиректа выполняем обмен временного кода на постоянный токен доступа
       String code = request.getParameter("code");
       ReceiveOAuthTokenResponse resp = ym.receiveOAuthToken(code, Consts.REDIRECT_URI);
       if (resp.isSuccess()) {
         out.println("Токен: " + resp.getAccessToken());
       }
-=======
-     	// Затем на странице редиректа выполняем обмен временного кода на постоянный токен доступа
-     	String code = request.getParameter("code");
-     	ReceiveOAuthTokenResponse resp = ym.receiveOAuthToken(code, Consts.REDIRECT_URI);
-     	if (resp.isSuccess()) {
-     		out.println("Токен: " + resp.getAccessToken());
-     	}
->>>>>>> 6b7d8aea626d1ed0fde3ac653b6434a72f529e93
 
-При создании объекта ym ему передается идентификатор приложения, который обычно прописывается в константах приложения (client.Consts в наших примерах). Затем проставляем права scope и делаем вызов полученного URI. 
+При создании объекта ym ему передается идентификатор приложения, который обычно прописывается в константах приложения (`client/Consts.java` в наших примерах). Затем проставляем права scope и делаем вызов полученного URI. 
 Чтобы получить информацию о счете пользователя, можно таким же образом создать объект, а затем вызвать метод, передав ему токен пользователя:
 
       YandexMoney ym = new YandexMoneyImpl(Consts.CLIENT_ID);
-      String token = (String) session.getAttribute("token");
-      AccountInfoResponse resp = null;
+      String token = (String) session.getAttribute("token");      
       try {
-<<<<<<< HEAD
-        resp = ym.accountInfo(token);
+        AccountInfoResponse resp = ym.accountInfo(token);
+        out.println("Счет: " + resp.getAccount()) ;
+        out.println("Баланс: " + resp.getBalance()) ;
+        out.println("Валюта: " + resp.getCurrency()) ;
       } catch (Exception e) {
         out.println("При выполнении возникла ошибка: " + e.getMessage());
-=======
-      	resp = ym.accountInfo(token);
-      } catch (Exception e) {
-      	out.println("При выполнении возникла ошибка: " + e.getMessage());
->>>>>>> 6b7d8aea626d1ed0fde3ac653b6434a72f529e93
       }
 
 Информация о счете получена. 
-Примерно так же обстоят дела и с другими вызовами. Предлагаем вам посмотреть (а может, и запустить) более полные примеры использования библиотеки (в архиве с исходниками или на github'е https://github.com/melnikovdv/Java-Yandex.Money-API-SDK). Среди них вы найдете пример оплаты за мобильную связь и небольшой бонус, который позволяет без исопльзования API создать прямую ссылку для перевода денег на другой счет. 
+Примерно так же обстоят дела и с другими вызовами. Предлагаем вам посмотреть (а может, и запустить) более полные примеры использования библиотеки (`war/ym.war` в архиве с исходниками или на github'е https://github.com/melnikovdv/Java-Yandex.Money-API-SDK). Среди них вы найдете пример оплаты за мобильную связь и небольшой бонус, который позволяет без исопльзования API создать прямую ссылку для перевода денег на другой счет. 
 
 Для успешного запуска примеров из комплекта следует проделать следующее:
 
-* зарегистрировать приложение, т.е. получить идентификатор клиента (https://sp-money.yandex.ru/myservices/new.xml) и прописать его в константы примеров (consts.php);
 * установить (если ранее не был установлен) какой-нибудь application server, например Apache Tomcat (http://tomcat.apache.org/);
 * задеплоить веб-архив ym.war (в каталоге war).
+
+Или собрать проект самостоятельно. Для этого:
+
+* зарегистрировать приложение, т.е. получить идентификатор клиента (https://sp-money.yandex.ru/myservices/new.xml) и прописать его в константы примеров (src\client\Consts.java);
+* изменить `REDIRECT_URI` (`src/client/Consts.java`), если отличается; 	
+* скомпилировать и запустить веб-приложение.
