@@ -66,7 +66,10 @@
 
                 if (resp.isSuccess()) {
     %>
-                    <p>
+                    <p>Исходный код страницы <a href="https://github.com/melnikovdv/Java-Yandex.Money-API-SDK/blob/master/web/mobile/index.jsp">тут</a>.
+                        Результат выполнения:
+                    </p>
+                    <p class="code">
                         Статус запроса платежа: <%= resp.getStatus() %> <br />
                         Код ошибки при проведении платежа: <%= resp.getError() %>; <br />
                         Доступные методы проведения платежа: <%= resp.getMoneySource() %>; <br />

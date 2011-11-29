@@ -14,7 +14,9 @@
 <body>
 <div id="main">
     <h3 id="header">Пример вызова API-функции account-info</h3>
-
+    <p>Исходный код страницы <a href="https://github.com/melnikovdv/Java-Yandex.Money-API-SDK/blob/master/web/funcs/account-info.jsp">тут</a>.
+        Результат выполнения:
+    </p>
     <%
         YandexMoney ym = new YandexMoneyImpl(Consts.CLIENT_ID);
         String token = (String) session.getAttribute("token");
@@ -27,7 +29,7 @@
 
         if (resp != null) {
     %>
-    <p>
+    <p class="code">
         Счет: <%= resp.getAccount() %> <br/>
         Баланс: <%= resp.getBalance() %> <br/>
         Валюта: <%= resp.getCurrency() %> <br/>

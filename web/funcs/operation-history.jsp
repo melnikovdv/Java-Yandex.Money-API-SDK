@@ -26,22 +26,26 @@
                 out.println("В ответе получена ошибка: " + resp.getError());
             else {
     %>
-    <p>
+    <p>Исходный код страницы <a href="https://github.com/melnikovdv/Java-Yandex.Money-API-SDK/blob/master/web/funcs/operation-history.jsp">тут</a>.
+        Результат выполнения:
+    </p>
+    <p class="code">
         Следующая запись: <%= resp.getNextRecord() %> <br/>
         Операции:
-    <ul>
-        <% for (Operation op : resp.getOperations()) { %>
-        <li>
-            Идентификатор операции: <%= op.getOperationId() %>;
-            Дата: <%= op.getDatetime() %>;
-            Краткое описание операции: <%= op.getTitle() %>;
-            Идентификатор шаблона платежа: <%= op.getPatternId() %>;
-            Направление движения средств: <%= op.getDirection() %>;
-            Сумма операции : <%= op.getAmount() %>
-        </li>
-        <% } %>
-    </ul>
     </p>
+        <ul class="code">
+            <% for (Operation op : resp.getOperations()) { %>
+            <li>
+                Идентификатор операции: <%= op.getOperationId() %>;
+                Дата: <%= op.getDatetime() %>;
+                Краткое описание операции: <%= op.getTitle() %>;
+                Идентификатор шаблона платежа: <%= op.getPatternId() %>;
+                Направление движения средств: <%= op.getDirection() %>;
+                Сумма операции : <%= op.getAmount() %>
+            </li> <br />
+            <% } %>
+        </ul>
+
 
     <% }
     } catch (Exception e) {

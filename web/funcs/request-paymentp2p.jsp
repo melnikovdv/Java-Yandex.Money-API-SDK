@@ -26,7 +26,10 @@
                     "comment to payment", "payment message");
             if (resp.isSuccess()) {
     %>
-    <p>
+    <p>Исходный код страницы <a href="https://github.com/melnikovdv/Java-Yandex.Money-API-SDK/blob/master/web/funcs/operation-details.jsp">тут</a>.
+        Результат выполнения:
+    </p>
+    <p class="code">
         Статус запроса платежа: <%= resp.getStatus() %> <br/>
         Доступные методы проведения платежа: <%= resp.getMoneySource() %>; <br/>
         Возможна ли оплата с привязанной карты: <%= resp

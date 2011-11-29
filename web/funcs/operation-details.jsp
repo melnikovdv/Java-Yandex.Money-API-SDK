@@ -14,7 +14,7 @@
 </head>
 <body>
 <div id="main">
-    <h3 id="header">Пример вызова API-функции account-info</h3>
+    <h3 id="header">Пример вызова API-функции operation-details</h3>
 
     <%
         YandexMoney ym = new YandexMoneyImpl(Consts.CLIENT_ID);
@@ -28,7 +28,11 @@
 
                 if (resp.isSuccess()) {
     %>
-    <p>
+
+    <p>Исходный код страницы <a href="https://github.com/melnikovdv/Java-Yandex.Money-API-SDK/blob/master/web/funcs/operation-details.jsp">тут</a>.
+        Результат выполнения:
+    </p>
+    <p class="code">
         Идентификатор операции: <%= resp.getOperationId() %>; <br/>
         Идентификатор шаблона платежа: <%= resp.getPatternId() %>; <br/>
         Направление движения средств: <%= resp.getDirection() %>; <br/>

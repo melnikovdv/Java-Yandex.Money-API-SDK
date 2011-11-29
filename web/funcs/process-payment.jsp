@@ -23,7 +23,10 @@
                     requestId);
             if (resp.isSuccess()) {
     %>
-                <p>
+                <p>Исходный код страницы <a href="https://github.com/melnikovdv/Java-Yandex.Money-API-SDK/blob/master/web/funcs/process-payment.jsp">тут</a>.
+                    Результат выполнения:
+                </p>
+                <p class="code">
                     Результат ваполнения операции: <%= resp.getStatus() %> <br />
                     Идентификатор платежа: <%= resp.getPaymentId() %> <br />
                     Баланс после проведения: <%= resp.getBalance() %> <br />

@@ -1,10 +1,10 @@
 <%@ page import="org.apache.http.NameValuePair" %>
+<%@ page import="org.apache.http.client.methods.HttpGet" %>
+<%@ page import="org.apache.http.client.methods.HttpPost" %>
 <%@ page import="org.apache.http.client.utils.URLEncodedUtils" %>
 <%@ page import="org.apache.http.message.BasicNameValuePair" %>
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="java.util.List" %>
-<%@ page import="org.apache.http.client.methods.HttpPost" %>
-<%@ page import="org.apache.http.client.methods.HttpGet" %>
 <%--
   User: dvmelnikov
 --%>
@@ -69,6 +69,8 @@
 
     <% if (request.getMethod().equals(HttpGet.METHOD_NAME)) { %>
     <div>
+        Для создания простой платежной ссылки запоните следующие поля и нажмите
+        кнопку "Отправить".
         <form method="POST">
             <div id="inputs">
                 <p>
