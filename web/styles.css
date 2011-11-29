@@ -16,7 +16,7 @@
 .code {
 	background-color: #f0f0f0;	
 	border: 1px solid gray;
-    border-radius: 10px;
+    border-radius: 3px;
 	padding-left: 5px;
 	padding-right: 5px;
 	padding-top: 5px;
@@ -34,7 +34,7 @@
 	font-style: italic;
 	background-color: #f0f0f0;
 	overflow: hidden;
-    border-radius: 10px;
+    border-radius: 3px;
 }
 
 .tomainpage {
