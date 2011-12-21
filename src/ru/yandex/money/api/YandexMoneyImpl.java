@@ -117,6 +117,21 @@ public class YandexMoneyImpl implements YandexMoney, Serializable {
         return parseJson(httpResp.getEntity(), ReceiveOAuthTokenResponse.class);
     }
 
+    public ReceiveOAuthTokenResponse receiveOAuthToken(String code,
+            String redirectUri, String clientSecret) throws IOException, InsufficientScopeException {
+        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        params.add(new BasicNameValuePair("grant_type", "authorization_code"));
+        params.add(new BasicNameValuePair("client_id", clientId));
+        params.add(new BasicNameValuePair("code", code));
+        params.add(new BasicNameValuePair("redirect_uri", redirectUri));
+        params.add(new BasicNameValuePair("client_secret", clientSecret));
+
+        HttpResponse httpResp =
+                execPostRequest(YandexMoney.URI_YM_TOKEN, params, null);
+        checkCommonResponse(httpResp);
+        return parseJson(httpResp.getEntity(), ReceiveOAuthTokenResponse.class);
+    }
+
     public AccountInfoResponse accountInfo(String accessToken)
             throws IOException, InvalidTokenException, InsufficientScopeException {
         HttpResponse resp =
