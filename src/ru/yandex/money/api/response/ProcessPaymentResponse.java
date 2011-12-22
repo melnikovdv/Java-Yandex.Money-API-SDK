@@ -14,7 +14,7 @@ import java.math.BigDecimal;
 public class ProcessPaymentResponse {
 
     private Status status;
-    private Status error;
+    private String error;
     private String paymentId;
     private BigDecimal balance;
     private String payer;
@@ -68,7 +68,7 @@ public class ProcessPaymentResponse {
      * либо превышен лимит платежной системы для данного пользователя.</li>
      * </ul>
      */
-    public Status getError() {
+    public String getError() {
         return error;
     }
 
