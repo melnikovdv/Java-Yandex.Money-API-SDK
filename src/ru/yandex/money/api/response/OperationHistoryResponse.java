@@ -25,7 +25,7 @@ import java.util.List;
 public class OperationHistoryResponse {
 
     private String error;
-    private String nextRecord;
+    private Integer nextRecord;
     private List<Operation> operations;
 
     private OperationHistoryResponse() {
@@ -61,7 +61,7 @@ public class OperationHistoryResponse {
      * странице истории операций. Присутствует в случае наличия следующей
      * страницы истории.
      */
-    public String getNextRecord() {
+    public Integer getNextRecord() {
         return nextRecord;
     }
 
