@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent"
+        >
+    <TextView
+            style="@style/Control"
+            android:text="Это тестовое приложение для использования библиотеки yamodroid."
+            />
+    <TextView
+            style="@style/Control"
+            android:text="Ниже показаны примеры вызовов основных функций."
+            />
+
+    <ImageView
+            style="@style/Control"
+            android:src="@drawable/line2"
+            />
+
+    <TextView
+            style="@style/Control"
+            android:id="@+id/tvAuthStatus"
+            android:text="Статус: "
+            />
+
+    <Button
+            style="@style/Control"
+            android:id="@+id/btnAuth"
+            />
+
+    <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+        <TextView
+                style="@style/ControlInLine"
+                android:text="Номер счета: "
+                />
+        <TextView
+                style="@style/ControlInLine"
+                android:id="@+id/tvAccount"
+                />
+    </LinearLayout>
+
+    <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+        <TextView
+                style="@style/ControlInLine"
+                android:text="Баланс: "
+                />
+        <TextView
+                style="@style/ControlInLine"
+                android:id="@+id/tvBalance"
+                />
+        <TextView
+                style="@style/ControlInLine"
+                android:text="Валюта: "
+                />
+        <TextView
+                style="@style/ControlInLine"
+                android:id="@+id/tvCurrency"
+                />
+
+    </LinearLayout>
+
+    <Button
+            style="@style/Control"
+            android:id="@+id/btnHistory"
+            android:text="Показать историю"
+            />
+
+    <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            >
+
+        <Button
+                style="@style/ControlInLine"
+                android:id="@+id/btnP2p"
+                android:text="перевод p2p"
+                android:width="150dp"
+                />
+        <Button
+                style="@style/ControlInLine"
+                android:id="@+id/btnShop"
+                android:text="оплата в магазин"
+                android:width="150dp"
+                android:layout_alignParentRight="true"
+                />
+    </RelativeLayout>
+</LinearLayout>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              style="@style/container.full"
+              >
+    <TextView
+            style="@style/ym.fullwidth.medium"
+            android:id="@+id/header"
+            android:singleLine="true"
+            android:scrollHorizontally="true"
+            android:text="Платеж за портсигар золотой заграничный"
+            />
+    <TextView
+            style="@style/ym.wrapped.small"
+            android:id="@+id/date"
+            android:text="01.01.2012 12:57"
+            android:layout_below="@id/header"
+
+            />
+    <TextView
+            style="@style/ym.wrapped.small"
+            android:id="@+id/sum"
+            android:text="+1920.20"
+            android:layout_alignParentRight="true"
+            android:layout_toLeftOf="@id/date"
+            android:layout_alignTop="@id/date"
+            />
+
+</RelativeLayout>

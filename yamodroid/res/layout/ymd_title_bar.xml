@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="horizontal"
+        style="@style/ym.ui.titlebar.bar.one"
+        android:id="@+id/title_bar_root"
+        android:layout_width="fill_parent"
+        >
+
+    <LinearLayout
+            android:orientation="horizontal"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_gravity="center"
+            >
+
+        <ImageView
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:paddingRight="3dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_wallet"/>
+
+
+        <TextView
+                android:id="@+id/title_bar_balance_text"
+                android:text="@string/yandex_money"
+                style="@style/ym.ui.titlebar.balance.one"
+                android:layout_gravity="center"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:textStyle="bold"
+                android:singleLine="true"
+                android:ellipsize="end"
+                />
+
+        <ProgressBar
+                android:id="@+id/title_bar_progress"
+                android:indeterminate="true"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:visibility="invisible"
+                android:layout_marginLeft="3dp"
+                style="@android:style/Widget.ProgressBar"
+                />
+
+    </LinearLayout>
+
+</LinearLayout>

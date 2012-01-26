@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical"
+        >
+    <include layout="@layout/ymd_title_bar" android:id="@+id/title_bar"/>
+
+        <RelativeLayout
+                style="@style/container.wrapped"
+                android:paddingBottom="8dp">
+            <TextView
+                    style="@style/ym.wrapped.large"
+                    android:id="@+id/header"
+                    android:text="История операций"
+                    android:layout_below="@id/title_bar"
+                    />
+            <ImageView
+                    style="@style/ym.wrapped"
+                    android:id="@+id/image_refresh"
+                    android:src="@drawable/ic_menu_refresh"
+                    android:layout_toRightOf="@id/header"
+                    android:layout_alignParentRight="true"
+                    android:layout_below="@id/title_bar"
+                    />
+        </RelativeLayout>
+
+        <ListView
+                android:id="@+id/list_history"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/header"
+                android:layout_alignParentBottom="true"
+                android:scrollbarStyle="outsideInset"
+                />
+</LinearLayout>

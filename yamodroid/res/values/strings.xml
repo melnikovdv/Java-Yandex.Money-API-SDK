@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">ACTIVITY_ENTRY_NAME</string>
+    <string name="auth_result_header">Аутентификация</string>
+    <string name="yandex_money">Яндекс.Деньги</string>
+</resources>

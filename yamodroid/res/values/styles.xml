@@ -1,0 +1,123 @@
+<resources>
+
+    <style name="container">
+        <item name="android:paddingLeft">16dp</item>
+        <item name="android:paddingRight">16dp</item>
+    </style>
+
+    <style name="container.full">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">fill_parent</item>
+    </style>
+
+    <style name="container.wrapped">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="ym.fullwidth">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="ym.wrapped">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="ym.fullwidth.small">
+        <item name="android:textAppearance">@android:style/TextAppearance.Small</item>
+
+    </style>
+
+    <style name="ym.fullwidth.medium">
+        <item name="android:textAppearance">@android:style/TextAppearance.Medium</item>
+    </style>
+
+    <style name="ym.fullwidth.large">
+        <item name="android:textAppearance">@android:style/TextAppearance.Large</item>
+    </style>
+
+    <style name="ym.fullwidth.small.centered">
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="ym.fullwidth.medium.centered">
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="ym.fullwidth.large.centered">
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="ym.wrapped.small">
+        <item name="android:textAppearance">@android:style/TextAppearance.Small</item>
+    </style>
+
+    <style name="ym.wrapped.medium">
+        <item name="android:textAppearance">@android:style/TextAppearance.Medium</item>
+    </style>
+
+    <style name="ym.wrapped.large">
+        <item name="android:textAppearance">@android:style/TextAppearance.Large</item>
+    </style>
+
+    <style name="YmHistDetailCtrl">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingLeft">20dp</item>
+    </style>
+
+
+    <style name="Theme.Light.YM" parent="android:Theme.Light">
+        <item name="android:editTextStyle">@style/ym.ui.edit</item>
+        <item name="android:buttonStyle">@style/ym.ui.button</item>
+    </style>
+
+    <style name="ym.ui.edit" parent="android:style/Widget.EditText">
+        <item name="android:background">@drawable/selector_edit</item>
+    </style>
+
+    <style name="ym.ui.button" parent="android:Widget.Button">
+        <!--<item name="android:background">@drawable/selector_ym_btn</item>-->
+    </style>
+
+    <style name="ym"/>
+    <style name="ym.ui"/>
+
+    <style name="ym.ui.titlebar">
+        <item name="android:textSize">16sp</item>
+        <item name="android:gravity">left|center_vertical</item>
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">32dp</item>
+    </style>
+
+    <style name="ym.ui.titlebar.bar">
+        <item name="android:background">@drawable/ym_titlebar</item>
+        <item name="android:paddingLeft">8dp</item>
+        <item name="android:paddingRight">5dp</item>
+        <item name="android:layout_width">fill_parent</item>
+
+    </style>
+
+    <style name="ym.ui.titlebar.bar.one">
+        <item name="android:background">@color/title_bar_top_color</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="ym.ui.titlebar.balance">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">22sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/user_info_sum_text_color</item>
+    </style>
+
+    <style name="ym.ui.titlebar.balance.one">
+        <item name="android:textSize">19sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+</resources>

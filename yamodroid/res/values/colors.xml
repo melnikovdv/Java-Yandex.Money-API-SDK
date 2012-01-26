@@ -1,0 +1,20 @@
+<resources>
+    <color name="selected">#F57F35</color>
+    <color name="wallet_color">#F57F35</color>
+    <color name="protected_payment_color">#fedcb9</color>
+    <color name="user_info_login_bg_color">#1e1e1e</color>
+    <color name="user_info_bg_color">#000000</color>
+    <color name="user_info_account_text_color">#808080</color>
+    <color name="user_info_login_color">#ffffff</color>
+    <color name="user_info_sum_text_color">#ffffff</color>
+    <color name="user_info_last_update_color">#808080</color>
+    <color name="tab_font_color">#ffffff</color>
+    <color name="tab_font_selected_color">#000000</color>
+    <color name="title_bar_text_color">#ffffff</color>
+    <color name="title_bar_top_color">#000000</color>
+    <color name="payment_bottom_bg">#d9d9d9</color>
+    <color name="gray_bg">#d9d9d9</color>
+    <color name="gray">#808080</color>
+    <color name="home_formal_txt_bg">#333333</color>
+    <color name="protect_period_bg">#424142</color>
+</resources>

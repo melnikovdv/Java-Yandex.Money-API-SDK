@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent"
+              android:orientation="vertical"
+        >
+    <include layout="@layout/ymd_title_bar" android:id="@+id/title_bar"/>
+
+    <LinearLayout
+            style="@style/container.full"
+            android:orientation="vertical">
+        <TextView
+                style="@style/ym.wrapped.large"
+                android:text="Перевод в магазин"
+                />
+
+        <LinearLayout
+                style="@style/ym.wrapped"
+                android:paddingTop="20dp"
+                >
+            <TextView
+                    style="@style/ym.wrapped.medium"
+                    android:text="Сумма: "
+                    />
+            <TextView
+                    style="@style/ym.wrapped.medium"
+                    android:id="@+id/tv_sum"
+                    android:text="1290.20"
+                    />
+            <TextView
+                    style="@style/ym.wrapped.medium"
+                    android:text=" руб."
+                    />
+        </LinearLayout>
+        <TextView
+                style="@style/ym.wrapped.small"
+                android:id="@+id/tv_descr"
+                android:text="Здесь может быть довольно длинный комментарий, который может быть на несколько строк"
+                />
+
+        <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/ym.ui.button"
+                android:id="@+id/btn_send"
+                android:text="Перевести"
+                android:width="150dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp"
+                />
+    </LinearLayout>
+</LinearLayout>
