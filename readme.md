@@ -3,17 +3,17 @@ Java-проекты для API Яндекс.Денег
 
 Структура проекта:
 
-  JYMA
+    aggregator
     |
     |- yamolib
     |
     |- yamodroid
     |
     |- samples
-          |
-          |- yamolib-sample
-          |
-          |- yamodroid-sample
+        |
+        |- yamolib-sample
+        |
+        |- yamodroid-sample
 
 * JYMA (aka Java Yandex Money Api) - проект-агрегатор для.
 * yamolib (aka Yandex Money Library) - java-библиотека для работы с API. Ссылка на readme:
@@ -22,4 +22,6 @@ Java-проекты для API Яндекс.Денег
 * yamolib-sample - тестовое приложение для yamolib
 * yamodroid-sample - тестовое приложение для yamodroid
 
-Все проекты можно собрать с помощью Maven и *.pom файлов.
+Все проекты можно собрать с помощью Maven и pom.xml файлов.
+Maven: http://maven.apache.org/download.html
+Maven Android plugin:
