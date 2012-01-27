@@ -23,5 +23,7 @@ Java-проекты для API Яндекс.Денег
 * yamodroid-sample - тестовое приложение для yamodroid
 
 Все проекты можно собрать с помощью Maven и pom.xml файлов.
+
 Maven: http://maven.apache.org/download.html
-Maven Android plugin:
+
+Maven Android plugin: http://code.google.com/p/maven-android-plugin/wiki/GettingStarted
