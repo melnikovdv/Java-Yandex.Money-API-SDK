@@ -3,7 +3,7 @@ package ru.yandex.money.droid.preferences;
 public class LibConsts {
 
     public static String PREFERENCES = "ru.yandex.money.droid.preferences";
-    public static String PREF_ACCESS_TOKEN = "access_token";
+
     public static final String PREF_CLIENT_ID = "client_id";
     public static final String PREF_REDIRECT_URI = "redirect_uri";
     

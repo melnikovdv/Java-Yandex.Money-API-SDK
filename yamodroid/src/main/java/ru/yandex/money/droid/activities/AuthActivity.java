@@ -41,11 +41,12 @@ public class AuthActivity extends Activity {
         progressDialog.show();
 
         clientId = getIntent().getStringExtra(LibConsts.PREF_CLIENT_ID);
+        String sUri = getIntent().getExtras().getString(LibConsts.URI);
 
         setContentView(R.layout.ymd_auth);
         context = this;
 
-        webView = (WebView) findViewById(R.id.webview);
+        webView = (WebView) findViewById(R.id.wv_auth);
         webView.setWebViewClient(new AuthWebViewClient());
         webView.setWebChromeClient(new AuthWebChromeClient());
         webView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
@@ -54,8 +55,8 @@ public class AuthActivity extends Activity {
         webView.getSettings().setJavaScriptEnabled(false);
         webView.getSettings().setBuiltInZoomControls(true);
 
-        String sUri = getIntent().getExtras().getString(LibConsts.URI);
-//        new LoadWebViewContent().execute(sUri);
+
+
         webView.loadUrl(sUri);
 
     }
@@ -74,7 +75,6 @@ public class AuthActivity extends Activity {
                 return false;
             }
 
-//            new LoadWebViewContent().execute(url);
             webView.loadUrl(url);
             return true;
         }

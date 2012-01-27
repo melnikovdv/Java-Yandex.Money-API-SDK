@@ -6,7 +6,7 @@
         android:layout_width="fill_parent">
     <WebView
 
-            android:id="@+id/webview"
+            android:id="@+id/wv_auth"
             style="@style/container.full"
             android:scrollbarStyle="outsideInset"
             />

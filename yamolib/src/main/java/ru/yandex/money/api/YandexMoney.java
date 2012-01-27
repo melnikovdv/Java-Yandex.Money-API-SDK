@@ -78,7 +78,7 @@ public interface YandexMoney {
      *                    события результата авторизации. Значение этого параметра при посимвольном сравнении
      *                    должно быть идентично значению redirectUri, ранее переданному в метод authorize.
      * @return экземпляр класса {@link ReceiveOAuthTokenResponse}
-     * @throws java.io.IOException          ошибка связи с сервером Яндекс.Денег
+     * @throws IOException          ошибка связи с сервером Яндекс.Денег
      * @throws InsufficientScopeException   запрошена операция, на которую у
      *                                      токена нет прав.
      * @throws InternalServerErrorException техническая ошибка сервера Яндекс.Денег
