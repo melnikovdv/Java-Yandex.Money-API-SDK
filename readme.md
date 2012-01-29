@@ -15,7 +15,7 @@ Java-проекты для API Яндекс.Денег
         |
         |- yamodroid-sample
 
-* JYMA (aka Java Yandex Money Api) - проект-агрегатор для.
+* aggregator (aka Java Yandex Money Api) - проект-агрегатор для.
 * yamolib (aka Yandex Money Library) - java-библиотека для работы с API. Ссылка на readme:
 * yamodroid (aka Yandex Money Droid Library) - android-библиотека для работы c API. Ссылка на readme:
 * samples - проект-агрегатор для тестовых приложений использования библиотек.
