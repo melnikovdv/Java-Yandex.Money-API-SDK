@@ -1,4 +1,4 @@
-package ru.yandex.money.droid.activities.history;
+package ru.yandex.money.droid;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -8,8 +8,6 @@ import ru.yandex.money.api.InvalidTokenException;
 import ru.yandex.money.api.YandexMoney;
 import ru.yandex.money.api.response.OperationHistoryResponse;
 import ru.yandex.money.api.response.util.Operation;
-import ru.yandex.money.droid.preferences.LibConsts;
-import ru.yandex.money.droid.utils.Utils;
 
 import java.io.IOException;
 import java.util.List;
@@ -18,23 +16,27 @@ import java.util.List;
  * @author dvmelnikov
  */
 
-public class LoadHistoryTask extends AsyncTask<Integer, Void, List<Operation>> {
+class LoadHistoryTask extends AsyncTask<Integer, Void, List<Operation>> {
 
-    ProgressDialog dialog;
-    private final String token;
-    private final HistoryAdapter historyAdapter;
     private final Context context;
     private String error;
+    private String clientId;
+    private final String accessToken;
+    private final HistoryAdapter historyAdapter;
 
-    public LoadHistoryTask(Context context, HistoryAdapter historyAdapter, String clientId) {
+    ProgressDialog dialog;
+
+    public LoadHistoryTask(Context context, String clientId, String accessToken,
+            HistoryAdapter historyAdapter) {
         this.historyAdapter = historyAdapter;
         this.context = context;
-        token = Utils.getToken(context, clientId);
+        this.clientId = clientId;
+        this.accessToken = accessToken;
     }
 
     @Override
     protected void onPreExecute() {
-        dialog = Utils.makeProgressDialog(context, LibConsts.WAIT);
+        dialog = Utils.makeProgressDialog(context, Consts.WAIT);
         dialog.show();
     }
 
@@ -44,30 +46,30 @@ public class LoadHistoryTask extends AsyncTask<Integer, Void, List<Operation>> {
             for (Operation op : result)
                 historyAdapter.add(op);
         } else
-            Utils.showError(context, error);
+            Utils.showError(context, "Ошибка: " + error);
         dialog.dismiss();
     }
 
     @Override
     protected List<Operation> doInBackground(Integer... params) {
-        YandexMoney ym = Utils.getYandexMoney(context);
+        YandexMoney ym = Utils.getYandexMoney(clientId);
         try {
             OperationHistoryResponse resp =
-                    ym.operationHistory(token, params[0]);
+                    ym.operationHistory(accessToken, params[0]);
             if (resp.isSuccess())
                 return resp.getOperations();
             else
-                error = "Ошибка: " + resp.getError();
+                error = resp.getError();
 
         } catch (IOException e) {
             e.printStackTrace();
-            error = "Ошибка: " + e.getMessage();
+            error = e.getMessage();
         } catch (InvalidTokenException e) {
             e.printStackTrace();
-            error = "Ошибка: " + e.getMessage();
+            error = e.getMessage();
         } catch (InsufficientScopeException e) {
             e.printStackTrace();
-            error = "Ошибка: " + e.getMessage();
+            error = e.getMessage();
         }
         return null;
     }

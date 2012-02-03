@@ -78,8 +78,21 @@
         <item name="android:background">@drawable/selector_edit</item>
     </style>
 
+    <style name="ym.ui.edit.cvc">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:inputType">phone</item>
+        <item name="android:numeric">integer</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:singleLine">true</item>
+    </style>
+
     <style name="ym.ui.button" parent="android:Widget.Button">
-        <!--<item name="android:background">@drawable/selector_ym_btn</item>-->
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:width">200dp</item>
+        <item name="android:gravity">center</item>
     </style>
 
     <style name="ym"/>

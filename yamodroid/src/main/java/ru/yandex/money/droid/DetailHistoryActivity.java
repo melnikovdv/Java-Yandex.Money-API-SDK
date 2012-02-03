@@ -1,4 +1,4 @@
-package ru.yandex.money.droid.activities;
+package ru.yandex.money.droid;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -10,11 +10,9 @@ import ru.yandex.money.api.InvalidTokenException;
 import ru.yandex.money.api.YandexMoney;
 import ru.yandex.money.api.enums.MoneyDirection;
 import ru.yandex.money.api.response.OperationDetailResponse;
-import ru.yandex.money.droid.R;
-import ru.yandex.money.droid.preferences.LibConsts;
-import ru.yandex.money.droid.utils.Utils;
 
 import java.io.IOException;
+import java.text.DateFormat;
 
 /**
  * @author dvmelnikov
@@ -22,7 +20,15 @@ import java.io.IOException;
 
 public class DetailHistoryActivity extends Activity {
 
+    public static final String DET_HIST_IN_CLIENT_ID = "client_id";
+    public static final String DET_HIST_IN_ACCESS_TOKEN = "access_token";
+    public static final String DET_HIST_IN_OPERATION_ID = "operation_id";
+
     private DetailHistoryActivity context;
+    private String clientId;
+    private String accessToken;
+    private String operationId;
+
     private TextView title;
     private TextView sum;
     private TextView date;
@@ -30,16 +36,17 @@ public class DetailHistoryActivity extends Activity {
     private TextView message;
     private TextView accCaption;
     private TextView acc;
-    private String clientId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        clientId = getIntent().getStringExtra(LibConsts.PREF_CLIENT_ID);
-        
         setContentView(R.layout.ymd_detail);
-        context = this;        
+        context = this;
+
+        clientId = getIntent().getStringExtra(DET_HIST_IN_CLIENT_ID);
+        accessToken = getIntent().getStringExtra(DET_HIST_IN_ACCESS_TOKEN);
+        operationId = getIntent().getStringExtra(DET_HIST_IN_OPERATION_ID);
 
         title = (TextView) findViewById(R.id.tvTitle);
         title.setText("");
@@ -56,8 +63,7 @@ public class DetailHistoryActivity extends Activity {
         acc = (TextView) findViewById(R.id.tv_send_to);
         acc.setText("");
 
-        String opId = getIntent().getExtras().getString(LibConsts.OPERATION_ID);
-        new LoadDetailTask().execute(opId);
+        new LoadDetailTask().execute(operationId);
     }
 
     public class LoadDetailTask extends AsyncTask<String, Void, OperationDetailResponse> {
@@ -67,7 +73,7 @@ public class DetailHistoryActivity extends Activity {
 
         @Override
         protected void onPreExecute() {
-            dialog = Utils.makeProgressDialog(context, LibConsts.WAIT);
+            dialog = Utils.makeProgressDialog(context, Consts.WAIT);
             dialog.show();
         }
 
@@ -85,7 +91,9 @@ public class DetailHistoryActivity extends Activity {
                     accCaption.setText("Получатель:");
                     acc.setText(resp.getRecipient());
                 }
-                date.setText(resp.getDatetime().toLocaleString());
+
+                String df = DateFormat.getDateInstance().format(resp.getDatetime());
+                date.setText(df);
                 details.setText(resp.getDetails());
                 message.setText(resp.getMessage());
             } else
@@ -95,10 +103,10 @@ public class DetailHistoryActivity extends Activity {
 
         @Override
         protected OperationDetailResponse doInBackground(String... params) {
-            YandexMoney ym = Utils.getYandexMoney(context);
+            YandexMoney ym = Utils.getYandexMoney(clientId);
             try {
                 OperationDetailResponse resp =
-                        ym.operationDetail(Utils.getToken(context, clientId), params[0]);
+                        ym.operationDetail(accessToken, params[0]);
                 if (resp.isSuccess())
                     return resp;
                 else

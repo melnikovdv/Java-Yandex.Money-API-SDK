@@ -1,4 +1,4 @@
-package ru.yandex.money.droid.activities.history;
+package ru.yandex.money.droid;
 
 import android.content.Context;
 import android.os.AsyncTask;
@@ -9,7 +9,6 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import ru.yandex.money.api.enums.MoneyDirection;
 import ru.yandex.money.api.response.util.Operation;
-import ru.yandex.money.droid.R;
 
 import java.text.DateFormat;
 import java.util.List;
@@ -18,23 +17,27 @@ import java.util.List;
  * @author dvmelnikov
  */
 
-public class HistoryAdapter extends ArrayAdapter {
+class HistoryAdapter extends ArrayAdapter {
 
     private final LayoutInflater inflater;
     ViewHolder holder;
     private final List<Operation> history;
     private LoadHistoryTask loadHistoryTask;
+
     private final Context context;
-    String clientId;
+    private String accessToken;
+    private String clientId;
 
     public HistoryAdapter(Context context, int textViewResourceId,
-            List<Operation> history, String clientId) {
+            List<Operation> history, String clientId, String accessToken) {
         super(context, textViewResourceId, history);
 
-        this.clientId = clientId;
         inflater = (LayoutInflater) context.getSystemService(
                 Context.LAYOUT_INFLATER_SERVICE);
+
         this.history = history;
+        this.accessToken = accessToken;
+        this.clientId = clientId;
         this.context = context;
     }
 
@@ -42,7 +45,7 @@ public class HistoryAdapter extends ArrayAdapter {
     public View getView(int position, View convertView,
             ViewGroup parent) {
         if (position == getCount() - 1) {
-            loadHistoryTask = new LoadHistoryTask(context, this, clientId);
+            loadHistoryTask = new LoadHistoryTask(context, clientId, accessToken, this);
             if ((loadHistoryTask.getStatus() != AsyncTask.Status.RUNNING))
                 loadHistoryTask.execute(getCount());
         }

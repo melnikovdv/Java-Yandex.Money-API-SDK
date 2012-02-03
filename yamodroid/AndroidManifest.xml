@@ -8,28 +8,29 @@
     <application android:label="@string/app_name" android:icon="@drawable/icon">
 
         <activity
-                android:name=".activities.AuthActivity"
+                android:name=".AuthActivity"
                 android:label="@string/app_name"
+                android:theme="@style/Theme.Light.YM"
                 android:configChanges="orientation"
                 >
         </activity>
 
         <activity
-            android:name=".activities.HistoryActivity"
+            android:name=".HistoryActivity"
             android:theme="@style/Theme.Light.YM"
             android:label="@string/app_name"
             android:configChanges="orientation"
             />
 
         <activity
-                android:name=".activities.DetailHistoryActivity"
+                android:name=".DetailHistoryActivity"
                 android:label="@string/app_name"
                 android:theme="@style/Theme.Light.YM"
                 android:configChanges="orientation"
                 />
 
         <activity
-                android:name=".activities.PaymentActivity"
+                android:name=".PaymentActivity"
                 android:theme="@style/Theme.Light.YM"
                 android:label="@string/app_name"
                 android:configChanges="orientation"

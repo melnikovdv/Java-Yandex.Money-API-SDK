@@ -8,7 +8,7 @@
         >
     <include layout="@layout/ymd_title_bar" android:id="@+id/title_bar"/>
 
-        <RelativeLayout
+        <LinearLayout
                 style="@style/container.wrapped"
                 android:paddingBottom="8dp">
             <TextView
@@ -18,14 +18,14 @@
                     android:layout_below="@id/title_bar"
                     />
             <ImageView
-                    style="@style/ym.wrapped"
+                    style="@style/ym.fullwidth"
                     android:id="@+id/image_refresh"
                     android:src="@drawable/ic_menu_refresh"
-                    android:layout_toRightOf="@id/header"
-                    android:layout_alignParentRight="true"
                     android:layout_below="@id/title_bar"
+                    android:layout_marginLeft="10dp"
+                    android:scaleType="fitStart"
                     />
-        </RelativeLayout>
+        </LinearLayout>
 
         <ListView
                 android:id="@+id/list_history"

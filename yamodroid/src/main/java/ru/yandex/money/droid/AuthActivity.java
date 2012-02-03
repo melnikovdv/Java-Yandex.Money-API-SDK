@@ -1,4 +1,4 @@
-package ru.yandex.money.droid.activities2;
+package ru.yandex.money.droid;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -15,9 +15,6 @@ import android.webkit.WebViewClient;
 import ru.yandex.money.api.InsufficientScopeException;
 import ru.yandex.money.api.YandexMoney;
 import ru.yandex.money.api.response.ReceiveOAuthTokenResponse;
-import ru.yandex.money.droid.R;
-import ru.yandex.money.droid.preferences.LibConsts;
-import ru.yandex.money.droid.utils.Utils;
 
 import java.io.IOException;
 
@@ -25,27 +22,43 @@ import java.io.IOException;
  * @author dvmelnikov
  */
 
-public class AuthAct extends Activity {
+public class AuthActivity extends Activity {
 
     private ProgressDialog pd;
 
     private String clientId;
     private String redirectUri;
+    private String authUri;
 
     private WebView authView;
+
+    public static final String AUTH_IN_SHOW_RES_DLG = "show_result_dialog";
+    public static final String AUTH_IN_REDIRECT_URI = "redirect_uri";
+    public static final String AUTH_IN_CLIENT_ID = "client_id";
+    public static final String AUTH_IN_AUTH_URI = "authorize_uri";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        pd = Utils.makeProgressDialog(this, LibConsts.AUTH, LibConsts.WAIT);
+        pd = Utils.makeProgressDialog(this, Consts.AUTH, Consts.WAIT);
         pd.show();
 
         setContentView(R.layout.ymd_auth);
         setupIntentParams();
         setupAuthView();
 
-        authView.loadUrl(redirectUri);
+        authView.loadUrl(authUri);
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent();
+        intent.putExtra(ActivityParams.PAYMENT_OUT_IS_SUCCESS,
+                false);
+        intent.putExtra(ActivityParams.PAYMENT_OUT_ERROR, Consts.USER_CANCELLED);
+        this.setResult(Activity.RESULT_CANCELED, intent);
+        finish();
     }
 
     private void setupAuthView() {
@@ -60,24 +73,24 @@ public class AuthAct extends Activity {
     }
 
     private void setupIntentParams() {
-        clientId = getIntent().getStringExtra(Consts2.AUTH_IN_CLIENT_ID);
+        clientId = getIntent().getStringExtra(AuthActivity.AUTH_IN_CLIENT_ID);
         redirectUri =
-                getIntent().getExtras().getString(Consts2.AUTH_IN_REDIRECT_URI);
+                getIntent().getStringExtra(AuthActivity.AUTH_IN_REDIRECT_URI);
+        authUri = getIntent().getStringExtra(AuthActivity.AUTH_IN_AUTH_URI);
     }
 
     private String extractCode(String urlWithCode) {
         Uri uri = Uri.parse(urlWithCode);
-        return uri.getQueryParameter(LibConsts.CODE);
+        return uri.getQueryParameter(Consts.AUTH_CODE);
     }
 
     private ReceiveTokenResp receiveToken(String code) {
-        YandexMoney ym = Utils.getYandexMoney(AuthAct.this);
+        YandexMoney ym = Utils.getYandexMoney(clientId);
         try {
             ReceiveOAuthTokenResponse resp =
                     ym.receiveOAuthToken(code,
-                            Utils.getRedirectUri(AuthAct.this));
+                            redirectUri);
             if (resp.isSuccess()) {
-                Utils.writeToken(AuthAct.this, clientId, resp.getAccessToken());
                 return new ReceiveTokenResp(resp.getAccessToken(), null);
             } else {
                 return new ReceiveTokenResp(resp.getAccessToken(),
@@ -92,21 +105,28 @@ public class AuthAct extends Activity {
         }
     }
 
-    private AlertDialog makeAlertDialog(final ReceiveTokenResp resp, final Intent intent) {
+    private AlertDialog makeAlertDialog(final ReceiveTokenResp resp) {
         AlertDialog.Builder builder;
         builder = new AlertDialog.Builder(this);
         builder.setIcon(R.drawable.ic_wallet);
+        builder.setTitle("Авторизация");
         if (resp.isSuccess())
-            builder.setMessage("Авторизация успешно завершена");
+            builder.setMessage("успешно завершена");
         else
             builder.setMessage("Ошибка: " + resp.getError());
 
         builder.setNeutralButton("Ok", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
+                Intent authResult = new Intent();
+                authResult.putExtra(ActivityParams.AUTH_OUT_ACCESS_TOKEN, resp.getToken());
+                authResult.putExtra(ActivityParams.AUTH_OUT_ERROR, resp.getError());
+                authResult.putExtra(ActivityParams.AUTH_OUT_IS_SUCCESS, resp.isSuccess());
+
                 if (resp.isSuccess())
-                    AuthAct.this.setResult(Activity.RESULT_OK, intent);
+                    AuthActivity.this.setResult(Activity.RESULT_OK, authResult);
                 else
-                    AuthAct.this.setResult(Activity.RESULT_CANCELED, intent);
+                    AuthActivity.this.setResult(Activity.RESULT_CANCELED, authResult);
+                finish();
             }
         });
         return builder.create();
@@ -120,7 +140,7 @@ public class AuthAct extends Activity {
 
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
-            if (url.contains(Utils.getRedirectUri(AuthAct.this))) {
+            if (url.contains(redirectUri)) {
                 view.goBack();
                 new StartAuthResultActivity().execute(extractCode(url));
                 return false;
@@ -150,17 +170,23 @@ public class AuthAct extends Activity {
         @Override
         protected void onPostExecute(ReceiveTokenResp response) {
             Intent result = new Intent();
-            result.putExtra(Consts2.AUTH_OUT_IS_SUCCESS, response.isSuccess());
-            result.putExtra(Consts2.AUTH_OUT_ACCESS_TOKEN, response.getToken());
-            result.putExtra(Consts2.AUTH_OUT_ERROR, response.getError());
+            result.putExtra(ActivityParams.AUTH_OUT_IS_SUCCESS, response.isSuccess());
+            result.putExtra(ActivityParams.AUTH_OUT_ACCESS_TOKEN, response.getToken());
+            result.putExtra(ActivityParams.AUTH_OUT_ERROR, response.getError());
 
             boolean showResultDialog = getIntent()
-                    .getBooleanExtra(Consts2.AUTH_IN_SHOW_RES_DLG, false);
-            if (showResultDialog) {
-                AlertDialog resDlg =
-            }
-
+                    .getBooleanExtra(AuthActivity.AUTH_IN_SHOW_RES_DLG, false);
             pd.dismiss();
+            if (showResultDialog) {
+                AlertDialog resDlg = makeAlertDialog(response);
+                resDlg.show();
+            } else {
+                if (response.isSuccess())
+                    setResult(Activity.RESULT_OK, result);
+                else
+                    setResult(Activity.RESULT_CANCELED, result);
+                finish();
+            }
         }
 
         @Override
@@ -176,6 +202,7 @@ public class AuthAct extends Activity {
 
         public ReceiveTokenResp(String token, String error) {
             success = token != null;
+            this.token = token;
             this.error = error;
         }
 

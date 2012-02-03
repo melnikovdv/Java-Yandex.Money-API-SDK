@@ -10,17 +10,8 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.conn.ClientConnectionManager;
-import org.apache.http.conn.scheme.Scheme;
-import org.apache.http.conn.scheme.SchemeRegistry;
-import org.apache.http.conn.ssl.SSLSocketFactory;
-import org.apache.http.impl.client.AbstractHttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.impl.conn.SingleClientConnManager;
 import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.params.BasicHttpParams;
-import org.apache.http.params.HttpConnectionParams;
-import org.apache.http.params.HttpParams;
 import ru.yandex.money.api.enums.MoneySource;
 import ru.yandex.money.api.enums.OperationHistoryType;
 import ru.yandex.money.api.response.*;
@@ -31,8 +22,6 @@ import ru.yandex.money.api.rights.Permission;
 import java.io.*;
 import java.math.BigDecimal;
 import java.net.URLEncoder;
-import java.security.*;
-import java.security.cert.CertificateException;
 import java.util.*;
 
 /**
@@ -83,55 +72,14 @@ public class YandexMoneyImpl implements YandexMoney, Serializable {
         if (clientId == null || (clientId.equals("")))
             throw new IllegalArgumentException("client_id is empty");
         this.clientId = clientId;
-
-//        if (params == null) {
-//            params = new BasicHttpParams();
-//            HttpConnectionParams.setConnectionTimeout(params, 60000);
-//        }
-//        client = new DefaultHttpClient(conmaYfn, params);
-//        this.client = AndroidHttpClient.newInstance("AndroidHttpClient");
         this.client = client;
-
-        //        KeyStore trustStore  = null;
-//        try {
-//            trustStore = KeyStore.getInstance("PKCS12");
-//        } catch (KeyStoreException e) {
-//            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-//        }
-//        InputStream instream = YandexMoneyImpl.class.getResourceAsStream("/pk.ks");
-//        try {
-//            trustStore.load(instream, "".toCharArray());
-//        } catch (CertificateException e) {
-//            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-//        } catch (NoSuchAlgorithmException e) {
-//            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-//        } catch (IOException e) {
-//            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-//        } finally {
-//            try { instream.close(); } catch (Exception ignore) {}
-//        }
-//
-//        SSLSocketFactory socketFactory = null;
-//        try {
-//            socketFactory = new SSLSocketFactory(trustStore);
-//        } catch (NoSuchAlgorithmException e) {
-//            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-//        } catch (KeyManagementException e) {
-//            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-//        } catch (KeyStoreException e) {
-//            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-//        } catch (UnrecoverableKeyException e) {
-//            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-//        }
-//        Scheme sch = new Scheme("https", socketFactory, 443);
-//        client.getConnectionManager().getSchemeRegistry().register(sch);
     }
 
     public String authorizeUri(Collection<Permission> scope,
-            String redirectUri, Boolean mobile) {
+            String redirectUri, Boolean mobileMode) {
 
         String sScope = makeScope(scope);
-        String authAddress = mobile ? URI_YM_AUTH_MOBILE : URI_YM_AUTH;
+        String authAddress = mobileMode ? URI_YM_AUTH_MOBILE : URI_YM_AUTH;
         try {
             return authAddress + "?client_id=" + clientId +
                     "&response_type=code" +

@@ -27,6 +27,7 @@
     <Button
             style="@style/Control"
             android:id="@+id/btnAuth"
+            android:text="Авторизоваться"
             />
 
     <LinearLayout
