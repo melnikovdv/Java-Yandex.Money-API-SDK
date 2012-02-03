@@ -28,6 +28,14 @@ public class HistoryActivity extends Activity {
     private HistoryAdapter historyAdapter;
 
     @Override
+    public void onBackPressed() {
+        Intent intent = new Intent();
+        intent.putExtra(ActivityParams.HISTORY_OUT_IS_SUCCESS, true);
+        this.setResult(Activity.RESULT_OK, intent);
+        finish();
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 

@@ -1,5 +1,6 @@
 package ru.yandex.money.droid;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.view.LayoutInflater;
@@ -24,11 +25,11 @@ class HistoryAdapter extends ArrayAdapter {
     private final List<Operation> history;
     private LoadHistoryTask loadHistoryTask;
 
-    private final Context context;
+    private final Activity context;
     private String accessToken;
     private String clientId;
 
-    public HistoryAdapter(Context context, int textViewResourceId,
+    public HistoryAdapter(Activity context, int textViewResourceId,
             List<Operation> history, String clientId, String accessToken) {
         super(context, textViewResourceId, history);
 

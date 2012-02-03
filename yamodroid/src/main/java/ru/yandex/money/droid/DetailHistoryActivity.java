@@ -2,6 +2,7 @@ package ru.yandex.money.droid;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.widget.TextView;
@@ -66,6 +67,14 @@ public class DetailHistoryActivity extends Activity {
         new LoadDetailTask().execute(operationId);
     }
 
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent();
+        intent.putExtra(ActivityParams.HISTORY_OUT_IS_SUCCESS, true);
+        this.setResult(Activity.RESULT_OK, intent);
+        finish();
+    }
+
     public class LoadDetailTask extends AsyncTask<String, Void, OperationDetailResponse> {
 
         private ProgressDialog dialog;
@@ -79,25 +88,38 @@ public class DetailHistoryActivity extends Activity {
 
         @Override
         protected void onPostExecute(OperationDetailResponse resp) {
-            if (resp != null) {
-                title.setText(resp.getTitle());
-                if (resp.getDirection() == MoneyDirection.in) {
-                    sum.setText("+" + resp.getAmount());
-                    accCaption.setText("Отправитель:");
-                    acc.setText(resp.getSender());
+            if ((resp == null) || (error != null)) {
+                Intent intent = new Intent();
+                intent.putExtra(ActivityParams.HISTORY_OUT_IS_SUCCESS, false);
+                intent.putExtra(ActivityParams.HISTORY_OUT_ERROR, error);
+                context.setResult(Activity.RESULT_CANCELED, intent);
+                context.finish();
+            } else {
+                if (resp.isSuccess()) {
+                    title.setText(resp.getTitle());
+                    if (resp.getDirection() == MoneyDirection.in) {
+                        sum.setText("+" + resp.getAmount());
+                        accCaption.setText("Отправитель:");
+                        acc.setText(resp.getSender());
 
+                    } else {
+                        sum.setText("-" + resp.getAmount());
+                        accCaption.setText("Получатель:");
+                        acc.setText(resp.getRecipient());
+                    }
+
+                    String df = DateFormat.getDateInstance().format(resp.getDatetime());
+                    date.setText(df);
+                    details.setText(resp.getDetails());
+                    message.setText(resp.getMessage());
                 } else {
-                    sum.setText("-" + resp.getAmount());
-                    accCaption.setText("Получатель:");
-                    acc.setText(resp.getRecipient());
+                    Intent intent = new Intent();
+                    intent.putExtra(ActivityParams.HISTORY_OUT_IS_SUCCESS, false);
+                    intent.putExtra(ActivityParams.HISTORY_OUT_ERROR, resp.getError());
+                    context.setResult(Activity.RESULT_CANCELED, intent);
+                    context.finish();
                 }
-
-                String df = DateFormat.getDateInstance().format(resp.getDatetime());
-                date.setText(df);
-                details.setText(resp.getDetails());
-                message.setText(resp.getMessage());
-            } else
-                Utils.showError(context, error);
+            }
             dialog.dismiss();
         }
 
