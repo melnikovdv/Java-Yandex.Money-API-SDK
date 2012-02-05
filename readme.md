@@ -2,17 +2,17 @@
 
 - - -
 
-**aggregator** (aka Java Yandex Money Api) - проект-агрегатор для.
+**aggregator** (aka Java Yandex Money Api) - проект-агрегатор.
 
-**yamolib** (aka Yandex Money Library) - java-библиотека для работы с API. Ссылка на readme:
+**yamolib** (aka Yandex Money Library) - java-библиотека для работы с API. [Посмотреть](https://github.com/melnikovdv/Java-Yandex.Money-API-SDK/tree/master/yamolib).
 
-**yamodroid** (aka Yandex Money Droid Library) - android-библиотека для работы c API. Ссылка на readme:
+**yamodroid** (aka Yandex Money Droid Library) - android-библиотека для работы c API. [Посмотреть](https://github.com/melnikovdv/Java-Yandex.Money-API-SDK/tree/master/yamodroid).
 
-**samples** - проект-агрегатор для тестовых приложений использования библиотек.
+**samples** - проект-агрегатор для тестовых приложений использования библиотек. [Посмотреть](https://github.com/melnikovdv/Java-Yandex.Money-API-SDK/tree/master/samples).
 
-**yamolib-sample** - тестовое приложение для yamolib
+**yamolib-sample** - тестовое приложение для yamolib. [Посмотреть](https://github.com/melnikovdv/Java-Yandex.Money-API-SDK/tree/master/samples/yamolib-sample).
 
-**yamodroid-sample** - тестовое приложение для yamodroid
+**yamodroid-sample** - тестовое приложение для yamodroid. [Посмотреть](https://github.com/melnikovdv/Java-Yandex.Money-API-SDK/tree/master/samples/yamodroid-sample).
 
 ###Структура проекта
 
