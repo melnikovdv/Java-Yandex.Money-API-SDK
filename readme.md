@@ -1,5 +1,7 @@
 ##Java-проекты для API Яндекс.Денег
 
+- - -
+
 **aggregator** (aka Java Yandex Money Api) - проект-агрегатор для.
 
 **yamolib** (aka Yandex Money Library) - java-библиотека для работы с API. Ссылка на readme:
