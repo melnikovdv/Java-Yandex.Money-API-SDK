@@ -46,3 +46,55 @@ Manifest-файла библиотеки все Activity в Manifest вашег�
 Второй и третий способы не очень удобны для обновления библиотеки.
 
 ### Getting started
+
+Здесь я попробую показать, как осуществлять вызовы функций библиотеки.
+
+Для упрощения вызова Intent'ов библиотеки создан публичный класс IntentCreator, который четко знает какие параметры
+нужно передать в том или ином случае. Посмотрите на javadoc статических методов этого класса.
+
+#### Авторизация 
+Чтобы авторизоваться и получить токен доступа к API, нужно сделать intent и вызвать его, ожидая результат. 
+Код вызова Intent'а:
+
+    Intent intent = IntentCreator.createAuth(YourAppActivity, "YOUR_APP_CLIENT_ID",
+            YOUR_APP_REDIRECT_URI, Consts.getPermissions(), true);
+    startActivityForResult(intent, CODE_AUTH);
+    
+Код обработки результата
+
+    if (requestCode == CODE_AUTH) {
+            boolean isSuccess = data.getBooleanExtra(ActivityParams.AUTH_OUT_IS_SUCCESS, false);
+            String accessToken = data.getStringExtra(ActivityParams.AUTH_OUT_ACCESS_TOKEN);
+            String error = data.getStringExtra(ActivityParams.AUTH_OUT_ERROR);
+
+            if (isSuccess)
+                // сохраняем accessToken
+                
+            Toast.makeText(this, "Authorization result: " + isSuccess + "\ntoken: " + token + "\n" +
+                            "error: " + error, Toast.LENGTH_LONG).show();
+        }
+        
+#### Пример получения истории операций 
+Покажем как показать историю операции пользователя:
+
+    Intent historyIntent = IntentCreator.createHistory(YourAppActivity, "YOUR_APP_CLIENT_ID", accessToken);
+    startActivity(historyIntent);
+    
+#### Пример перевода на счет другому пользователю
+
+    Intent intent = IntentCreator.createPaymentP2P(YourAppActivity, "YOUR_APP_CLIENT_ID", accessToken,
+                                "410011161616877", BigDecimal.valueOf(0.02), "comment for p2p", "message for p2p", true);
+    startActivityForResult(intent, CODE_PAYMENT_P2P);
+    
+#### Пример вызова оплаты мобильной связи оператора Мегафон
+
+    HashMap<String, String> params = new HashMap<String, String>();
+    params.put("PROPERTY1", "921");
+    params.put("PROPERTY2", "3020052");
+    params.put("sum", "1.00");
+
+    Intent intent = IntentCreator.createPaymentShop(YourAppActivity, "YOUR_APP_CLIENT_ID", accessToken,
+            BigDecimal.valueOf(1.00), "337", params, true);
+    startActivityForResult(intent, CODE_PAYMENT_SHOP);
+    
+Выходные параметры для обработки результата каждой функции можно посмотреть в классе `ActivityParams`.
