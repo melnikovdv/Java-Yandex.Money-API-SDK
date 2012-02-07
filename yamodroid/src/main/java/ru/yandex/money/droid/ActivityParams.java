@@ -1,6 +1,8 @@
 package ru.yandex.money.droid;
 
 /**
+ * Класс, который содержит имена параметров, которые можно получить в результате
+ * вызовов Activity библиотеки.
  * @author dvmelnikov
  */
 
