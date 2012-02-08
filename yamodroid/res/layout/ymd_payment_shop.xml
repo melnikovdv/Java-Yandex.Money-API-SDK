@@ -46,7 +46,7 @@
             <Button
                     style="@style/ym.ui.button"
                     android:id="@+id/btn_send_p2p"
-                    android:text="Оплатить со счета"                    
+                    android:text="Оплатить с кошелька"                    
                     android:visibility="visible"
                     android:layout_marginTop="10dp"
                     />
