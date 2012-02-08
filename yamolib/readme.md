@@ -103,15 +103,14 @@ yamolib - java-библиотека API Яндекс.Денег
 Или собрать проект самостоятельно. Для этого:
 
 * зарегистрировать приложение, т.е. получить идентификатор клиента (https://sp-money.yandex.ru/myservices/new.xml) и прописать его в константы примеров (src\client\Consts.java);
-* изменить `REDIRECT_URI` (`src/client/Consts.java`), если отличается; 	
+* изменить `REDIRECT_URI` (`src/client/Consts.java`), если отличается;
 * скомпилировать и запустить веб-приложение.
 
 #### Пример сборки maven war файла:
 
-git clone PROJECT_GIT_URL  
-cd ymapi  
+git clone git@github.com:melnikovdv/Java-Yandex.Money-API-SDK.git  
+cd Java-Yandex.Money-API-SDK  
 mvn clean package  
-cp ymwar/target/ymwar.war /var/lib/tomcat6/webapps
 
 Ссылка администирования приложений: https://sp-money.yandex.ru/myservices/admin.xml  
 Ссылка для управление доступом приложений: https://sp-money.yandex.ru/myservices/
