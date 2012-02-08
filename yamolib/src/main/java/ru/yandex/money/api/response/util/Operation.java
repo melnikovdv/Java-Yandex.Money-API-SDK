@@ -2,6 +2,7 @@ package ru.yandex.money.api.response.util;
 
 import ru.yandex.money.api.enums.MoneyDirection;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -10,7 +11,10 @@ import java.util.Date;
  * @author dvmelnikov
  */
 
-public class Operation {
+public class Operation implements Serializable {
+
+    private static final long serialVersionUID = -8165150792250463801L;
+    
     protected String operationId;
     protected String patternId;
     protected MoneyDirection direction;

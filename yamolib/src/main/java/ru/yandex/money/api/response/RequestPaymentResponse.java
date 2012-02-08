@@ -4,6 +4,7 @@ import ru.yandex.money.api.enums.MoneySource;
 import ru.yandex.money.api.enums.Status;
 import ru.yandex.money.api.response.util.money.PaymentMethods;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 /**
@@ -13,8 +14,10 @@ import java.math.BigDecimal;
  * @author dvmelnikov
  */
 
-public class RequestPaymentResponse {
+public class RequestPaymentResponse implements Serializable {
 
+    private static final long serialVersionUID = -2187147998780277482L;
+    
     private Status status;
     private String error;
     private PaymentMethods moneySource;

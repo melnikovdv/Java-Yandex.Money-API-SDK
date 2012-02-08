@@ -1,5 +1,7 @@
 package ru.yandex.money.api.response;
 
+import java.io.Serializable;
+
 /**
  * <p>Класс для возврата результата метода receiveOAuthToken</p>
  * <b>Внимание</b>: при неуспешном результате операции все поля, кроме error и
@@ -7,7 +9,9 @@ package ru.yandex.money.api.response;
  * @author dvmelnikov
  */
 
-public class ReceiveOAuthTokenResponse {
+public class ReceiveOAuthTokenResponse implements Serializable {
+
+    private static final long serialVersionUID = -6557808563221514650L;
 
     private String error;
     private String accessToken;

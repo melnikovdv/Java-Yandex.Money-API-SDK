@@ -2,6 +2,7 @@ package ru.yandex.money.api.response;
 
 import ru.yandex.money.api.enums.Status;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 /**
@@ -11,7 +12,9 @@ import java.math.BigDecimal;
  * @author dvmelnikov
  */
 
-public class ProcessPaymentResponse {
+public class ProcessPaymentResponse implements Serializable {
+
+    private static final long serialVersionUID = -7677898505314637271L;
 
     private Status status;
     private String error;

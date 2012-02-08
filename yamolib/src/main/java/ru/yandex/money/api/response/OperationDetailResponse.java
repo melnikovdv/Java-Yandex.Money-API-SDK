@@ -11,6 +11,8 @@ import ru.yandex.money.api.response.util.Operation;
  */
 public class OperationDetailResponse extends Operation {
 
+    private static final long serialVersionUID = -8469292472444798257L;
+
     private String error;
     private String sender;
     private String recipient;

@@ -1,5 +1,6 @@
 package ru.yandex.money.api.response;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 /**
@@ -9,8 +10,10 @@ import java.math.BigDecimal;
  * @author dvmelnikov
  */
 
-public class AccountInfoResponse {
+public class AccountInfoResponse implements Serializable {
 
+    private static final long serialVersionUID = -5030821635331803325L;
+    
     private String account;
     private BigDecimal balance;
     private String currency;

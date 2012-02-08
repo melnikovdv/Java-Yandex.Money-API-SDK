@@ -2,6 +2,7 @@ package ru.yandex.money.api.response;
 
 import ru.yandex.money.api.response.util.Operation;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -22,8 +23,10 @@ import java.util.List;
  * @author dvmelnikov
  */
 
-public class OperationHistoryResponse {
+public class OperationHistoryResponse implements Serializable {
 
+    private static final long serialVersionUID = 7329380614477144397L;
+    
     private String error;
     private Integer nextRecord;
     private List<Operation> operations;

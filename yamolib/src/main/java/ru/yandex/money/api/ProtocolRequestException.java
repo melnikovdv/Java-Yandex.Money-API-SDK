@@ -8,6 +8,8 @@ package ru.yandex.money.api;
  */
 public class ProtocolRequestException extends RuntimeException {
 
+    private static final long serialVersionUID = 4192097904020534835L;
+
     ProtocolRequestException(String s) {
         super(s);
     }
