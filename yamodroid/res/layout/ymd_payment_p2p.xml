@@ -76,8 +76,7 @@
                     android:layout_height="wrap_content"
                     style="@style/ym.ui.button"
                     android:id="@+id/btn_send_p2p"
-                    android:text="Перевести со счета"
-                    android:width="150dp"
+                    android:text="Перевести со счета"                    
                     android:layout_gravity="left"
                     android:layout_marginTop="10dp"
                     />

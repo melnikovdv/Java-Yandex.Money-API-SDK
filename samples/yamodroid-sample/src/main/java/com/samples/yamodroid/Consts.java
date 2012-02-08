@@ -20,12 +20,8 @@ public class Consts {
         scope.add(new OperationHistory());
         scope.add(new OperationDetails());
         scope.add(new MoneySource(true, true));
-        scope.add(new PaymentP2P().limit(30, "1000"));
-        //    scope.add(new PaymentShop().limit(1, "100"));
-        scope.add(new Payment(Destination.toPattern, "337", 1, "100"));
-        scope.add(new Payment(Destination.toPattern, "335", 1, "100"));
-        scope.add(new Payment(Destination.toPattern, "343", 1, "100"));
-        scope.add(new Payment(Destination.toPattern, "928", 1, "100"));
+        scope.add(new PaymentP2P().limit(30, "100"));
+        scope.add(new Payment(Destination.toPattern, "337", 1, "10"));        
         return scope;
     }
 }

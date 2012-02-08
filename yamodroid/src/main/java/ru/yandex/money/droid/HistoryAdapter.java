@@ -2,11 +2,14 @@ package ru.yandex.money.droid;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 import ru.yandex.money.api.enums.MoneyDirection;
 import ru.yandex.money.api.response.util.Operation;
@@ -57,12 +60,10 @@ class HistoryAdapter extends ArrayAdapter {
                             parent, false);
 
             holder = new ViewHolder();
-            holder.header = (TextView) convertView
-                    .findViewById(R.id.header);
-            holder.date = (TextView) convertView
-                    .findViewById(R.id.date);
-            holder.sum = (TextView) convertView
-                    .findViewById(R.id.sum);
+            holder.header = (TextView) convertView.findViewById(R.id.header);
+            holder.date = (TextView) convertView.findViewById(R.id.date);
+            holder.sum = (TextView) convertView.findViewById(R.id.sum);
+            holder.image = (ImageView) convertView.findViewById(R.id.img_direction);
 
             convertView.setTag(holder);
         } else {
@@ -75,16 +76,22 @@ class HistoryAdapter extends ArrayAdapter {
         String df = DateFormat.getDateInstance().format(op.getDatetime());
         holder.date.setText(df);
         String sum = op.getAmount().toString();
+        Bitmap source = null;
         if (op.getDirection() == MoneyDirection.in)
-            sum = "+" + sum;
+////            sum = "+" + sum;
+            source = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_plus);
         else
-            sum = "-" + sum;
+////            sum = "-" + sum;
+            source = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_minus_g);
+            
+        holder.image.setImageBitmap(source);
         holder.sum.setText(sum);
 
         return convertView;
     }
 
     class ViewHolder {
+        ImageView image;
         TextView header;
         TextView date;
         TextView sum;

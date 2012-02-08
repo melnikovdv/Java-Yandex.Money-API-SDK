@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="vertical"
-              android:layout_width="fill_parent"
-              android:layout_height="fill_parent"
+              style="@style/container.full"
         >
     <TextView
             style="@style/Control"
@@ -31,63 +30,69 @@
             />
 
     <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content">
-        <TextView
-                style="@style/ControlInLine"
-                android:text="Номер счета: "
-                />
-        <TextView
-                style="@style/ControlInLine"
-                android:id="@+id/tvAccount"
-                />
-    </LinearLayout>
-
-    <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content">
-        <TextView
-                style="@style/ControlInLine"
-                android:text="Баланс: "
-                />
-        <TextView
-                style="@style/ControlInLine"
-                android:id="@+id/tvBalance"
-                />
-        <TextView
-                style="@style/ControlInLine"
-                android:text="Валюта: "
-                />
-        <TextView
-                style="@style/ControlInLine"
-                android:id="@+id/tvCurrency"
-                />
-
-    </LinearLayout>
-
-    <Button
-            style="@style/Control"
-            android:id="@+id/btnHistory"
-            android:text="Показать историю"
-            />
-
-    <RelativeLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
+           style="@style/ym.wrapped"
+           android:id="@+id/ll_funcs"
+           android:orientation="vertical"
             >
+        <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content">
+            <TextView
+                    style="@style/ControlInLine"
+                    android:text="Номер счета: "
+                    />
+            <TextView
+                    style="@style/ControlInLine"
+                    android:id="@+id/tvAccount"
+                    />
+        </LinearLayout>
+
+        <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content">
+            <TextView
+                    style="@style/ControlInLine"
+                    android:text="Баланс: "
+                    />
+            <TextView
+                    style="@style/ControlInLine"
+                    android:id="@+id/tvBalance"
+                    />
+            <TextView
+                    style="@style/ControlInLine"
+                    android:text="Валюта: "
+                    />
+            <TextView
+                    style="@style/ControlInLine"
+                    android:id="@+id/tvCurrency"
+                    />
+
+        </LinearLayout>
 
         <Button
-                style="@style/ControlInLine"
-                android:id="@+id/btnP2p"
-                android:text="перевод p2p"
-                android:width="150dp"
+                style="@style/Control"
+                android:id="@+id/btnHistory"
+                android:text="Показать историю"
                 />
-        <Button
-                style="@style/ControlInLine"
-                android:id="@+id/btnShop"
-                android:text="оплата в магазин"
-                android:width="150dp"
-                android:layout_alignParentRight="true"
-                />
-    </RelativeLayout>
+
+        <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                >
+
+            <Button
+                    style="@style/ControlInLine"
+                    android:id="@+id/btnP2p"
+                    android:text="перевод p2p"
+                    android:width="140dp"
+                    />
+            <Button
+                    style="@style/ControlInLine"
+                    android:id="@+id/btnShop"
+                    android:text="оплата в магазин"
+                    android:width="140dp"
+                    android:layout_alignParentRight="true"
+                    />
+        </RelativeLayout>
+    </LinearLayout>
 </LinearLayout>

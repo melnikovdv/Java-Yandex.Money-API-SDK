@@ -46,9 +46,9 @@
             <Button
                     style="@style/ym.ui.button"
                     android:id="@+id/btn_send_p2p"
-                    android:text="Оплатить со счета"
-                    android:layout_marginTop="10dp"
+                    android:text="Оплатить со счета"                    
                     android:visibility="visible"
+                    android:layout_marginTop="10dp"
                     />
 
             <LinearLayout
@@ -77,7 +77,7 @@
                 <Button
                         style="@style/ym.ui.button"
                         android:id="@+id/btn_send_card"
-                        android:text="Оплатить с карты"
+                        android:text="Оплатить с карты"                        
                         />
             </LinearLayout>
         </LinearLayout>

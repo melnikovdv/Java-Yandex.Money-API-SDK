@@ -7,6 +7,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import ru.yandex.money.api.InsufficientScopeException;
@@ -36,12 +37,15 @@ public class GreatAppActivity extends Activity {
     private TextView tvBalance;
     private TextView tvCurrency;
     private Button btnAuth;
+    private LinearLayout llFuncs;
 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
+
+        llFuncs = (LinearLayout) findViewById(R.id.ll_funcs);
 
         btnAuth = (Button) findViewById(R.id.btnAuth);
         btnAuth.setOnClickListener(new View.OnClickListener() {
@@ -58,8 +62,7 @@ public class GreatAppActivity extends Activity {
                 } else { // Если уже авторизован, то выходим
                     storeToken("");
                 }
-                renewAuthCaptions();
-                renewAccountInfo();
+                refresh();
             }
         });
 
@@ -126,8 +129,20 @@ public class GreatAppActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
+        refresh();
+    }
+
+    private void refresh() {
+        visibleFunctions();
         renewAuthCaptions();
         renewAccountInfo();
+    }
+
+    private void visibleFunctions() {
+        if (isAuthorized(false)) 
+            llFuncs.setVisibility(View.VISIBLE);
+        else
+            llFuncs.setVisibility(View.GONE);
     }
 
     private void renewAccountInfo() {
