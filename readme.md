@@ -37,10 +37,12 @@ GettingStarted Maven-плагина для Android [тут](http://code.google.c
 
 ### Changelog
 
-**08.02.2012 yamolib 1.1.0**
+**08.02.2012 yamolib 1.1.0** (спасибо [axet](https://github.com/axet))
 
 * response-объекты стали serializable
 * мелкие баги поправлены
+* client_secret добавлен
+
     
 **07.02.2012 yamodroid 1.0.0**
 
