@@ -38,11 +38,14 @@ GettingStarted Maven-плагина для Android [тут](http://code.google.c
 ### Changelog
 
 **08.02.2012 yamolib 1.1.0**
+
 * response-объекты стали serializable
 * мелкие баги поправлены
     
 **07.02.2012 yamodroid 1.0.0**
+
 * создана библиотека для android
     
 **01.02.2012 aggregator**
+
 * поддержка maven
