@@ -34,3 +34,15 @@
 GettingStarted Maven-плагина для Android [тут](http://code.google.com/p/maven-android-plugin/wiki/GettingStarted).
 
 Чтобы создать файлы проекта для вашей среды разработки, нужно в каталоге какого-либо проекта выполнить команду `mvn idea:idea` или `mvn eclipse:eclipse` в зависимости от вашей IDE. NetBeans не упомянут в виду отсутствия у него плагина для android-разработки.
+
+### Changelog
+
+*08.02.2012 yamolib 1.1.0*
+    * response-объекты стали serializable
+    * мелкие баги поправлены
+    
+*07.02.2012 yamodroid 1.0.0*
+    * создана библиотека для android
+    
+*01.02.2012 aggregator*
+    * поддержка maven
