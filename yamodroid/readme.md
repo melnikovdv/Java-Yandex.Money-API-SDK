@@ -6,6 +6,7 @@
 
 Библиотека позволяет использовать возможности [API Яндекс.Денег](http://api.yandex.ru/money/) в вашем android-приложении.  
 Она работает на основе библиотеки [yamolib](https://github.com/melnikovdv/Java-Yandex.Money-API-SDK/tree/master/yamolib).
+Прежде, чем работать с библиотекой yamodroid изучите описание [yamolib](https://github.com/melnikovdv/Java-Yandex.Money-API-SDK/blob/master/yamolib/readme.md)
 
 #### Возможности
 

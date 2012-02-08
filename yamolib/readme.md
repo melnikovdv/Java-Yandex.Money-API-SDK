@@ -70,7 +70,8 @@ yamolib - java-библиотека API Яндекс.Денег
       codeReqUri = ym.authorizeUri(scope, Consts.REDIRECT_URI);    
       response.sendRedirect(codeReqUri);
 
-      // Затем на странице редиректа выполняем обмен временного кода на постоянный токен доступа
+Затем на странице редиректа выполняем обмен временного кода на постоянный токен доступа
+
       String code = request.getParameter("code");
       ReceiveOAuthTokenResponse resp = ym.receiveOAuthToken(code, Consts.REDIRECT_URI);
       if (resp.isSuccess()) {
@@ -104,3 +105,13 @@ yamolib - java-библиотека API Яндекс.Денег
 * зарегистрировать приложение, т.е. получить идентификатор клиента (https://sp-money.yandex.ru/myservices/new.xml) и прописать его в константы примеров (src\client\Consts.java);
 * изменить `REDIRECT_URI` (`src/client/Consts.java`), если отличается; 	
 * скомпилировать и запустить веб-приложение.
+
+#### Пример сборки maven war файла:
+
+git clone PROJECT_GIT_URL
+cd ymapi
+mvn clean package
+cp ymwar/target/ymwar.war /var/lib/tomcat6/webapps
+
+Ссылка администирования приложений: https://sp-money.yandex.ru/myservices/admin.xml
+Ссылка для управление доступом приложений: https://sp-money.yandex.ru/myservices/
