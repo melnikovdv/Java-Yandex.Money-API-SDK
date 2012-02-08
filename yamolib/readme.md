@@ -108,10 +108,10 @@ yamolib - java-библиотека API Яндекс.Денег
 
 #### Пример сборки maven war файла:
 
-git clone PROJECT_GIT_URL
-cd ymapi
-mvn clean package
+git clone PROJECT_GIT_URL  
+cd ymapi  
+mvn clean package  
 cp ymwar/target/ymwar.war /var/lib/tomcat6/webapps
 
-Ссылка администирования приложений: https://sp-money.yandex.ru/myservices/admin.xml
+Ссылка администирования приложений: https://sp-money.yandex.ru/myservices/admin.xml  
 Ссылка для управление доступом приложений: https://sp-money.yandex.ru/myservices/
