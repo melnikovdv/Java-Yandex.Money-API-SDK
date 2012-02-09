@@ -37,6 +37,7 @@ public class DetailHistoryActivity extends Activity {
     private TextView message;
     private TextView accCaption;
     private TextView acc;
+    private TextView direction;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +54,8 @@ public class DetailHistoryActivity extends Activity {
         title.setText("");
         sum = (TextView) findViewById(R.id.tvSum);
         sum.setText("");
+        direction = (TextView) findViewById(R.id.tv_direction);
+        direction.setText("");
         date = (TextView) findViewById(R.id.tvDate);
         date.setText("");
         details = (TextView) findViewById(R.id.tvDetails);
@@ -98,12 +101,14 @@ public class DetailHistoryActivity extends Activity {
                 if (resp.isSuccess()) {
                     title.setText(resp.getTitle());
                     if (resp.getDirection() == MoneyDirection.in) {
-                        sum.setText("+" + resp.getAmount());
+                        sum.setText(resp.getAmount().toString());
+                        direction.setText("приход");
                         accCaption.setText("Отправитель:");
                         acc.setText(resp.getSender());
 
                     } else {
-                        sum.setText("-" + resp.getAmount());
+                        sum.setText(resp.getAmount().toString());
+                        direction.setText("расход");
                         accCaption.setText("Получатель:");
                         acc.setText(resp.getRecipient());
                     }

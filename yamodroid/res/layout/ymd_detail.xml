@@ -40,6 +40,16 @@
 
             <TextView
                     style="@style/ym.fullwidth.small"
+                    android:text="Тип:"
+                    />
+            <TextView
+                    android:id="@+id/tv_direction"
+                    style="@style/YmHistDetailCtrl"
+                    android:text="приход"
+                    />
+
+            <TextView
+                    style="@style/ym.fullwidth.small"
                     android:text="Дата:"
                     />
             <TextView
