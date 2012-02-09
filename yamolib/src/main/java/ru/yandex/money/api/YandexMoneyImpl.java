@@ -12,6 +12,7 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.params.CoreProtocolPNames;
 import ru.yandex.money.api.enums.MoneySource;
 import ru.yandex.money.api.enums.OperationHistoryType;
 import ru.yandex.money.api.response.*;
@@ -59,7 +60,7 @@ public class YandexMoneyImpl implements YandexMoney, Serializable {
      */
     public YandexMoneyImpl(final String clientId) {
 //        this(clientId, new SingleClientConnManager(null, new SchemeRegistry()), null);
-        this(clientId, new DefaultHttpClient());
+        this(clientId, null);                
     }
 
     /**
@@ -72,8 +73,15 @@ public class YandexMoneyImpl implements YandexMoney, Serializable {
     public YandexMoneyImpl(final String clientId, HttpClient client) {
         if (clientId == null || (clientId.equals("")))
             throw new IllegalArgumentException("client_id is empty");
+
+        HttpClient httpClient = client;
+        if (httpClient == null) {
+            httpClient = new DefaultHttpClient();
+            httpClient.getParams().setParameter(CoreProtocolPNames.USER_AGENT, USER_AGENT);
+        }                   
+        
         this.clientId = clientId;
-        this.client = client;
+        this.client = httpClient;
     }
 
     public String authorizeUri(Collection<Permission> scope,
@@ -272,8 +280,7 @@ public class YandexMoneyImpl implements YandexMoney, Serializable {
 
         if (accessToken != null)
             post.addHeader("Authorization", "Bearer " + accessToken);
-        
-        post.setHeader("User-Agent", USER_AGENT);
+                        
         return client.execute(post);
     }
 
