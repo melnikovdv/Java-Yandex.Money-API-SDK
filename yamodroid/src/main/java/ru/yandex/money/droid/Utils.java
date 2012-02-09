@@ -26,7 +26,7 @@ public class Utils {
             return ymObjects.get(clientId);
         else {
             YandexMoney ym = new YandexMoneyImpl(clientId,
-                    AndroidHttpClient.newInstance("AndroidHttpClient"));
+                    AndroidHttpClient.newInstance(Consts.USER_AGENT));
             ymObjects.put(clientId, ym);
             return ym;
         }

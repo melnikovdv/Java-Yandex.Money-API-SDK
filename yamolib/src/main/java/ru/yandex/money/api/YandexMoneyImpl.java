@@ -48,6 +48,7 @@ public class YandexMoneyImpl implements YandexMoney, Serializable {
      * Кодировка для url encoding/decoding
      */
     private static String CHARSET = "UTF-8";
+    private static String USER_AGENT = "yamolib";
 
     /**
      * Создает экземпляр класса. Внутри создается httpClient
@@ -271,6 +272,8 @@ public class YandexMoneyImpl implements YandexMoney, Serializable {
 
         if (accessToken != null)
             post.addHeader("Authorization", "Bearer " + accessToken);
+        
+        post.setHeader("User-Agent", USER_AGENT);
         return client.execute(post);
     }
 
