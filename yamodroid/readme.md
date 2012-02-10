@@ -6,7 +6,7 @@
 
 Библиотека позволяет использовать возможности [API Яндекс.Денег](http://api.yandex.ru/money/) в вашем android-приложении.  
 Она работает на основе библиотеки [yamolib](https://github.com/melnikovdv/Java-Yandex.Money-API-SDK/tree/master/yamolib).
-Прежде, чем работать с библиотекой yamodroid изучите описание [yamolib](https://github.com/melnikovdv/Java-Yandex.Money-API-SDK/blob/master/yamolib/readme.md). 
+Прежде, чем работать с библиотекой yamodroid посмотрите описание библиотеки [yamolib](https://github.com/melnikovdv/Java-Yandex.Money-API-SDK/blob/master/yamolib/readme.md). 
 
 #### Возможности
 
@@ -25,7 +25,7 @@
 Чтобы удобно и просто передавать параметры в Activities библиотеки предусмотрен специальный объект `IntentCreator`, 
 который облегчит создание intent'а и передачу в него параметров.
 
-**Системные требования библиотеки**: Android SDK версии 7 и транзитивные требования библиотеки [yamolib](https://github.com/melnikovdv/Java-Yandex.Money-API-SDK/tree/master/yamolib).
+**Системные требования**: Android SDK версии 7 и транзитивные требования библиотеки [yamolib](https://github.com/melnikovdv/Java-Yandex.Money-API-SDK/tree/master/yamolib).
    
 **На заметку**: 
 *Если вы хотите создать свои формы или использовать некоторые возможности API в фоне, ничего
@@ -34,7 +34,9 @@
 
 ### Установка и настройка
 
-Это android-библиотека, а это значит, что она содержит ресурсы, манифест и прочее специфичное для платформы android. 
+Структуру проектов, changelog и ссылки на инструменты для сборки можно посмотреть в [описании проекта](https://github.com/melnikovdv/Java-Yandex.Money-API-SDK/blob/master/readme.md). 
+
+Этот проект - это android-библиотека, а это значит, что она содержит ресурсы, манифест и прочее специфичное для платформы android. 
 Их нужно правильным способом добавить в свое приложение.
 
 #### Первый и самый простой способ
@@ -46,7 +48,7 @@
 #### Второй способ
 
 Если вы не используете Maven в своих проектах, то можете собрать проект командой `mvn package`. После этого у вас появится 
-файл `target\yamodroid-x.x.x-SNAPSHOT.apklib`. Этот файл вы можете переименовать в .zip и затем скопировать 
+файл `target\yamodroid-x.x.x-SNAPSHOT.apklib`. Этот файл вы можете переименовать в .zip и затем разархивировать  
 содержимое (ресурсы, манифест, исходники) в свое приложение.
 
 #### Третий способ
