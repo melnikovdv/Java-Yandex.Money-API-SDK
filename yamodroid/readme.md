@@ -25,7 +25,7 @@
 Чтобы удобно и просто передавать параметры в Activities библиотеки предусмотрен специальный объект `IntentCreator`, 
 который облегчит создание intent'а и передачу в него параметров.
 
-Системные требования библиотеки: Android SDK версии 7 и наследование требований [yamolib](https://github.com/melnikovdv/Java-Yandex.Money-API-SDK/tree/master/yamolib)
+**Системные требования библиотеки**: Android SDK версии 7 и транзитивные требования библиотеки [yamolib](https://github.com/melnikovdv/Java-Yandex.Money-API-SDK/tree/master/yamolib).
    
 **На заметку**: 
 *Если вы хотите создать свои формы или использовать некоторые возможности API в фоне, ничего
