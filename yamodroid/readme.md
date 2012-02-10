@@ -6,7 +6,7 @@
 
 Библиотека позволяет использовать возможности [API Яндекс.Денег](http://api.yandex.ru/money/) в вашем android-приложении.  
 Она работает на основе библиотеки [yamolib](https://github.com/melnikovdv/Java-Yandex.Money-API-SDK/tree/master/yamolib).
-Прежде, чем работать с библиотекой yamodroid изучите описание [yamolib](https://github.com/melnikovdv/Java-Yandex.Money-API-SDK/blob/master/yamolib/readme.md).
+Прежде, чем работать с библиотекой yamodroid изучите описание [yamolib](https://github.com/melnikovdv/Java-Yandex.Money-API-SDK/blob/master/yamolib/readme.md). 
 
 #### Возможности
 
@@ -16,11 +16,21 @@
 * Перевод денежных средств на другие счета (p2p)
 * Оплата в магазины
 
+Для всех указанных возможностей реализованы готовые к использованию формы, поэтому для 
+внедрения в приложение требуется минимум усилий. 
+
 Все перечисленные выше возможности - это Activity. Их можно запустить с помощью обычного Intent'а и 
 обработать результат с помощью onActivityResult. 
 
 Чтобы удобно и просто передавать параметры в Activities библиотеки предусмотрен специальный объект `IntentCreator`, 
-который облегчит создание intent'а и передачу в него параметров.   
+который облегчит создание intent'а и передачу в него параметров.
+
+Системные требования библиотеки: Android SDK версии 7 и наследование требований [yamolib](https://github.com/melnikovdv/Java-Yandex.Money-API-SDK/tree/master/yamolib)
+   
+*На заметку*
+   *Если вы хотите создать свои формы или использовать некоторые возможности API в фоне, ничего
+   не мешает сделать вызывать методы библиотеки [yamolib](https://github.com/melnikovdv/Java-Yandex.Money-API-SDK/tree/master/yamolib) напрямую.
+   Только следует помнить, что все этим операции обращаются к сети и делать вызовы следует в отдельном от UI потоке*
 
 ### Установка и настройка
 
