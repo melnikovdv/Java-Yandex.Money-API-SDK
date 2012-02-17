@@ -70,9 +70,10 @@ Manifest-файла библиотеки все Activity в Manifest вашег�
 Код вызова Intent'а:
 
     Intent intent = IntentCreator.createAuth(YourAppActivity, "YOUR_APP_CLIENT_ID",
-            YOUR_APP_REDIRECT_URI, Consts.getPermissions(), true);
+            YOUR_APP_REDIRECT_URI, getPermissions(), true);
     startActivityForResult(intent, CODE_AUTH);
     
+Чтобы авторизоваться, нужно указать права которые будут доступны пользователю. Как это сделать - более подробно показано в описании [yamolib](https://github.com/melnikovdv/Java-Yandex.Money-API-SDK/blob/master/yamolib) в секции [примеры использования](https://github.com/melnikovdv/Java-Yandex.Money-API-SDK/blob/master/yamolib/readme.md).  
 Код обработки результата
 
     if (requestCode == CODE_AUTH) {
