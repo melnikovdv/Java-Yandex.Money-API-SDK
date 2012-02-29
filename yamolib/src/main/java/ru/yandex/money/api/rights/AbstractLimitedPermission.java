@@ -27,6 +27,21 @@ public class AbstractLimitedPermission extends AbstractPermission {
         limit = "limit(" + duration + "," + sum + ")";
 
         if (!checkSum(sum))
+            throw new IllegalArgumentException("sum is not valid");               
+
+        return this;
+    }
+
+    /**
+     * Ограничение права на лимит платежа и количетсво платежей. Создает разрешение на 
+     * одноразовый платеж определенной суммы      
+     * @param sum лимит суммы
+     * @return само себя (право)
+     */
+    protected Permission limit(String sum) {
+        limit = "limit(," + sum + ")";
+
+        if (!checkSum(sum))
             throw new IllegalArgumentException("sum is not valid");
 
         return this;
