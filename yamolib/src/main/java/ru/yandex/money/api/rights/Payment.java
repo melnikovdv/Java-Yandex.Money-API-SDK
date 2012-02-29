@@ -18,4 +18,19 @@ public class Payment extends AbstractDestinationPermission {
             destinationToPattern(destination);
         this.limit(duration, sum);
     }
+
+    /**
+     * Одноразовый токен
+     * @param destinationType
+     * @param destination
+     * @param sum
+     */
+    public Payment(Destination destinationType, String destination, String sum) {
+        super("payment");
+        if (destinationType == Destination.toAccount)
+            destinationToAccount(destination);
+        if (destinationType == Destination.toPattern)
+            destinationToPattern(destination);
+        this.limit(sum);
+    }
 }
