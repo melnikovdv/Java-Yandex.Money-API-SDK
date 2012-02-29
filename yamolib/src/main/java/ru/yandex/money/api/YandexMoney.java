@@ -60,9 +60,8 @@ public interface YandexMoney {
      *                    указанному при регистрации приложения. При сравнении не учитываются индивидуальные
      *                    параметры приложения, которые могут быть добавлены в конец строки URI.
      * @param mobileMode      флаг выбора странички авторизации (мобильный сайт для true и обычный для false)
-     * @return URI, по которому нужно переидти для
-     *         инициации аутентификации
-     *         ошибка кодирования параметров uri
+     * @return URI, по которому нужно переидти для инициации авторизации
+     *         
      */
     public String authorizeUri(Collection<Permission> scope,
             String redirectUri, Boolean mobileMode);

@@ -97,7 +97,7 @@ public class YandexMoneyImpl implements YandexMoney, Serializable {
                     "&redirect_uri=" + URLEncoder
                     .encode(redirectUri, CHARSET);
         } catch (UnsupportedEncodingException e) {
-            throw new IllegalStateException("unsupprorted encoding error", e);
+            throw new IllegalStateException("unsupported encoding error", e);
         }
     }
 
