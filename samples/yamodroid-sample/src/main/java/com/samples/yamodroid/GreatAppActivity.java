@@ -17,6 +17,7 @@ import ru.yandex.money.api.response.AccountInfoResponse;
 import ru.yandex.money.droid.ActivityParams;
 import ru.yandex.money.droid.IntentCreator;
 import ru.yandex.money.droid.Utils;
+import ru.yandex.money.droid.YandexMoneyDroid;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -39,6 +40,9 @@ public class GreatAppActivity extends Activity {
     private Button btnAuth;
     private LinearLayout llFuncs;
 
+    private YandexMoneyDroid ymd = new YandexMoneyDroid(Consts.CLIENT_ID);
+    private MyDialogListener dialogListener = new MyDialogListener();
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -52,13 +56,16 @@ public class GreatAppActivity extends Activity {
             public void onClick(View view) {
                 // Если не авторизован, то авторизуемся по нажатию
                 if (!isAuthorized(false)) {
-                    Intent intent = IntentCreator.createAuth(
-                            GreatAppActivity.this,
-                            Consts.CLIENT_ID,
-                            Consts.REDIRECT_URI,
-                            Consts.getPermissions(),
-                            true);
-                    startActivityForResult(intent, CODE_AUTH);
+                    //                    Intent intent = IntentCreator.createAuth(
+                    //                            GreatAppActivity.this,
+                    //                            Consts.CLIENT_ID,
+                    //                            Consts.REDIRECT_URI,
+                    //                            Consts.getPermissions(),
+                    //                            true);
+                    //                    startActivityForResult(intent, CODE_AUTH);
+
+                    ymd.authorize(GreatAppActivity.this, 10, Consts.REDIRECT_URI, Consts.getPermissions(), true,
+                            dialogListener);
                 } else { // Если уже авторизован, то выходим
                     storeToken("");
                 }
@@ -73,10 +80,11 @@ public class GreatAppActivity extends Activity {
                 if (!isAuthorized(true))
                     return;
 
-                Intent historyIntent = IntentCreator.createHistory(
-                        GreatAppActivity.this, Consts.CLIENT_ID,
-                        restoreToken());
-                startActivity(historyIntent);
+//                Intent historyIntent = IntentCreator.createHistory(
+//                        GreatAppActivity.this, Consts.CLIENT_ID,
+//                        restoreToken());
+//                startActivity(historyIntent);
+                ymd.showHistory(GreatAppActivity.this, 11, restoreToken(), dialogListener);
             }
         });
 
@@ -139,7 +147,7 @@ public class GreatAppActivity extends Activity {
     }
 
     private void visibleFunctions() {
-        if (isAuthorized(false)) 
+        if (isAuthorized(false))
             llFuncs.setVisibility(View.VISIBLE);
         else
             llFuncs.setVisibility(View.GONE);
@@ -162,6 +170,8 @@ public class GreatAppActivity extends Activity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode,
             Intent data) {
+
+        ymd.callbackOnResult(requestCode, resultCode, data);
 
         if (requestCode == CODE_AUTH) {
             boolean isSuccess =
@@ -191,7 +201,7 @@ public class GreatAppActivity extends Activity {
                     "P2P payment result: " + isSuccess + "\npayment_id: " + paymentId + "\n" +
                             "error: " + error, Toast.LENGTH_LONG).show();
         }
-        
+
         if (requestCode == CODE_PAYMENT_SHOP) {
             boolean isSuccess =
                     data.getBooleanExtra(ActivityParams.PAYMENT_OUT_IS_SUCCESS,
@@ -223,7 +233,7 @@ public class GreatAppActivity extends Activity {
                         Toast.LENGTH_LONG).show();
             return false;
         } else
-        return true;
+            return true;
     }
 
     class LoadAccountInfoTask extends
@@ -260,5 +270,28 @@ public class GreatAppActivity extends Activity {
             return null;
         }
     }
+
+    private class MyDialogListener implements YandexMoneyDroid.DialogListener {
+        public void onSuccess(Bundle values) {
+            String token = values.getString(ActivityParams.AUTH_OUT_ACCESS_TOKEN);
+            if (token != null) 
+                storeToken(token);
+            Toast.makeText(GreatAppActivity.this, "Success. Access token = " + token, Toast.LENGTH_LONG).show();
+        }
+
+        public void onFail(String cause) {
+            Toast.makeText(GreatAppActivity.this, "Fail: " + cause, Toast.LENGTH_LONG).show();
+        }
+
+        public void onException(Exception exception) {
+            Toast.makeText(GreatAppActivity.this, "Exception: " + exception.getClass().getName(), Toast.LENGTH_LONG)
+                    .show();
+        }
+
+        public void onCancel() {
+            Toast.makeText(GreatAppActivity.this, "Cancelled", Toast.LENGTH_LONG).show();
+        }
+    }
+
 }
 

@@ -91,17 +91,17 @@ public class AuthActivity extends Activity {
                     ym.receiveOAuthToken(code,
                             redirectUri);
             if (resp.isSuccess()) {
-                return new ReceiveTokenResp(resp.getAccessToken(), null);
+                return new ReceiveTokenResp(resp.getAccessToken(), null, null);
             } else {
                 return new ReceiveTokenResp(resp.getAccessToken(),
-                        resp.getError());
+                        resp.getError(), null);
             }
         } catch (IOException e) {
             e.printStackTrace();
-            return new ReceiveTokenResp(null, e.getMessage());
+            return new ReceiveTokenResp(null, null, e);
         } catch (InsufficientScopeException e) {
             e.printStackTrace();
-            return new ReceiveTokenResp(null, e.getMessage());
+            return new ReceiveTokenResp(null, e.getMessage(), e);
         }
     }
 
@@ -121,7 +121,8 @@ public class AuthActivity extends Activity {
                 authResult.putExtra(ActivityParams.AUTH_OUT_ACCESS_TOKEN, resp.getToken());
                 authResult.putExtra(ActivityParams.AUTH_OUT_ERROR, resp.getError());
                 authResult.putExtra(ActivityParams.AUTH_OUT_IS_SUCCESS, resp.isSuccess());
-
+                authResult.putExtra(ActivityParams.AUTH_OUT_EXCEPTION, resp.getException());
+                
                 if (resp.isSuccess())
                     AuthActivity.this.setResult(Activity.RESULT_OK, authResult);
                 else
@@ -173,6 +174,7 @@ public class AuthActivity extends Activity {
             result.putExtra(ActivityParams.AUTH_OUT_IS_SUCCESS, response.isSuccess());
             result.putExtra(ActivityParams.AUTH_OUT_ACCESS_TOKEN, response.getToken());
             result.putExtra(ActivityParams.AUTH_OUT_ERROR, response.getError());
+            result.putExtra(ActivityParams.AUTH_OUT_EXCEPTION, response.getException());            
 
             boolean showResultDialog = getIntent()
                     .getBooleanExtra(AuthActivity.AUTH_IN_SHOW_RES_DLG, false);
@@ -182,7 +184,7 @@ public class AuthActivity extends Activity {
                 resDlg.show();
             } else {
                 if (response.isSuccess())
-                    setResult(Activity.RESULT_OK, result);
+                    setResult(Activity.RESULT_OK, result);                
                 else
                     setResult(Activity.RESULT_CANCELED, result);
                 finish();
@@ -196,14 +198,16 @@ public class AuthActivity extends Activity {
     }
 
     private class ReceiveTokenResp {
-        private String token;
-        private String error;
-        private boolean success;
+        private final String token;
+        private final String error;
+        private final boolean success;
+        private final Exception exception;
 
-        public ReceiveTokenResp(String token, String error) {
+        public ReceiveTokenResp(String token, String error, Exception exception) {
             success = token != null;
             this.token = token;
             this.error = error;
+            this.exception = exception; 
         }
 
         public String getToken() {
@@ -216,6 +220,10 @@ public class AuthActivity extends Activity {
 
         public boolean isSuccess() {
             return success;
+        }
+
+        public Exception getException() {
+            return exception;
         }
     }
 }

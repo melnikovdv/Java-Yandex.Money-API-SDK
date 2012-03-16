@@ -16,7 +16,7 @@ import java.io.IOException;
  * @author dvmelnikov
  */
 
-class LoadHistoryTask extends AsyncTask<Integer, Void, OperationHistoryResponse> {
+class LoadHistoryTask extends AsyncTask<Integer, Void, LoadHistoryTask.HistoryResp> {
 
     private final Activity context;
     private String error;
@@ -41,45 +41,61 @@ class LoadHistoryTask extends AsyncTask<Integer, Void, OperationHistoryResponse>
     }
 
     @Override
-    protected void onPostExecute(OperationHistoryResponse resp) {
-        if ((resp == null) || (error != null)) {
-            Intent intent = new Intent();
-            intent.putExtra(ActivityParams.HISTORY_OUT_IS_SUCCESS, false);
-            intent.putExtra(ActivityParams.HISTORY_OUT_ERROR, error);
-            context.setResult(Activity.RESULT_CANCELED, intent);
-            context.finish();
-        } else {
-            if (resp.isSuccess()) {
-                for (Operation op : resp.getOperations())
+    protected void onPostExecute(HistoryResp resp) {                
+        if (resp.getException() == null) {
+            if (resp.getResponse().isSuccess()) {
+                for (Operation op : resp.getResponse().getOperations())
                     historyAdapter.add(op);
             } else {
                 Intent intent = new Intent();
                 intent.putExtra(ActivityParams.HISTORY_OUT_IS_SUCCESS, false);
-                intent.putExtra(ActivityParams.HISTORY_OUT_ERROR, resp.getError());
+                intent.putExtra(ActivityParams.HISTORY_OUT_ERROR, resp.getResponse().getError());
                 context.setResult(Activity.RESULT_CANCELED, intent);
                 context.finish();
             }
-        }
-
+        } else {
+            Intent intent = new Intent();
+            intent.putExtra(ActivityParams.HISTORY_OUT_IS_SUCCESS, false);            
+            intent.putExtra(ActivityParams.HISTORY_OUT_EXCEPTION, resp.getException());
+            context.setResult(Activity.RESULT_CANCELED, intent);
+            context.finish();
+        }               
         dialog.dismiss();
     }
 
     @Override
-    protected OperationHistoryResponse doInBackground(Integer... params) {
+    protected HistoryResp doInBackground(Integer... params) {
         YandexMoney ym = Utils.getYandexMoney(clientId);
         try {
-            return ym.operationHistory(accessToken, params[0]);
-
+            OperationHistoryResponse resp = ym.operationHistory(accessToken, params[0]);
+            return new HistoryResp(resp, null);            
         } catch (IOException e) {
             e.printStackTrace();
-            error = e.getMessage();
+            return new HistoryResp(null, e);
         } catch (InvalidTokenException e) {
             e.printStackTrace();
-            error = e.getMessage();
+            return new HistoryResp(null, e);
         } catch (InsufficientScopeException e) {
             e.printStackTrace();
-            error = e.getMessage();
+            return new HistoryResp(null, e);
+        }        
+    }
+
+    class HistoryResp {        
+        private final OperationHistoryResponse response;
+        private final Exception exception;
+
+        public HistoryResp(OperationHistoryResponse response, Exception exception) {
+            this.response = response;
+            this.exception = exception;
         }
-        return null;
+
+        public OperationHistoryResponse getResponse() {
+            return response;
+        }
+
+        public Exception getException() {
+            return exception;
+        }
     }
 }

@@ -17,8 +17,8 @@ public class Consts {
     public static Collection<Permission> getPermissions() {
         Collection<Permission> scope = new LinkedList<Permission>();
         scope.add(new AccountInfo());
-        scope.add(new OperationHistory());
-        scope.add(new OperationDetails());
+//        scope.add(new OperationHistory());
+//        scope.add(new OperationDetails());
         scope.add(new MoneySource(true, true));
         scope.add(new PaymentP2P().limit(30, "100"));
         scope.add(new Payment(Destination.toPattern, "337", 1, "10"));        
