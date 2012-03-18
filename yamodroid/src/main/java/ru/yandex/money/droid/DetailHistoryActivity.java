@@ -73,15 +73,29 @@ public class DetailHistoryActivity extends Activity {
     @Override
     public void onBackPressed() {
         Intent intent = new Intent();
-        intent.putExtra(ActivityParams.HISTORY_OUT_IS_SUCCESS, true);
-        this.setResult(Activity.RESULT_OK, intent);
+        intent.putExtra(ActivityParams.HISTORY_DETAIL_OUT_IS_SUCCESS, true);
+        this.setResult(Activity.RESULT_CANCELED, intent);
         finish();
     }
 
-    public class LoadDetailTask extends AsyncTask<String, Void, OperationDetailResponse> {
+    public class LoadDetailTask extends AsyncTask<String, Void, HistoryDetailResp> {
 
         private ProgressDialog dialog;
-        private String error;
+
+        @Override
+        protected HistoryDetailResp doInBackground(String... params) {
+            YandexMoney ym = Utils.getYandexMoney(clientId);
+            try {
+                OperationDetailResponse resp = ym.operationDetail(accessToken, params[0]);
+                return new HistoryDetailResp(resp, null);
+            } catch (IOException e) {
+                return new HistoryDetailResp(null, e);
+            } catch (InvalidTokenException e) {
+                return new HistoryDetailResp(null, e);
+            } catch (InsufficientScopeException e) {
+                return new HistoryDetailResp(null, e);
+            }
+        }
 
         @Override
         protected void onPreExecute() {
@@ -90,62 +104,60 @@ public class DetailHistoryActivity extends Activity {
         }
 
         @Override
-        protected void onPostExecute(OperationDetailResponse resp) {
-            if ((resp == null) || (error != null)) {
-                Intent intent = new Intent();
-                intent.putExtra(ActivityParams.HISTORY_OUT_IS_SUCCESS, false);
-                intent.putExtra(ActivityParams.HISTORY_OUT_ERROR, error);
-                context.setResult(Activity.RESULT_CANCELED, intent);
-                context.finish();
-            } else {
-                if (resp.isSuccess()) {
-                    title.setText(resp.getTitle());
-                    if (resp.getDirection() == MoneyDirection.in) {
-                        sum.setText(resp.getAmount().toString());
+        protected void onPostExecute(HistoryDetailResp resp) {
+            if (resp.getException() == null) {
+                if (resp.getResponse().isSuccess()) {
+                    title.setText(resp.getResponse().getTitle());
+                    if (resp.getResponse().getDirection() == MoneyDirection.in) {
+                        sum.setText(resp.getResponse().getAmount().toString());
                         direction.setText("приход");
                         accCaption.setText("Отправитель:");
-                        acc.setText(resp.getSender());
+                        acc.setText(resp.getResponse().getSender());
 
                     } else {
-                        sum.setText(resp.getAmount().toString());
+                        sum.setText(resp.getResponse().getAmount().toString());
                         direction.setText("расход");
                         accCaption.setText("Получатель:");
-                        acc.setText(resp.getRecipient());
+                        acc.setText(resp.getResponse().getRecipient());
                     }
 
-                    String df = DateFormat.getDateInstance().format(resp.getDatetime());
+                    String df = DateFormat.getDateInstance().format(resp.getResponse().getDatetime());
                     date.setText(df);
-                    details.setText(resp.getDetails());
-                    message.setText(resp.getMessage());
+                    details.setText(resp.getResponse().getDetails());
+                    message.setText(resp.getResponse().getMessage());
                 } else {
                     Intent intent = new Intent();
-                    intent.putExtra(ActivityParams.HISTORY_OUT_IS_SUCCESS, false);
-                    intent.putExtra(ActivityParams.HISTORY_OUT_ERROR, resp.getError());
+                    intent.putExtra(ActivityParams.HISTORY_DETAIL_OUT_IS_SUCCESS, false);
+                    intent.putExtra(ActivityParams.HISTORY_DETAIL_OUT_ERROR, resp.getResponse().getError());
                     context.setResult(Activity.RESULT_CANCELED, intent);
                     context.finish();
                 }
+            } else {
+                Intent intent = new Intent();
+                intent.putExtra(ActivityParams.HISTORY_DETAIL_OUT_IS_SUCCESS, false);
+                intent.putExtra(ActivityParams.HISTORY_DETAIL_OUT_EXCEPTION, resp.getException());
+                context.setResult(Activity.RESULT_CANCELED, intent);
+                context.finish();
             }
             dialog.dismiss();
         }
+    }
 
-        @Override
-        protected OperationDetailResponse doInBackground(String... params) {
-            YandexMoney ym = Utils.getYandexMoney(clientId);
-            try {
-                OperationDetailResponse resp =
-                        ym.operationDetail(accessToken, params[0]);
-                if (resp.isSuccess())
-                    return resp;
-                else
-                    error = "Ошибка: " + resp.getError();
-            } catch (IOException e) {
-                error = "Ошибка: " + e.getMessage();
-            } catch (InvalidTokenException e) {
-                error = "Ошибка: " + e.getMessage();
-            } catch (InsufficientScopeException e) {
-                error = "Ошибка: " + e.getMessage();
-            }
-            return null;
+    private class HistoryDetailResp {
+        private final OperationDetailResponse resp;
+        private final Exception exception;
+
+        private HistoryDetailResp(OperationDetailResponse resp, Exception exception) {
+            this.exception = exception;
+            this.resp = resp;
+        }
+
+        public OperationDetailResponse getResponse() {
+            return resp;
+        }
+
+        public Exception getException() {
+            return exception;
         }
     }
 }

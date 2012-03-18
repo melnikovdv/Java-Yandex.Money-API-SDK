@@ -7,8 +7,12 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.Toast;
+import ru.yandex.money.api.InsufficientScopeException;
+import ru.yandex.money.api.InvalidTokenException;
 import ru.yandex.money.api.response.util.Operation;
 
+import java.io.IOException;
 import java.util.LinkedList;
 
 /**
@@ -22,16 +26,18 @@ public class HistoryActivity extends Activity {
 
     private String accessToken;
     private String clientId;
-
+    private int DETAIL_HISTORY_ACTIVITY_CODE = 4867943;
+    
     private ImageView imgRefresh;
     private ListView listView;
     private HistoryAdapter historyAdapter;
+    private YandexMoneyDroid ymd;
 
     @Override
     public void onBackPressed() {
         Intent intent = new Intent();
         intent.putExtra(ActivityParams.HISTORY_OUT_IS_SUCCESS, true);
-        this.setResult(Activity.RESULT_OK, intent);
+        this.setResult(Activity.RESULT_CANCELED, intent);
         finish();
     }
 
@@ -41,6 +47,7 @@ public class HistoryActivity extends Activity {
 
         clientId = getIntent().getStringExtra(HISTORY_IN_CLIENT_ID);
         accessToken = getIntent().getStringExtra(HISTORY_IN_ACCESS_TOKEN);
+        ymd = new YandexMoneyDroid(clientId);
 
         setContentView(R.layout.ymd_history);
 
@@ -48,9 +55,7 @@ public class HistoryActivity extends Activity {
         imgRefresh.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 historyAdapter.clear();
-                new LoadHistoryTask(HistoryActivity.this, clientId, accessToken,
-                        historyAdapter)
-                        .execute(0);
+                new LoadHistoryTask(HistoryActivity.this, clientId, accessToken, historyAdapter).execute(0);
             }
         });
 
@@ -62,23 +67,54 @@ public class HistoryActivity extends Activity {
         listView.setAdapter(historyAdapter);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View view,
-                    int position,
-                    long id) {
-                Operation operation =
-                        (Operation) historyAdapter.getItem(position);
-                Intent intent = new Intent(HistoryActivity.this, DetailHistoryActivity.class);
-                intent.putExtra(DetailHistoryActivity.DET_HIST_IN_OPERATION_ID,
-                        operation.getOperationId());
-                intent.putExtra(DetailHistoryActivity.DET_HIST_IN_ACCESS_TOKEN,
-                        accessToken);
-                intent.putExtra(DetailHistoryActivity.DET_HIST_IN_CLIENT_ID,
-                        clientId);
-                startActivity(intent);
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Operation operation = (Operation) historyAdapter.getItem(position);
+
+                ymd.showHistoryDetail(HistoryActivity.this, DETAIL_HISTORY_ACTIVITY_CODE, accessToken,
+                        operation.getOperationId(), new YandexMoneyDroid.DialogListener() {
+                    @Override
+                    public void onSuccess(Bundle values) {
+                        Intent intent = new Intent();
+                        intent.putExtra(ActivityParams.HISTORY_OUT_IS_SUCCESS, true);
+                        HistoryActivity.this.setResult(Activity.RESULT_OK, intent);
+                        HistoryActivity.this.finish();
+                    }
+
+                    @Override
+                    public void onFail(String cause) {
+                        Toast.makeText(HistoryActivity.this, "Ошибка запроса деталей операции: " + cause,
+                                Toast.LENGTH_LONG).show();
+                    }
+
+                    @Override
+                    public void onException(Exception exception) {
+                        String text = null;
+                        if (exception.getClass() == InsufficientScopeException.class)
+                            text = "Ошибка: нет прав для просмотра детальной информации";
+                        if (exception.getClass() == IOException.class)
+                            text = "Ошибка связи: проверьте подключение к интернету";
+                        if (exception.getClass() == InvalidTokenException.class)
+                            text = "Ошибка: невалидный токен";
+
+                        if (text != null) {
+                            Toast.makeText(HistoryActivity.this, text,
+                                    Toast.LENGTH_LONG).show();
+                        }
+                    }
+
+                    @Override
+                    public void onCancel() {
+
+                    }
+                });
             }
         });
 
         new LoadHistoryTask(this, clientId, accessToken, historyAdapter).execute(0);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        ymd.callbackOnResult(requestCode, resultCode, data);
+    }
 }

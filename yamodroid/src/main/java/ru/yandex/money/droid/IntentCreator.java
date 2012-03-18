@@ -13,6 +13,7 @@ import java.util.Map;
 /**
  * Вспомогательный класс создания Intent'ов Activity библиотеки.
  * Создан для упрощения передачи параметров.
+ *
  * @author dvmelnikov
  */
 
@@ -21,7 +22,7 @@ public class IntentCreator {
     /**
      * Создание Intent'а авторизации
      *
-     * @param context          Activity, из которого будет стартовать Intent
+     * @param activity         Activity, из которого будет стартовать Intent
      * @param clientId         идентификатор приложения в системе API Яндекс.Деньги
      * @param redirectUri      URI страницы приложения, на который OAuth-сервер
      *                         осуществляет передачу события результата авторизации. Значение этого параметра
@@ -33,13 +34,13 @@ public class IntentCreator {
      *                         или приложение будет само показывать результат операции.
      * @return Intent с проставленными параметрами
      */
-    public static Intent createAuth(final Activity context,
-            final String clientId, final String redirectUri,
-            final Collection<Permission> permissions,
-            boolean showResultDialog) {
-        checkMainParams(clientId, "token", context);
+    public static Intent createAuth(final Activity activity,
+                                    final String clientId, final String redirectUri,
+                                    final Collection<Permission> permissions,
+                                    boolean showResultDialog) {
+        checkMainParams(clientId, "token", activity);
 
-        Intent intent = new Intent(context, AuthActivity.class);
+        Intent intent = new Intent(activity, AuthActivity.class);
         intent.putExtra(AuthActivity.AUTH_IN_CLIENT_ID, clientId);
         intent.putExtra(AuthActivity.AUTH_IN_REDIRECT_URI, redirectUri);
         intent.putExtra(AuthActivity.AUTH_IN_SHOW_RES_DLG, showResultDialog);
@@ -55,26 +56,35 @@ public class IntentCreator {
     /**
      * Создание Intent'а запроса истории
      *
-     * @param context     контекст приложения или родительское Activity
+     * @param activity    контекст приложения или родительское Activity
      * @param clientId    идентификатор приложения в системе API Яндекс.Деньги
      * @param accessToken токен авторизации пользователя
      * @return Intent с проставленными параметрами
      */
-    public static Intent createHistory(final Context context,
-            String clientId, String accessToken) {
-        checkMainParams(clientId, accessToken, context);
+    public static Intent createHistory(final Activity activity,
+                                       String clientId, String accessToken) {
+        checkMainParams(clientId, accessToken, activity);
 
-        Intent intent = new Intent(context, HistoryActivity.class);
+        Intent intent = new Intent(activity, HistoryActivity.class);
         intent.putExtra(HistoryActivity.HISTORY_IN_CLIENT_ID, clientId);
         intent.putExtra(HistoryActivity.HISTORY_IN_ACCESS_TOKEN, accessToken);
 
         return intent;
     }
 
+    public static Intent createHistoryDetail(final Activity activity, final String clientId, final String accessToken,
+                                             String operationId) {
+        Intent intent = new Intent(activity, DetailHistoryActivity.class);
+        intent.putExtra(DetailHistoryActivity.DET_HIST_IN_OPERATION_ID, operationId);
+        intent.putExtra(DetailHistoryActivity.DET_HIST_IN_ACCESS_TOKEN, accessToken);
+        intent.putExtra(DetailHistoryActivity.DET_HIST_IN_CLIENT_ID, clientId);
+        return intent;
+    }
+
     /**
      * Создание Intent'а перевода на счет другого пользователя
      *
-     * @param context          Activity, из которого будет стартовать Intent
+     * @param activity         Activity, из которого будет стартовать Intent
      * @param clientId         идентификатор приложения в системе API Яндекс.Деньги
      * @param accessToken      токен авторизации пользователя
      * @param accountTo        номер счета получателя платежа (счет Яндекс.Денег)
@@ -87,13 +97,13 @@ public class IntentCreator {
      *                         или приложение будет само показывать результат операции.
      * @return Intent с проставленными параметрами
      */
-    public static Intent createPaymentP2P(final Activity context,
-            String clientId, String accessToken, String accountTo,
-            BigDecimal amount, String comment, String message,
-            boolean showResultDialog) {
-        checkMainParams(clientId, accessToken, context);
+    public static Intent createPaymentP2P(final Activity activity,
+                                          String clientId, String accessToken, String accountTo,
+                                          BigDecimal amount, String comment, String message,
+                                          boolean showResultDialog) {
+        checkMainParams(clientId, accessToken, activity);
 
-        Intent intent = new Intent(context, PaymentActivity.class);
+        Intent intent = new Intent(activity, PaymentActivity.class);
         intent.putExtra(PaymentActivity.PAYMENT_IN_CLIENT_ID, clientId);
         intent.putExtra(PaymentActivity.PAYMENT_IN_ACCESS_TOKEN, accessToken);
         intent.putExtra(PaymentActivity.PAYMENT_IN_P2P_FLAG, true);
@@ -112,7 +122,7 @@ public class IntentCreator {
     /**
      * Создание Intent'а оплаты в магазин
      *
-     * @param context          Activity, из которого будет стартовать Intent
+     * @param activity         Activity, из которого будет стартовать Intent
      * @param clientId         идентификатор приложения в системе API Яндекс.Деньги
      * @param accessToken      токен авторизации пользователя
      * @param amount           общая сумма оплаты
@@ -123,13 +133,13 @@ public class IntentCreator {
      *                         или приложение будет само показывать результат операции.
      * @return Intent с проставленными параметрами
      */
-    public static Intent createPaymentShop(final Activity context,
-            String clientId, String accessToken, BigDecimal amount,
-            String patternId, Map<String, String> params,
-            boolean showResultDialog) {
-        checkMainParams(clientId, accessToken, context);
+    public static Intent createPaymentShop(final Activity activity,
+                                           String clientId, String accessToken, BigDecimal amount,
+                                           String patternId, Map<String, String> params,
+                                           boolean showResultDialog) {
+        checkMainParams(clientId, accessToken, activity);
 
-        Intent intent = new Intent(context, PaymentActivity.class);
+        Intent intent = new Intent(activity, PaymentActivity.class);
         intent.putExtra(PaymentActivity.PAYMENT_IN_CLIENT_ID, clientId);
         intent.putExtra(PaymentActivity.PAYMENT_IN_ACCESS_TOKEN, accessToken);
         intent.putExtra(PaymentActivity.PAYMENT_IN_P2P_FLAG, false);
@@ -144,7 +154,7 @@ public class IntentCreator {
     }
 
     private static void checkMainParams(String clientId, String accessToken,
-            Context context) {
+                                        Context context) {
         if ((clientId == null) || (clientId.equals("")))
             throw new IllegalArgumentException("client_id is empty");
         if ((accessToken == null) || (accessToken.equals("")))

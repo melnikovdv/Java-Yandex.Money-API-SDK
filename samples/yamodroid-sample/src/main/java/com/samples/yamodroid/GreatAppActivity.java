@@ -15,7 +15,6 @@ import ru.yandex.money.api.InvalidTokenException;
 import ru.yandex.money.api.YandexMoney;
 import ru.yandex.money.api.response.AccountInfoResponse;
 import ru.yandex.money.droid.ActivityParams;
-import ru.yandex.money.droid.IntentCreator;
 import ru.yandex.money.droid.Utils;
 import ru.yandex.money.droid.YandexMoneyDroid;
 
@@ -28,8 +27,8 @@ public class GreatAppActivity extends Activity {
     private final int CODE_AUTH = 1710;
     private final int CODE_PAYMENT_P2P = 1720;
     private final int CODE_PAYMENT_SHOP = 1730;
+    private static final int CODE_HISTORY = 1740;
 
-    private final String TAG = "yamodroid-sample";
     private static final String PREFERENCES = "yandex_money_preferences";
     private final String PREF_ACCESS_TOKEN = "access_token";
 
@@ -43,7 +42,6 @@ public class GreatAppActivity extends Activity {
     private YandexMoneyDroid ymd = new YandexMoneyDroid(Consts.CLIENT_ID);
     private MyDialogListener dialogListener = new MyDialogListener();
 
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,15 +54,7 @@ public class GreatAppActivity extends Activity {
             public void onClick(View view) {
                 // Если не авторизован, то авторизуемся по нажатию
                 if (!isAuthorized(false)) {
-                    //                    Intent intent = IntentCreator.createAuth(
-                    //                            GreatAppActivity.this,
-                    //                            Consts.CLIENT_ID,
-                    //                            Consts.REDIRECT_URI,
-                    //                            Consts.getPermissions(),
-                    //                            true);
-                    //                    startActivityForResult(intent, CODE_AUTH);
-
-                    ymd.authorize(GreatAppActivity.this, 10, Consts.REDIRECT_URI, Consts.getPermissions(), true,
+                    ymd.authorize(GreatAppActivity.this, CODE_AUTH, Consts.REDIRECT_URI, Consts.getPermissions(), true,
                             dialogListener);
                 } else { // Если уже авторизован, то выходим
                     storeToken("");
@@ -79,12 +69,7 @@ public class GreatAppActivity extends Activity {
 
                 if (!isAuthorized(true))
                     return;
-
-//                Intent historyIntent = IntentCreator.createHistory(
-//                        GreatAppActivity.this, Consts.CLIENT_ID,
-//                        restoreToken());
-//                startActivity(historyIntent);
-                ymd.showHistory(GreatAppActivity.this, 11, restoreToken(), dialogListener);
+                ymd.showHistory(GreatAppActivity.this, CODE_HISTORY, restoreToken(), dialogListener);
             }
         });
 
@@ -95,13 +80,9 @@ public class GreatAppActivity extends Activity {
                 if (!isAuthorized(true))
                     return;
 
-                Intent intent = IntentCreator
-                        .createPaymentP2P(GreatAppActivity.this,
-                                Consts.CLIENT_ID, restoreToken(),
-                                "410011161616877", BigDecimal.valueOf(0.02),
-                                "comment for p2p", "message for p2p", true);
-
-                startActivityForResult(intent, CODE_PAYMENT_P2P);
+                ymd.showPaymentP2P(GreatAppActivity.this, CODE_PAYMENT_P2P, restoreToken(),
+                        "410011161616877", BigDecimal.valueOf(0.02), "comment for p2p",
+                        "message for p2p", true, dialogListener);
             }
         });
 
@@ -117,11 +98,8 @@ public class GreatAppActivity extends Activity {
                 params.put("PROPERTY2", "3020052");
                 params.put("sum", "1.00");
 
-                Intent intent = IntentCreator.createPaymentShop(
-                        GreatAppActivity.this, Consts.CLIENT_ID, restoreToken(),
-                        BigDecimal.valueOf(1.00), "337", params, true);
-
-                startActivityForResult(intent, CODE_PAYMENT_SHOP);
+                ymd.showPaymentShop(GreatAppActivity.this, CODE_PAYMENT_SHOP, restoreToken(), BigDecimal.valueOf(1.00),
+                        "337", params, true, dialogListener);
             }
         });
 
@@ -154,7 +132,7 @@ public class GreatAppActivity extends Activity {
     }
 
     private void renewAccountInfo() {
-        new LoadAccountInfoTask().execute(null);
+        new LoadAccountInfoTask().execute();
     }
 
     private void renewAuthCaptions() {
@@ -169,51 +147,9 @@ public class GreatAppActivity extends Activity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode,
-            Intent data) {
+                                    Intent data) {
 
         ymd.callbackOnResult(requestCode, resultCode, data);
-
-        if (requestCode == CODE_AUTH) {
-            boolean isSuccess =
-                    data.getBooleanExtra(ActivityParams.AUTH_OUT_IS_SUCCESS,
-                            false);
-            String token =
-                    data.getStringExtra(ActivityParams.AUTH_OUT_ACCESS_TOKEN);
-            String error = data.getStringExtra(ActivityParams.AUTH_OUT_ERROR);
-
-            if (isSuccess)
-                storeToken(token);
-
-            Toast.makeText(this,
-                    "Authorization result: " + isSuccess + "\ntoken: " + token + "\n" +
-                            "error: " + error, Toast.LENGTH_LONG).show();
-        }
-
-        if (requestCode == CODE_PAYMENT_P2P) {
-            boolean isSuccess =
-                    data.getBooleanExtra(ActivityParams.PAYMENT_OUT_IS_SUCCESS,
-                            false);
-            String paymentId =
-                    data.getStringExtra(ActivityParams.PAYMENT_OUT_OPERATION_ID);
-            String error = data.getStringExtra(ActivityParams.PAYMENT_OUT_ERROR);
-
-            Toast.makeText(this,
-                    "P2P payment result: " + isSuccess + "\npayment_id: " + paymentId + "\n" +
-                            "error: " + error, Toast.LENGTH_LONG).show();
-        }
-
-        if (requestCode == CODE_PAYMENT_SHOP) {
-            boolean isSuccess =
-                    data.getBooleanExtra(ActivityParams.PAYMENT_OUT_IS_SUCCESS,
-                            false);
-            String paymentId =
-                    data.getStringExtra(ActivityParams.PAYMENT_OUT_OPERATION_ID);
-            String error = data.getStringExtra(ActivityParams.PAYMENT_OUT_ERROR);
-
-            Toast.makeText(this,
-                    "Shop payment result: " + isSuccess + "\npayment_id: " + paymentId + "\n" +
-                            "error: " + error, Toast.LENGTH_LONG).show();
-        }
     }
 
     private void storeToken(String token) {
@@ -274,9 +210,15 @@ public class GreatAppActivity extends Activity {
     private class MyDialogListener implements YandexMoneyDroid.DialogListener {
         public void onSuccess(Bundle values) {
             String token = values.getString(ActivityParams.AUTH_OUT_ACCESS_TOKEN);
-            if (token != null) 
+            if (token != null) {
                 storeToken(token);
-            Toast.makeText(GreatAppActivity.this, "Success. Access token = " + token, Toast.LENGTH_LONG).show();
+                Toast.makeText(GreatAppActivity.this, "Success. Access token = " + token, Toast.LENGTH_LONG).show();
+            }
+
+            String paymentId = values.getString(ActivityParams.PAYMENT_OUT_OPERATION_ID);
+            if (paymentId != null) {
+                Toast.makeText(GreatAppActivity.this, "p2p payment successfully finished. Payment id: " + paymentId, Toast.LENGTH_LONG).show();
+            }
         }
 
         public void onFail(String cause) {

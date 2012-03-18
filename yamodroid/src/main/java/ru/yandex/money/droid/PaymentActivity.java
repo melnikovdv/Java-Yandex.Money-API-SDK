@@ -32,8 +32,7 @@ public class PaymentActivity extends Activity {
     public static final String PAYMENT_IN_CLIENT_ID = "ru.yandex.money.droid.client_id";
     public static final String PAYMENT_IN_ACCESS_TOKEN = "ru.yandex.money.droid.access_token";
     public static final String PAYMENT_IN_P2P_FLAG = "ru.yandex.money.droid.p2p_flag";
-    public static final String PAYMENT_IN_SHOW_RESULT_DIALOG =
-            "ru.yandex.money.droid.show_result_dialog";
+    public static final String PAYMENT_IN_SHOW_RESULT_DIALOG = "ru.yandex.money.droid.show_result_dialog";
 
     public static final String PAYMENT_P2P_IN_ACCOUNT = "ru.yandex.money.droid.account";
     public static final String PAYMENT_P2P_IN_AMOUNT = "ru.yandex.money.droid.sum";
@@ -132,7 +131,7 @@ public class PaymentActivity extends Activity {
         private final String message;
 
         private P2pParams(String to, Double sum, String comment,
-                String message) {
+                          String message) {
             this.to = to;
             this.sum = sum;
             this.comment = comment;
@@ -157,10 +156,9 @@ public class PaymentActivity extends Activity {
     }
 
     private class RequestPaymentP2pTask extends
-            AsyncTask<P2pParams, Void, RequestPaymentResponse> {
+            AsyncTask<P2pParams, Void, RequestPaymentResp> {
 
         ProgressDialog dialog;
-        String error;
 
         @Override
         protected void onPreExecute() {
@@ -171,52 +169,38 @@ public class PaymentActivity extends Activity {
 
         @Override
         protected void onPostExecute(
-                final RequestPaymentResponse resp) {
+                final RequestPaymentResp resp) {
             dialog.dismiss();
-            String title = "Подготовка перевода";
-            Intent resIntent = new Intent();
-            if ((resp == null) || (error != null)) {
-                resIntent.putExtra(ActivityParams.PAYMENT_OUT_ERROR, error);
-                resIntent
-                        .putExtra(ActivityParams.PAYMENT_OUT_IS_SUCCESS, false);
-                setResult(Activity.RESULT_CANCELED, resIntent);
-                if (showResultDialog) {
-                    makeResultAlertDialog(false, error, null, title).show();
-                } else {
-                    finish();
-                }
-            } else {
-                if (resp.isSuccess()) {
+
+            if (resp.getException() == null) {
+                if (resp.getResponse().isSuccess()) {
                     btnPayFromWallet.setOnClickListener(
                             new View.OnClickListener() {
                                 public void onClick(View v) {
                                     ProcPayParam param = new ProcPayParam(
-                                            resp.getRequestId(), MoneySource.wallet);
+                                            resp.getResponse().getRequestId(), MoneySource.wallet);
                                     new ProcessPaymentTask()
                                             .execute(param);
                                 }
                             });
                 } else {
-                    resIntent.putExtra(ActivityParams.PAYMENT_OUT_ERROR,
-                            resp.getError());
-                    resIntent.putExtra(ActivityParams.PAYMENT_OUT_IS_SUCCESS,
-                            resp.isSuccess());
-                    resIntent.putExtra(ActivityParams.PAYMENT_OUT_OPERATION_ID,
-                            resp.getRequestId());
-                    setResult(Activity.RESULT_CANCELED, resIntent);
-                    if (showResultDialog) {
-                        makeResultAlertDialog(resp.isSuccess(), resp.getError(),
-                                resp.getRequestId(), title);
-                    } else {
-                        finish();
-                    }
-
+                    Intent intent = new Intent();
+                    intent.putExtra(ActivityParams.PAYMENT_OUT_IS_SUCCESS, false);
+                    intent.putExtra(ActivityParams.PAYMENT_OUT_ERROR, resp.getResponse().getError());
+                    PaymentActivity.this.setResult(Activity.RESULT_CANCELED, intent);
+                    PaymentActivity.this.finish();
                 }
+            } else {
+                Intent intent = new Intent();
+                intent.putExtra(ActivityParams.PAYMENT_OUT_IS_SUCCESS, false);
+                intent.putExtra(ActivityParams.PAYMENT_OUT_EXCEPTION, resp.getException());
+                PaymentActivity.this.setResult(Activity.RESULT_CANCELED, intent);
+                PaymentActivity.this.finish();
             }
         }
 
         @Override
-        protected RequestPaymentResponse doInBackground(
+        protected RequestPaymentResp doInBackground(
                 P2pParams... params) {
             try {
                 YandexMoney ym = Utils.getYandexMoney(clientId);
@@ -224,28 +208,19 @@ public class PaymentActivity extends Activity {
                         params[0].getTo(),
                         BigDecimal.valueOf(params[0].getSum()),
                         params[0].getComment(), params[0].getMessage());
-                if (resp.isSuccess()) {
-                    return resp;
-                } else {
-                    error = resp.getError();
-                    return null;
-                }
+                return new RequestPaymentResp(resp, null);
             } catch (IOException e) {
-                e.printStackTrace();
-                error = e.getMessage();
+                return new RequestPaymentResp(null, e);
             } catch (InvalidTokenException e) {
-                e.printStackTrace();
-                error = e.getMessage();
+                return new RequestPaymentResp(null, e);
             } catch (InsufficientScopeException e) {
-                e.printStackTrace();
-                error = e.getMessage();
+                return new RequestPaymentResp(null, e);
             }
-            return null;
         }
     }
 
     private AlertDialog makeResultAlertDialog(final boolean isSuccess,
-            final String error, final String operationId, String title) {
+                                              final String error, final String operationId, String title) {
         AlertDialog.Builder builder;
         builder = new AlertDialog.Builder(this);
         builder.setIcon(R.drawable.ic_wallet);
@@ -261,9 +236,10 @@ public class PaymentActivity extends Activity {
                 Intent authResult = new Intent();
                 authResult.putExtra(ActivityParams.PAYMENT_OUT_IS_SUCCESS,
                         isSuccess);
-                authResult.putExtra(ActivityParams.PAYMENT_OUT_ERROR, error);
-                authResult.putExtra(ActivityParams.PAYMENT_OUT_OPERATION_ID,
-                        operationId);
+                if (error != null)
+                    authResult.putExtra(ActivityParams.PAYMENT_OUT_ERROR, error);
+                if (operationId != null)
+                    authResult.putExtra(ActivityParams.PAYMENT_OUT_OPERATION_ID, operationId);
 
                 if (isSuccess)
                     PaymentActivity.this
@@ -278,10 +254,9 @@ public class PaymentActivity extends Activity {
     }
 
     private class RequestPaymentShopTask extends
-            AsyncTask<PaymentShopParcelable, Void, RequestPaymentResponse> {
+            AsyncTask<PaymentShopParcelable, Void, RequestPaymentResp> {
 
         ProgressDialog dialog;
-        String error;
 
         @Override
         protected void onPreExecute() {
@@ -293,98 +268,75 @@ public class PaymentActivity extends Activity {
 
         @Override
         protected void onPostExecute(
-                final RequestPaymentResponse resp) {
+                final RequestPaymentResp resp) {
             dialog.dismiss();
-            String title = "Подготовка перевода";
-            Intent resIntent = new Intent();
-            if ((resp == null) || (error != null)) {
-                resIntent.putExtra(ActivityParams.PAYMENT_OUT_ERROR, error);
-                resIntent
-                        .putExtra(ActivityParams.PAYMENT_OUT_IS_SUCCESS, false);
-                setResult(Activity.RESULT_CANCELED, resIntent);
-                if (showResultDialog) {
-                    makeResultAlertDialog(false, error, null, title).show();
-                } else {
-                    finish();
-                }
-            } else {
-                if (resp.isSuccess()) {
-                    tvDescr.setText(resp.getContract());
 
-                    if (resp.getMoneySource().getCard().getAllowed()) {
+            if (resp.getException() == null) {
+                if (resp.getResponse().isSuccess()) {
+                    tvDescr.setText(resp.getResponse().getContract());
+
+                    if (resp.getResponse().getMoneySource().getCard().getAllowed()) {
                         layoutPaywithCard.setVisibility(View.VISIBLE);
                         btnPayFromCard.setOnClickListener(new View.OnClickListener() {
-                                    public void onClick(View v) {
-                                        ProcPayParam param = new ProcPayParam(
-                                                resp.getRequestId(),
-                                                MoneySource.card,
-                                                edtCVC.getText().toString());
-                                        new ProcessPaymentTask().execute(param);
-                                    }
-                                });
-                    }
+                            public void onClick(View v) {
+                                ProcPayParam param = new ProcPayParam(
+                                        resp.getResponse().getRequestId(),
+                                        MoneySource.card,
+                                        edtCVC.getText().toString());
+                                new ProcessPaymentTask().execute(param);
+                            }
+                        });
+                    } else
+                        layoutPaywithCard.setVisibility(View.GONE);
 
-                    if (resp.getMoneySource().getWallet().getAllowed()) {
+                    if (resp.getResponse().getMoneySource().getWallet().getAllowed()) {
                         btnPayFromWallet.setVisibility(View.VISIBLE);
-                        btnPayFromWallet
-                                .setOnClickListener(new View.OnClickListener() {
-                                    public void onClick(View v) {
-                                        ProcPayParam param = new ProcPayParam(
-                                                resp.getRequestId(),
-                                                MoneySource.wallet);
-                                        new ProcessPaymentTask().execute(param);
-                                    }
-                                });
+                        btnPayFromWallet.setOnClickListener(new View.OnClickListener() {
+                            public void onClick(View v) {
+                                ProcPayParam param = new ProcPayParam(
+                                        resp.getResponse().getRequestId(),
+                                        MoneySource.wallet);
+                                new ProcessPaymentTask().execute(param);
+                            }
+                        });
                     }
                 } else {
-                    resIntent.putExtra(ActivityParams.PAYMENT_OUT_ERROR,
-                            resp.getError());
-                    resIntent.putExtra(ActivityParams.PAYMENT_OUT_IS_SUCCESS,
-                            resp.isSuccess());
-                    resIntent.putExtra(ActivityParams.PAYMENT_OUT_OPERATION_ID,
-                            resp.getRequestId());
-                    setResult(Activity.RESULT_CANCELED, resIntent);
-                    if (showResultDialog) {
-                        makeResultAlertDialog(resp.isSuccess(), resp.getError(),
-                                resp.getRequestId(), title);
-                    } else {
-                        finish();
-                    }
+                    Intent intent = new Intent();
+                    intent.putExtra(ActivityParams.PAYMENT_OUT_IS_SUCCESS, false);
+                    intent.putExtra(ActivityParams.PAYMENT_OUT_ERROR, resp.getResponse().getError());
+                    PaymentActivity.this.setResult(Activity.RESULT_CANCELED, intent);
+                    PaymentActivity.this.finish();
                 }
+            } else {
+                Intent intent = new Intent();
+                intent.putExtra(ActivityParams.PAYMENT_OUT_IS_SUCCESS, false);
+                intent.putExtra(ActivityParams.PAYMENT_OUT_EXCEPTION, resp.getException());
+                PaymentActivity.this.setResult(Activity.RESULT_CANCELED, intent);
+                PaymentActivity.this.finish();
             }
         }
 
         @Override
-        protected RequestPaymentResponse doInBackground(PaymentShopParcelable... params) {
+        protected RequestPaymentResp doInBackground(PaymentShopParcelable... params) {
             try {
                 YandexMoney ym = Utils.getYandexMoney(clientId);
                 RequestPaymentResponse resp = ym.requestPaymentShop(accessToken,
                         params[0].getPatternId(), params[0].getParams());
-                if (resp.isSuccess()) {
-                    return resp;
-                } else {
-                    error = resp.getError();
-                    return null;
-                }
+                return new RequestPaymentResp(resp, null);
             } catch (IOException e) {
-                e.printStackTrace();
-                error = e.getMessage();
+                return new RequestPaymentResp(null, e);
             } catch (InvalidTokenException e) {
-                e.printStackTrace();
-                error = e.getMessage();
+                return new RequestPaymentResp(null, e);
             } catch (InsufficientScopeException e) {
-                e.printStackTrace();
-                error = e.getMessage();
+                return new RequestPaymentResp(null, e);
             }
-            return null;
         }
     }
 
     private class ProcessPaymentTask extends
-            AsyncTask<ProcPayParam, Void, ProcessPaymentResponse> {
+            AsyncTask<ProcPayParam, Void, ProcessPaymentResp> {
 
         ProgressDialog dialog;
-        String error;
 
         @Override
         protected void onPreExecute() {
@@ -395,62 +347,56 @@ public class PaymentActivity extends Activity {
 
         @Override
         protected void onPostExecute(
-                ProcessPaymentResponse resp) {
-            Intent resIntent = new Intent();
+                ProcessPaymentResp resp) {
             dialog.dismiss();
-            String title = "Перевод";
-            if ((resp == null) || (error != null)) {
-                resIntent.putExtra(ActivityParams.PAYMENT_OUT_ERROR, error);
-                resIntent
-                        .putExtra(ActivityParams.PAYMENT_OUT_IS_SUCCESS, false);
-                setResult(Activity.RESULT_CANCELED, resIntent);
-                if (showResultDialog) {
-                    makeResultAlertDialog(false, error, null, title).show();
+
+            if (resp.getException() == null) {
+                if (resp.getResponse().isSuccess()) {
+
+                    if (showResultDialog) {
+                        makeResultAlertDialog(true, null, resp.getResponse().getPaymentId(), "Перевод").show();
+                    } else {
+                        Intent intent = new Intent();
+                        intent.putExtra(ActivityParams.PAYMENT_OUT_IS_SUCCESS, true);
+                        intent.putExtra(ActivityParams.PAYMENT_OUT_OPERATION_ID, resp.getResponse().getPaymentId());
+                        PaymentActivity.this.setResult(Activity.RESULT_OK, intent);
+                        PaymentActivity.this.finish();
+                    }
                 } else {
-                    finish();
+                    Intent intent = new Intent();
+                    intent.putExtra(ActivityParams.PAYMENT_OUT_IS_SUCCESS, false);
+                    intent.putExtra(ActivityParams.PAYMENT_OUT_ERROR, resp.getResponse().getError());
+                    PaymentActivity.this.setResult(Activity.RESULT_CANCELED, intent);
+                    PaymentActivity.this.finish();
                 }
             } else {
-                resIntent.putExtra(ActivityParams.PAYMENT_OUT_ERROR,
-                        resp.getError());
-                resIntent.putExtra(ActivityParams.PAYMENT_OUT_IS_SUCCESS,
-                        resp.isSuccess());
-                resIntent.putExtra(ActivityParams.PAYMENT_OUT_OPERATION_ID,
-                        resp.getPaymentId());
-                if (resp.isSuccess())
-                    setResult(Activity.RESULT_OK, resIntent);
-                else
-                    setResult(Activity.RESULT_CANCELED, resIntent);
-                if (showResultDialog) {
-                    makeResultAlertDialog(resp.isSuccess(), resp.getError(),
-                            resp.getPaymentId(), title).show();
-                } else {
-                    finish();
-                }
+                Intent intent = new Intent();
+                intent.putExtra(ActivityParams.PAYMENT_OUT_IS_SUCCESS, false);
+                intent.putExtra(ActivityParams.PAYMENT_OUT_EXCEPTION, resp.getException());
+                PaymentActivity.this.setResult(Activity.RESULT_CANCELED, intent);
+                PaymentActivity.this.finish();
             }
         }
 
         @Override
-        protected ProcessPaymentResponse doInBackground(
+        protected ProcessPaymentResp doInBackground(
                 ProcPayParam... params) {
             try {
                 YandexMoney ym = Utils.getYandexMoney(clientId);
+                ProcessPaymentResponse resp = null;
                 if (params[0].getMoneySource() == MoneySource.wallet)
-                    return ym.processPaymentByWallet(accessToken,
-                            params[0].getRequestId());
+                    resp = ym.processPaymentByWallet(accessToken, params[0].getRequestId());
                 if (params[0].getMoneySource() == MoneySource.card)
-                    return ym.processPaymentByCard(accessToken,
-                            params[0].getRequestId(), edtCVC.getText().toString());
+                    resp = ym.processPaymentByCard(accessToken, params[0].getRequestId(),
+                            edtCVC.getText().toString());
+                return new ProcessPaymentResp(resp, null);
             } catch (IOException e) {
-                e.printStackTrace();
-                error = e.getMessage();
+                return new ProcessPaymentResp(null, e);
             } catch (InsufficientScopeException e) {
-                e.printStackTrace();
-                error = e.getMessage();
+                return new ProcessPaymentResp(null, e);
             } catch (InvalidTokenException e) {
-                e.printStackTrace();
-                error = e.getMessage();
+                return new ProcessPaymentResp(null, e);
             }
-            return null;
         }
     }
 
@@ -460,7 +406,7 @@ public class PaymentActivity extends Activity {
         private final String cvc;
 
         ProcPayParam(String requestId, MoneySource moneySource,
-                String cvc) {
+                     String cvc) {
             this.requestId = requestId;
             this.moneySource = moneySource;
             this.cvc = cvc;
@@ -482,6 +428,42 @@ public class PaymentActivity extends Activity {
 
         public String getCvc() {
             return cvc;
+        }
+    }
+
+    private class RequestPaymentResp {
+        private RequestPaymentResponse response;
+        private Exception exception;
+
+        private RequestPaymentResp(RequestPaymentResponse response, Exception exception) {
+            this.response = response;
+            this.exception = exception;
+        }
+
+        public RequestPaymentResponse getResponse() {
+            return response;
+        }
+
+        public Exception getException() {
+            return exception;
+        }
+    }
+
+    private class ProcessPaymentResp {
+        private ProcessPaymentResponse response;
+        private Exception exception;
+
+        private ProcessPaymentResp(ProcessPaymentResponse response, Exception exception) {
+            this.response = response;
+            this.exception = exception;
+        }
+
+        public ProcessPaymentResponse getResponse() {
+            return response;
+        }
+
+        public Exception getException() {
+            return exception;
         }
     }
 }
