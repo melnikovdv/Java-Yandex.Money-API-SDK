@@ -56,7 +56,7 @@
                     android:id="@+id/ll_pay_with_card"
                     android:orientation="vertical"
                     android:layout_marginTop="10dp"
-                    android:visibility="visible"
+                    android:visibility="gone"
                     android:gravity="left">
                 <LinearLayout
                         style="@style/ym.wrapped">
