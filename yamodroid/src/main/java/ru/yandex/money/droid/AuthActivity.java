@@ -42,7 +42,17 @@ public class AuthActivity extends Activity {
         super.onCreate(savedInstanceState);
 
         pd = Utils.makeProgressDialog(this, Consts.AUTH, Consts.WAIT);
-        pd.show();
+        pd.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            public void onCancel(DialogInterface dialog) {
+                dialog.dismiss();
+                Intent result = new Intent();
+                result.putExtra(ActivityParams.AUTH_OUT_IS_SUCCESS, false);                
+                setResult(Activity.RESULT_CANCELED, result);
+                finish();        
+            }
+        });
+        if (!isFinishing())
+            pd.show();
 
         setContentView(R.layout.ymd_auth);
         setupIntentParams();
@@ -87,21 +97,12 @@ public class AuthActivity extends Activity {
     private ReceiveTokenResp receiveToken(String code) {
         YandexMoney ym = Utils.getYandexMoney(clientId);
         try {
-            ReceiveOAuthTokenResponse resp =
-                    ym.receiveOAuthToken(code,
-                            redirectUri);
-            if (resp.isSuccess()) {
-                return new ReceiveTokenResp(resp.getAccessToken(), null, null);
-            } else {
-                return new ReceiveTokenResp(resp.getAccessToken(),
-                        resp.getError(), null);
-            }
+            ReceiveOAuthTokenResponse resp = ym.receiveOAuthToken(code, redirectUri);
+            return new ReceiveTokenResp(resp, null);            
         } catch (IOException e) {
-            e.printStackTrace();
-            return new ReceiveTokenResp(null, null, e);
+            return new ReceiveTokenResp(null, e);
         } catch (InsufficientScopeException e) {
-            e.printStackTrace();
-            return new ReceiveTokenResp(null, e.getMessage(), e);
+            return new ReceiveTokenResp(null, e);
         }
     }
 
@@ -110,20 +111,23 @@ public class AuthActivity extends Activity {
         builder = new AlertDialog.Builder(this);
         builder.setIcon(R.drawable.ic_wallet);
         builder.setTitle("Авторизация");
-        if (resp.isSuccess())
+        if (resp.getResponse().isSuccess())
             builder.setMessage("успешно завершена");
         else
-            builder.setMessage("Ошибка: " + resp.getError());
+            builder.setMessage("Ошибка: " + resp.getResponse().getError());
 
         builder.setNeutralButton("Ok", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 Intent authResult = new Intent();
-                authResult.putExtra(ActivityParams.AUTH_OUT_ACCESS_TOKEN, resp.getToken());
-                authResult.putExtra(ActivityParams.AUTH_OUT_ERROR, resp.getError());
-                authResult.putExtra(ActivityParams.AUTH_OUT_IS_SUCCESS, resp.isSuccess());
-                authResult.putExtra(ActivityParams.AUTH_OUT_EXCEPTION, resp.getException());
+                if (resp.getResponse().getAccessToken() != null)
+                    authResult.putExtra(ActivityParams.AUTH_OUT_ACCESS_TOKEN, resp.getResponse().getAccessToken());
+                if (resp.getResponse().getError() != null)
+                    authResult.putExtra(ActivityParams.AUTH_OUT_ERROR, resp.getResponse().getError());                
+                authResult.putExtra(ActivityParams.AUTH_OUT_IS_SUCCESS, resp.getResponse().isSuccess());
+                if (resp.getException() != null)
+                    authResult.putExtra(ActivityParams.AUTH_OUT_EXCEPTION, resp.getException());
                 
-                if (resp.isSuccess())
+                if (resp.getResponse().isSuccess())
                     AuthActivity.this.setResult(Activity.RESULT_OK, authResult);
                 else
                     AuthActivity.this.setResult(Activity.RESULT_CANCELED, authResult);
@@ -165,30 +169,40 @@ public class AuthActivity extends Activity {
 
         @Override
         protected void onPreExecute() {
-            pd.show();
+            if (!isFinishing())
+                pd.show();
         }
 
         @Override
-        protected void onPostExecute(ReceiveTokenResp response) {
-            Intent result = new Intent();
-            result.putExtra(ActivityParams.AUTH_OUT_IS_SUCCESS, response.isSuccess());
-            result.putExtra(ActivityParams.AUTH_OUT_ACCESS_TOKEN, response.getToken());
-            result.putExtra(ActivityParams.AUTH_OUT_ERROR, response.getError());
-            result.putExtra(ActivityParams.AUTH_OUT_EXCEPTION, response.getException());            
-
-            boolean showResultDialog = getIntent()
-                    .getBooleanExtra(AuthActivity.AUTH_IN_SHOW_RES_DLG, false);
+        protected void onPostExecute(ReceiveTokenResp resp) {
             pd.dismiss();
-            if (showResultDialog) {
-                AlertDialog resDlg = makeAlertDialog(response);
-                resDlg.show();
-            } else {
-                if (response.isSuccess())
-                    setResult(Activity.RESULT_OK, result);                
-                else
+            if (resp.getException() == null) {
+                if (resp.getResponse().isSuccess()) {
+                    boolean showResultDialog = getIntent().getBooleanExtra(AuthActivity.AUTH_IN_SHOW_RES_DLG, false);
+                    if (showResultDialog) {
+                        if (!isFinishing())
+                            makeAlertDialog(resp).show();    
+                    } else {
+                        Intent result = new Intent();
+                        result.putExtra(ActivityParams.AUTH_OUT_IS_SUCCESS, resp.getResponse().isSuccess());
+                        result.putExtra(ActivityParams.AUTH_OUT_ACCESS_TOKEN, resp.getResponse().getAccessToken());
+                        setResult(Activity.RESULT_OK, result);
+                        finish();
+                    }                    
+                } else {
+                    Intent result = new Intent();
+                    result.putExtra(ActivityParams.AUTH_OUT_IS_SUCCESS, false);
+                    result.putExtra(ActivityParams.AUTH_OUT_ERROR, resp.getResponse().getError());
                     setResult(Activity.RESULT_CANCELED, result);
+                    finish();
+                }
+            } else {
+                Intent result = new Intent();
+                result.putExtra(ActivityParams.AUTH_OUT_IS_SUCCESS, false);                
+                result.putExtra(ActivityParams.AUTH_OUT_EXCEPTION, resp.getException());
+                setResult(Activity.RESULT_CANCELED, result);
                 finish();
-            }
+            }                                    
         }
 
         @Override
@@ -198,28 +212,16 @@ public class AuthActivity extends Activity {
     }
 
     private class ReceiveTokenResp {
-        private final String token;
-        private final String error;
-        private final boolean success;
+        ReceiveOAuthTokenResponse response;
         private final Exception exception;
 
-        public ReceiveTokenResp(String token, String error, Exception exception) {
-            success = token != null;
-            this.token = token;
-            this.error = error;
+        public ReceiveTokenResp(ReceiveOAuthTokenResponse response, Exception exception) {
+            this.response = response;
             this.exception = exception; 
         }
 
-        public String getToken() {
-            return token;
-        }
-
-        public String getError() {
-            return error;
-        }
-
-        public boolean isSuccess() {
-            return success;
+        public ReceiveOAuthTokenResponse getResponse() {
+            return response;
         }
 
         public Exception getException() {

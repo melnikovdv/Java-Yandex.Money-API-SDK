@@ -2,6 +2,7 @@ package ru.yandex.money.droid;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import ru.yandex.money.api.InsufficientScopeException;
@@ -25,19 +26,23 @@ class LoadHistoryTask extends AsyncTask<Integer, Void, LoadHistoryTask.HistoryRe
     private final HistoryAdapter historyAdapter;
 
     ProgressDialog dialog;
+    private final DialogInterface.OnCancelListener onDialogCancelListener;
 
-    public LoadHistoryTask(Activity context, String clientId, String accessToken,
-            HistoryAdapter historyAdapter) {
+    public LoadHistoryTask(Activity context, String clientId, String accessToken, HistoryAdapter historyAdapter,
+            DialogInterface.OnCancelListener onDialogCancelListener) {
         this.historyAdapter = historyAdapter;
         this.context = context;
         this.clientId = clientId;
-        this.accessToken = accessToken;
+        this.accessToken = accessToken;        
+        this.onDialogCancelListener = onDialogCancelListener;
     }
 
     @Override
     protected void onPreExecute() {
         dialog = Utils.makeProgressDialog(context, Consts.WAIT);
-        dialog.show();
+        dialog.setOnCancelListener(onDialogCancelListener);
+        if (!context.isFinishing())
+            dialog.show();       
     }
 
     @Override
@@ -70,13 +75,10 @@ class LoadHistoryTask extends AsyncTask<Integer, Void, LoadHistoryTask.HistoryRe
             OperationHistoryResponse resp = ym.operationHistory(accessToken, params[0]);
             return new HistoryResp(resp, null);            
         } catch (IOException e) {
-            e.printStackTrace();
             return new HistoryResp(null, e);
         } catch (InvalidTokenException e) {
-            e.printStackTrace();
             return new HistoryResp(null, e);
         } catch (InsufficientScopeException e) {
-            e.printStackTrace();
             return new HistoryResp(null, e);
         }        
     }

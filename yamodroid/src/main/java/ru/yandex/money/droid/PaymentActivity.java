@@ -164,7 +164,9 @@ public class PaymentActivity extends Activity {
         protected void onPreExecute() {
             dialog = Utils.makeProgressDialog(PaymentActivity.this,
                     "Подготовка перевода", Consts.WAIT);
-            dialog.show();
+            dialog.setOnCancelListener(new OnRequestCancel());
+            if (!isFinishing())
+                dialog.show();
         }
 
         @Override
@@ -262,7 +264,8 @@ public class PaymentActivity extends Activity {
         protected void onPreExecute() {
             dialog = Utils.makeProgressDialog(PaymentActivity.this,
                     "Подготовка перевода", Consts.WAIT);
-            if (!PaymentActivity.this.isFinishing())
+            dialog.setOnCancelListener(new OnRequestCancel());
+            if (!isFinishing())
                 dialog.show();
         }
 
@@ -342,19 +345,20 @@ public class PaymentActivity extends Activity {
         protected void onPreExecute() {
             dialog = Utils.makeProgressDialog(PaymentActivity.this,
                     "Выполнение перевода", Consts.WAIT);
-            dialog.show();
+            dialog.setCancelable(false);
+            if (!isFinishing())
+                dialog.show();
         }
 
         @Override
-        protected void onPostExecute(
-                ProcessPaymentResp resp) {
+        protected void onPostExecute(ProcessPaymentResp resp) {
             dialog.dismiss();
 
             if (resp.getException() == null) {
-                if (resp.getResponse().isSuccess()) {
-
+                if (resp.getResponse().isSuccess()) {                    
                     if (showResultDialog) {
-                        makeResultAlertDialog(true, null, resp.getResponse().getPaymentId(), "Перевод").show();
+                        if (!isFinishing())
+                            makeResultAlertDialog(true, null, resp.getResponse().getPaymentId(), "Перевод").show();
                     } else {
                         Intent intent = new Intent();
                         intent.putExtra(ActivityParams.PAYMENT_OUT_IS_SUCCESS, true);
@@ -464,6 +468,17 @@ public class PaymentActivity extends Activity {
 
         public Exception getException() {
             return exception;
+        }
+    }
+    
+    private class OnRequestCancel implements DialogInterface.OnCancelListener {
+
+        public void onCancel(DialogInterface dialog) {
+            dialog.dismiss();
+            Intent intent = new Intent();
+            intent.putExtra(ActivityParams.PAYMENT_OUT_IS_SUCCESS, false);            
+            PaymentActivity.this.setResult(Activity.RESULT_CANCELED, intent);
+            PaymentActivity.this.finish();
         }
     }
 }

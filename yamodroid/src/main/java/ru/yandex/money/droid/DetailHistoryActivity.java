@@ -2,6 +2,7 @@ package ru.yandex.money.droid;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -100,7 +101,17 @@ public class DetailHistoryActivity extends Activity {
         @Override
         protected void onPreExecute() {
             dialog = Utils.makeProgressDialog(context, Consts.WAIT);
-            dialog.show();
+            dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                public void onCancel(DialogInterface dialog) {
+                    dialog.dismiss();
+                    Intent intent = new Intent();
+                    intent.putExtra(ActivityParams.HISTORY_DETAIL_OUT_IS_SUCCESS, false);                    
+                    context.setResult(Activity.RESULT_CANCELED, intent);
+                    context.finish();
+                }
+            });
+            if (!isFinishing())
+                dialog.show();
         }
 
         @Override

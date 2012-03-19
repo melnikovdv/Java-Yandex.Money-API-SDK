@@ -25,7 +25,7 @@
 
         <TextView
                 android:id="@+id/title_bar_balance_text"
-                android:text="@string/yandex_money"
+                android:text="@string/ym_yandex_money"
                 style="@style/ym.ui.titlebar.balance.one"
                 android:layout_gravity="center"
                 android:layout_height="wrap_content"

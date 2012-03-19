@@ -1,6 +1,7 @@
 package ru.yandex.money.droid;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -54,15 +55,15 @@ public class HistoryActivity extends Activity {
         imgRefresh = (ImageView) findViewById(R.id.image_refresh);
         imgRefresh.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                historyAdapter.clear();
-                new LoadHistoryTask(HistoryActivity.this, clientId, accessToken, historyAdapter).execute(0);
+                historyAdapter.clear();                
+                new LoadHistoryTask(HistoryActivity.this, clientId, accessToken, historyAdapter, new OnLoadNewCancel()).execute(0);
             }
         });
 
         listView = (ListView) findViewById(R.id.list_history);
         historyAdapter =
                 new HistoryAdapter(this, R.layout.ymd_history_item,
-                        new LinkedList<Operation>(), clientId, accessToken);
+                        new LinkedList<Operation>(), clientId, accessToken, new OnLoadNewCancel());
 
         listView.setAdapter(historyAdapter);
 
@@ -110,11 +111,28 @@ public class HistoryActivity extends Activity {
             }
         });
 
-        new LoadHistoryTask(this, clientId, accessToken, historyAdapter).execute(0);
+        new LoadHistoryTask(this, clientId, accessToken, historyAdapter, new OnStartupCancel()).execute(0);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         ymd.callbackOnResult(requestCode, resultCode, data);
+    }
+    
+    class OnStartupCancel implements DialogInterface.OnCancelListener {
+        public void onCancel(DialogInterface dialog) {
+            dialog.dismiss();
+            Intent intent = new Intent();
+            intent.putExtra(ActivityParams.HISTORY_OUT_IS_SUCCESS, false);
+            HistoryActivity.this.setResult(Activity.RESULT_CANCELED, intent);
+            HistoryActivity.this.finish();
+        }
+    }
+
+    class OnLoadNewCancel implements DialogInterface.OnCancelListener {
+
+        public void onCancel(DialogInterface dialog) {
+            dialog.dismiss();
+        }
     }
 }

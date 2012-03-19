@@ -2,6 +2,7 @@ package ru.yandex.money.droid;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -31,10 +32,12 @@ class HistoryAdapter extends ArrayAdapter {
     private final Activity context;
     private String accessToken;
     private String clientId;
+    private DialogInterface.OnCancelListener onCancelListener;
 
     public HistoryAdapter(Activity context, int textViewResourceId,
-            List<Operation> history, String clientId, String accessToken) {
+            List<Operation> history, String clientId, String accessToken, DialogInterface.OnCancelListener onCancelListener) {
         super(context, textViewResourceId, history);
+        this.onCancelListener = onCancelListener;
 
         inflater = (LayoutInflater) context.getSystemService(
                 Context.LAYOUT_INFLATER_SERVICE);
@@ -48,8 +51,8 @@ class HistoryAdapter extends ArrayAdapter {
     @Override
     public View getView(int position, View convertView,
             ViewGroup parent) {
-        if (position == getCount() - 1) {
-            loadHistoryTask = new LoadHistoryTask(context, clientId, accessToken, this);
+        if (position == getCount() - 1) {            
+            loadHistoryTask = new LoadHistoryTask(context, clientId, accessToken, this, onCancelListener);
             if ((loadHistoryTask.getStatus() != AsyncTask.Status.RUNNING))
                 loadHistoryTask.execute(getCount());
         }
@@ -76,7 +79,7 @@ class HistoryAdapter extends ArrayAdapter {
         String df = DateFormat.getDateInstance().format(op.getDatetime());
         holder.date.setText(df);
         String sum = op.getAmount().toString();
-        Bitmap source = null;
+        Bitmap source;
         if (op.getDirection() == MoneyDirection.in)
 ////            sum = "+" + sum;
             source = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_plus);
