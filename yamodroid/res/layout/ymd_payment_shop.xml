@@ -45,41 +45,11 @@
 
             <Button
                     style="@style/ym.ui.button"
-                    android:id="@+id/btn_send_p2p"
-                    android:text="Оплатить с кошелька"                    
+                    android:id="@+id/btn_pay"
+                    android:text="Оплатить"                    
                     android:visibility="visible"
                     android:layout_marginTop="10dp"
-                    />
-
-            <LinearLayout
-                    style="@style/ym.wrapped"
-                    android:id="@+id/ll_pay_with_card"
-                    android:orientation="vertical"
-                    android:layout_marginTop="10dp"
-                    android:visibility="gone"
-                    android:gravity="left">
-                <LinearLayout
-                        style="@style/ym.wrapped">
-                    <TextView
-                            style="@style/ym.wrapped.medium"
-                            android:text="CVC код карты"
-                            />
-                    <EditText
-                            style="@style/ym.ui.edit.cvc"
-                            android:id="@+id/edt_cvc"
-                            android:maxLength="3"
-                            android:width="50dp"
-                            android:layout_marginLeft="10dp"
-                            android:enabled="true"
-
-                            />
-                </LinearLayout>
-                <Button
-                        style="@style/ym.ui.button"
-                        android:id="@+id/btn_send_card"
-                        android:text="Оплатить с карты"                        
-                        />
-            </LinearLayout>
+                    />            
         </LinearLayout>
     </LinearLayout>
 </ScrollView>

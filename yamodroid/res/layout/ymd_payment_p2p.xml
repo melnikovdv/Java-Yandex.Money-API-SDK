@@ -75,8 +75,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     style="@style/ym.ui.button"
-                    android:id="@+id/btn_send_p2p"
-                    android:text="Перевести с кошелька"                    
+                    android:id="@+id/btn_pay"
+                    android:text="Перевести"                    
                     android:layout_gravity="left"
                     android:layout_marginTop="10dp"
                     />

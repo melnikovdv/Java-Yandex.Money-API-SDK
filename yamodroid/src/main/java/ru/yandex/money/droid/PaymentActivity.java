@@ -47,7 +47,7 @@ public class PaymentActivity extends Activity {
     private boolean p2pFlag;
 
     private Button btnPayFromCard;
-    private Button btnPayFromWallet;
+    private Button btnPay;
     private TextView tvDescr;
     private LinearLayout layoutPaywithCard;
     private EditText edtCVC;
@@ -60,9 +60,8 @@ public class PaymentActivity extends Activity {
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
         if (p2pFlag) {
-            setContentView(R.layout.ymd_payment_p2p);
-            btnPayFromCard = (Button) findViewById(R.id.btn_send_card);
-            btnPayFromWallet = (Button) findViewById(R.id.btn_send_p2p);
+            setContentView(R.layout.ymd_payment_p2p);            
+            btnPay = (Button) findViewById(R.id.btn_pay);
 
             TextView tvTo = (TextView) findViewById(R.id.tv_send_to);
             tvTo.setText("");
@@ -89,7 +88,7 @@ public class PaymentActivity extends Activity {
         } else {
             setContentView(R.layout.ymd_payment_shop);
             btnPayFromCard = (Button) findViewById(R.id.btn_send_card);
-            btnPayFromWallet = (Button) findViewById(R.id.btn_send_p2p);
+            btnPay = (Button) findViewById(R.id.btn_pay);
             layoutPaywithCard =
                     (LinearLayout) findViewById(R.id.ll_pay_with_card);
             edtCVC = (EditText) findViewById(R.id.edt_cvc);
@@ -176,7 +175,7 @@ public class PaymentActivity extends Activity {
 
             if (resp.getException() == null) {
                 if (resp.getResponse().isSuccess()) {
-                    btnPayFromWallet.setOnClickListener(
+                    btnPay.setOnClickListener(
                             new View.OnClickListener() {
                                 public void onClick(View v) {
                                     ProcPayParam param = new ProcPayParam(
@@ -293,8 +292,8 @@ public class PaymentActivity extends Activity {
                         layoutPaywithCard.setVisibility(View.GONE);
 
                     if (resp.getResponse().getMoneySource().getWallet().getAllowed()) {
-                        btnPayFromWallet.setVisibility(View.VISIBLE);
-                        btnPayFromWallet.setOnClickListener(new View.OnClickListener() {
+                        btnPay.setVisibility(View.VISIBLE);
+                        btnPay.setOnClickListener(new View.OnClickListener() {
                             public void onClick(View v) {
                                 ProcPayParam param = new ProcPayParam(
                                         resp.getResponse().getRequestId(),
