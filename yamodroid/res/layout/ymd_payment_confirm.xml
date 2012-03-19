@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="fill_parent"
-              android:layout_height="wrap_content"
+              style="@style/container.full"
               android:orientation="vertical">
 
         <LinearLayout
@@ -10,7 +9,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:visibility="gone"
+                android:visibility="visible"
                 >
 
             <TextView
@@ -22,22 +21,42 @@
             <RadioGroup
                     android:id="@+id/payment_source_radio_group"
                     android:layout_height="wrap_content"
-                    android:layout_width="fill_parent">
+                    android:layout_width="fill_parent"
+                    >
 
+                <RadioButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=" Со счета в Яндекс.Деньгах"
+                        android:checked="true"
+                        />
+
+                <RadioButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=" С банковской карты"
+                        />
             </RadioGroup>
-
 
         </LinearLayout>
 
 
         <EditText
-                android:id="@+id/payment_source_cvc_edit"
+                android:id="@+id/cvc_edit"
                 android:layout_height="wrap_content"
                 android:layout_width="fill_parent"
                 android:visibility="gone"
-                android:hint=""
+                android:hint="CVV"
                 android:inputType="number"
                 android:singleLine="true"
-                /> 
+                />
+
+        <Button
+                android:id="@+id/btnConfirm"
+                style="@style/ym.ui.button"
+                android:text="Подтвердить"
+                android:layout_gravity="left"
+                android:layout_marginTop="10dp"
+        />
     
 </LinearLayout>

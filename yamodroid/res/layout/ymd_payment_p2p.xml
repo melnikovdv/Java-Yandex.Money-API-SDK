@@ -72,8 +72,6 @@
                     android:text="Здесь может быть довольно длинное сообщение, который может быть на несколько строк"
                     />
             <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
                     style="@style/ym.ui.button"
                     android:id="@+id/btn_pay"
                     android:text="Перевести"                    

@@ -34,5 +34,11 @@
                 android:configChanges="orientation"
                 />
 
+        <activity
+                android:name=".PaymentConfirmActivity"
+                android:theme="@style/Theme.Light.YM"
+                android:configChanges="orientation"
+                />
+
     </application>
 </manifest> 

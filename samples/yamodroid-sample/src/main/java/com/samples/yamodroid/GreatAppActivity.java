@@ -3,6 +3,7 @@ package com.samples.yamodroid;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.http.AndroidHttpClient;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
@@ -191,9 +192,10 @@ public class GreatAppActivity extends Activity {
 
         @Override
         protected AccountInfoResponse doInBackground(Void... params) {
+            AndroidHttpClient client = Utils.httpClient();
             try {
                 if (isAuthorized(false)) {
-                    YandexMoney ym = Utils.getYandexMoney(Consts.CLIENT_ID);
+                    YandexMoney ym = Utils.getYandexMoney(Consts.CLIENT_ID, client);
                     return ym.accountInfo(restoreToken());
                 }
             } catch (InsufficientScopeException e) {
@@ -202,6 +204,8 @@ public class GreatAppActivity extends Activity {
                 e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
             } catch (IOException e) {
                 e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            } finally {
+                client.close();
             }
             return null;
         }

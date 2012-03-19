@@ -18,23 +18,19 @@
 
         <activity
                 android:name="ru.yandex.money.droid.AuthActivity"
-                android:label="@string/app_name"
                 android:theme="@style/Theme.Light.YM"
                 android:configChanges="orientation"
                 >
         </activity>
 
-
         <activity
                 android:name="ru.yandex.money.droid.HistoryActivity"
                 android:theme="@style/Theme.Light.YM"
-                android:label="@string/app_name"
                 android:configChanges="orientation"
                 />
 
         <activity
                 android:name="ru.yandex.money.droid.DetailHistoryActivity"
-                android:label="@string/app_name"
                 android:theme="@style/Theme.Light.YM"
                 android:configChanges="orientation"
                 />
@@ -42,10 +38,14 @@
         <activity
                 android:name="ru.yandex.money.droid.PaymentActivity"
                 android:theme="@style/Theme.Light.YM"
-                android:label="@string/app_name"
                 android:configChanges="orientation"
                 />
 
+        <activity
+                android:name="ru.yandex.money.droid.PaymentConfirmActivity"
+                android:theme="@style/Theme.Light.YM"
+                android:configChanges="orientation"
+                />
     </application>
 
 </manifest>

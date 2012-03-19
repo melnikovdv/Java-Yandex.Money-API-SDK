@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.http.AndroidHttpClient;
 import android.os.AsyncTask;
 import ru.yandex.money.api.InsufficientScopeException;
 import ru.yandex.money.api.InvalidTokenException;
@@ -70,7 +71,8 @@ class LoadHistoryTask extends AsyncTask<Integer, Void, LoadHistoryTask.HistoryRe
 
     @Override
     protected HistoryResp doInBackground(Integer... params) {
-        YandexMoney ym = Utils.getYandexMoney(clientId);
+        AndroidHttpClient client = Utils.httpClient();
+        YandexMoney ym = Utils.getYandexMoney(clientId, client);
         try {
             OperationHistoryResponse resp = ym.operationHistory(accessToken, params[0]);
             return new HistoryResp(resp, null);            
@@ -80,7 +82,9 @@ class LoadHistoryTask extends AsyncTask<Integer, Void, LoadHistoryTask.HistoryRe
             return new HistoryResp(null, e);
         } catch (InsufficientScopeException e) {
             return new HistoryResp(null, e);
-        }        
+        } finally {
+            client.close();
+        }
     }
 
     class HistoryResp {        

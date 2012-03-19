@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.http.AndroidHttpClient;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.widget.TextView;
@@ -85,7 +86,8 @@ public class DetailHistoryActivity extends Activity {
 
         @Override
         protected HistoryDetailResp doInBackground(String... params) {
-            YandexMoney ym = Utils.getYandexMoney(clientId);
+            AndroidHttpClient client = Utils.httpClient();
+            YandexMoney ym = Utils.getYandexMoney(clientId, client);
             try {
                 OperationDetailResponse resp = ym.operationDetail(accessToken, params[0]);
                 return new HistoryDetailResp(resp, null);
@@ -95,6 +97,8 @@ public class DetailHistoryActivity extends Activity {
                 return new HistoryDetailResp(null, e);
             } catch (InsufficientScopeException e) {
                 return new HistoryDetailResp(null, e);
+            } finally {
+                client.close();
             }
         }
 
@@ -105,7 +109,7 @@ public class DetailHistoryActivity extends Activity {
                 public void onCancel(DialogInterface dialog) {
                     dialog.dismiss();
                     Intent intent = new Intent();
-                    intent.putExtra(ActivityParams.HISTORY_DETAIL_OUT_IS_SUCCESS, false);                    
+                    intent.putExtra(ActivityParams.HISTORY_DETAIL_OUT_IS_SUCCESS, false);
                     context.setResult(Activity.RESULT_CANCELED, intent);
                     context.finish();
                 }

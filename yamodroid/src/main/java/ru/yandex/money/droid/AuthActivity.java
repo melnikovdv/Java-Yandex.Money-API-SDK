@@ -6,6 +6,7 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
+import android.net.http.AndroidHttpClient;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.webkit.WebChromeClient;
@@ -46,9 +47,9 @@ public class AuthActivity extends Activity {
             public void onCancel(DialogInterface dialog) {
                 dialog.dismiss();
                 Intent result = new Intent();
-                result.putExtra(ActivityParams.AUTH_OUT_IS_SUCCESS, false);                
+                result.putExtra(ActivityParams.AUTH_OUT_IS_SUCCESS, false);
                 setResult(Activity.RESULT_CANCELED, result);
-                finish();        
+                finish();
             }
         });
         if (!isFinishing())
@@ -95,7 +96,8 @@ public class AuthActivity extends Activity {
     }
 
     private ReceiveTokenResp receiveToken(String code) {
-        YandexMoney ym = Utils.getYandexMoney(clientId);
+        AndroidHttpClient client = Utils.httpClient();
+        YandexMoney ym = Utils.getYandexMoney(clientId, client);
         try {
             ReceiveOAuthTokenResponse resp = ym.receiveOAuthToken(code, redirectUri);
             return new ReceiveTokenResp(resp, null);            
@@ -103,6 +105,8 @@ public class AuthActivity extends Activity {
             return new ReceiveTokenResp(null, e);
         } catch (InsufficientScopeException e) {
             return new ReceiveTokenResp(null, e);
+        } finally {
+            client.close();
         }
     }
 

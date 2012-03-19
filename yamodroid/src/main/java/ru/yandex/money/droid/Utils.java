@@ -4,8 +4,12 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.net.http.AndroidHttpClient;
 import android.widget.Toast;
+import org.apache.http.client.HttpClient;
 import ru.yandex.money.api.YandexMoney;
 import ru.yandex.money.api.YandexMoneyImpl;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author dvmelnikov
@@ -15,16 +19,16 @@ public class Utils {
     
 //    private static Map<String, YandexMoney> ymObjects = new HashMap<String, YandexMoney>();
 
-    public static YandexMoney getYandexMoney(String clientId) {
+    public static YandexMoney getYandexMoney(String clientId, HttpClient client) {
         //todo: разобраться с этим!
 //        if ((clientId == null) || (clientId.equals("")))
 //            throw new IllegalArgumentException("client_id is empty");
-//
-//        if (ymObjects.containsKey(clientId))
+////
+//        if (ymObjects.containsKey(clientId)) {
 //            return ymObjects.get(clientId);
-//        else {                                                
-            YandexMoney ym = new YandexMoneyImpl(clientId,
-                    AndroidHttpClient.newInstance(Consts.USER_AGENT));
+//        }
+//        else {
+            YandexMoney ym = new YandexMoneyImpl(clientId, client);
 //            ymObjects.put(clientId, ym);
             return ym;
 //        }
@@ -48,5 +52,9 @@ public class Utils {
 
     public static void showError(Context context, String message) {
         Toast.makeText(context, message, Toast.LENGTH_LONG).show();
+    }
+
+    public static AndroidHttpClient httpClient() {
+        return AndroidHttpClient.newInstance(Consts.USER_AGENT);
     }
 }
