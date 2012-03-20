@@ -178,7 +178,7 @@ ymd.showPaymentShop(yourAppActivity, CODE_PAYMENT_SHOP, accessToken, sum,
 
 ### callback 
 
-Не забывайте в `onActivityResult` добавлять вызов. Это даст библиотеке возможность обрабатывать полученные 
+Не забывайте в `onActivityResult` добавлять вызов, указанный ниже. Это даст библиотеке возможность обрабатывать полученные 
 результаты работы activities библиотеки.
 
 ```java
