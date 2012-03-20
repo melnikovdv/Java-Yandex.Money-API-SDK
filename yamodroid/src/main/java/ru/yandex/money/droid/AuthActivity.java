@@ -38,11 +38,14 @@ public class AuthActivity extends Activity {
     public static final String AUTH_IN_CLIENT_ID = "client_id";
     public static final String AUTH_IN_AUTH_URI = "authorize_uri";
 
+    public static String AUTH_CODE = "code";
+    public static final String AUTH = "Авторизация";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        pd = Utils.makeProgressDialog(this, Consts.AUTH, Consts.WAIT);
+        pd = Utils.makeProgressDialog(this, AUTH, Consts.WAIT);
         pd.setOnCancelListener(new DialogInterface.OnCancelListener() {
             public void onCancel(DialogInterface dialog) {
                 dialog.dismiss();
@@ -66,8 +69,7 @@ public class AuthActivity extends Activity {
     public void onBackPressed() {
         Intent intent = new Intent();
         intent.putExtra(ActivityParams.PAYMENT_OUT_IS_SUCCESS,
-                false);
-        intent.putExtra(ActivityParams.PAYMENT_OUT_ERROR, Consts.USER_CANCELLED);
+                false);        
         this.setResult(Activity.RESULT_CANCELED, intent);
         finish();
     }
@@ -92,7 +94,7 @@ public class AuthActivity extends Activity {
 
     private String extractCode(String urlWithCode) {
         Uri uri = Uri.parse(urlWithCode);
-        return uri.getQueryParameter(Consts.AUTH_CODE);
+        return uri.getQueryParameter(AUTH_CODE);
     }
 
     private ReceiveTokenResp receiveToken(String code) {

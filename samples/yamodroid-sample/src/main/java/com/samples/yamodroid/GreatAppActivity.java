@@ -52,22 +52,20 @@ public class GreatAppActivity extends Activity {
 
         btnAuth = (Button) findViewById(R.id.btnAuth);
         btnAuth.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
-                // Если не авторизован, то авторизуемся по нажатию
+            public void onClick(View view) {                
                 if (!isAuthorized(false)) {
                     ymd.authorize(GreatAppActivity.this, CODE_AUTH, Consts.REDIRECT_URI, Consts.getPermissions(), true,
                             dialogListener);
-                } else { // Если уже авторизован, то выходим
+                } else {
                     storeToken("");
                 }
                 refresh();
             }
-        });
+        });                
 
         Button btnHistory = (Button) findViewById(R.id.btnHistory);
         btnHistory.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-
                 if (!isAuthorized(true))
                     return;
                 ymd.showHistory(GreatAppActivity.this, CODE_HISTORY, restoreToken(), dialogListener);
@@ -114,6 +112,12 @@ public class GreatAppActivity extends Activity {
     }
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode,
+            Intent data) {
+        ymd.callbackOnResult(requestCode, resultCode, data);
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
         refresh();
@@ -144,14 +148,7 @@ public class GreatAppActivity extends Activity {
             tvAuthStatus.setText("Статус: не авторизован");
             btnAuth.setText("Авторизоваться");
         }
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode,
-                                    Intent data) {
-
-        ymd.callbackOnResult(requestCode, resultCode, data);
-    }
+    }   
 
     private void storeToken(String token) {
         SharedPreferences sp = getSharedPreferences(PREFERENCES, MODE_PRIVATE);
@@ -173,8 +170,7 @@ public class GreatAppActivity extends Activity {
             return true;
     }
 
-    class LoadAccountInfoTask extends
-            AsyncTask<Void, Void, AccountInfoResponse> {
+    class LoadAccountInfoTask extends AsyncTask<Void, Void, AccountInfoResponse> {
 
         @Override
         protected void onPostExecute(AccountInfoResponse air) {
@@ -199,11 +195,11 @@ public class GreatAppActivity extends Activity {
                     return ym.accountInfo(restoreToken());
                 }
             } catch (InsufficientScopeException e) {
-                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                // do new authorization with sufficient permissions scope
             } catch (InvalidTokenException e) {
-                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                // do auth again
             } catch (IOException e) {
-                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                // there is no internet ;-(
             } finally {
                 client.close();
             }
