@@ -37,6 +37,13 @@ GettingStarted Maven-плагина для Android [тут](http://code.google.c
 
 ### Changelog
 
+**20.03.2012 yamodroid 1.1.0**
+
+* добавлен класс YandexMoneyDroid и интерфейс лисенера для удобно обработки результатов работы методов API (onSuccess, 
+ onFail, onException, onCancel)
+* добавлена обработка нажатия cancel (назад) на длительных операциях
+* изменен и оптимизирован интерфейс работы оплаты в магазины, добавлено новое activity PaymentConfirmActivity.
+
 **08.02.2012 yamolib 1.1.0** (спасибо [axet](https://github.com/axet))
 
 * response-объекты стали serializable
