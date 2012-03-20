@@ -9,8 +9,8 @@ package ru.yandex.money.api.response.util.money;
 
 public class PaymentMethods {
 
-    private Element wallet;
-    private Element card;
+    private Element wallet = new Element();
+    private Element card = new Element();
 
     private PaymentMethods() {
     }

@@ -12,32 +12,32 @@
         <activity
                 android:name=".AuthActivity"                
                 android:theme="@style/Theme.Light.YM"
-                android:configChanges="orientation"
+                android:configChanges="keyboardHidden|orientation"
                 >
         </activity>
 
         <activity
             android:name=".HistoryActivity"
             android:theme="@style/Theme.Light.YM"            
-            android:configChanges="orientation"
+            android:configChanges="keyboardHidden|orientation"
             />
 
         <activity
                 android:name=".DetailHistoryActivity"                
                 android:theme="@style/Theme.Light.YM"
-                android:configChanges="orientation"
+                android:configChanges="keyboardHidden|orientation"
                 />
 
         <activity
                 android:name=".PaymentActivity"
                 android:theme="@style/Theme.Light.YM"                
-                android:configChanges="orientation"
+                android:configChanges="keyboardHidden|orientation"
                 />
 
         <activity
                 android:name=".PaymentConfirmActivity"
                 android:theme="@style/Theme.Light.YM"
-                android:configChanges="orientation"
+                android:configChanges="keyboardHidden|orientation"
                 />
 
     </application>

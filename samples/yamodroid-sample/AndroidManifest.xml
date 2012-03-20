@@ -19,32 +19,32 @@
         <activity
                 android:name="ru.yandex.money.droid.AuthActivity"
                 android:theme="@style/Theme.Light.YM"
-                android:configChanges="orientation"
+                android:configChanges="keyboardHidden|orientation"
                 >
         </activity>
 
         <activity
                 android:name="ru.yandex.money.droid.HistoryActivity"
                 android:theme="@style/Theme.Light.YM"
-                android:configChanges="orientation"
+                android:configChanges="keyboardHidden|orientation"
                 />
 
         <activity
                 android:name="ru.yandex.money.droid.DetailHistoryActivity"
                 android:theme="@style/Theme.Light.YM"
-                android:configChanges="orientation"
+                android:configChanges="keyboardHidden|orientation"
                 />
 
         <activity
                 android:name="ru.yandex.money.droid.PaymentActivity"
                 android:theme="@style/Theme.Light.YM"
-                android:configChanges="orientation"
+                android:configChanges="keyboardHidden|orientation"
                 />
 
         <activity
                 android:name="ru.yandex.money.droid.PaymentConfirmActivity"
                 android:theme="@style/Theme.Light.YM"
-                android:configChanges="orientation"
+                android:configChanges="keyboardHidden|orientation"
                 />
     </application>
 

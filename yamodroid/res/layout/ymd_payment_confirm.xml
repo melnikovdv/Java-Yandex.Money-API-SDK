@@ -1,62 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              style="@style/container.full"
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent"
               android:orientation="vertical">
 
-        <LinearLayout
-                android:id="@+id/payment_source_layout"
-                android:layout_width="fill_parent"
+    <include layout="@layout/ymd_title_bar" android:id="@+id/title_bar"/>
+
+    <LinearLayout
+            android:id="@+id/payment_source_layout"
+            style="@style/container.wrapped"
+            android:orientation="vertical"
+            android:visibility="visible"
+            >
+
+        <TextView
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:visibility="visible"
+                android:layout_width="fill_parent"
+                android:text="Выберите способ оплаты:"
+                />
+
+        <RadioGroup
+                android:id="@+id/payment_source_radio_group"
+                android:layout_height="wrap_content"
+                android:layout_width="fill_parent"
                 >
 
-            <TextView
+            <RadioButton
+                    android:id="@+id/radio_btn_wallet"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_width="fill_parent"
-                    android:text="Выберите способ оплаты:"
-                    />            
+                    android:text=" Со счета в Яндекс.Деньгах"
+                    android:checked="true"
+                    />
 
-            <RadioGroup
-                    android:id="@+id/payment_source_radio_group"
+            <RadioButton
+                    android:id="@+id/radio_btn_card"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_width="fill_parent"
-                    >
-
-                <RadioButton
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text=" Со счета в Яндекс.Деньгах"
-                        android:checked="true"
-                        />
-
-                <RadioButton
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text=" С банковской карты"
-                        />
-            </RadioGroup>
-
-        </LinearLayout>
-
+                    android:text=" С банковской карты"
+                    />
+        </RadioGroup>
 
         <EditText
                 android:id="@+id/cvc_edit"
                 android:layout_height="wrap_content"
-                android:layout_width="fill_parent"
+                android:layout_width="wrap_content"
                 android:visibility="gone"
                 android:hint="CVV"
+                android:width="200dp"
                 android:inputType="number"
                 android:singleLine="true"
                 />
 
         <Button
-                android:id="@+id/btnConfirm"
+                android:id="@+id/btn_confirm"
                 style="@style/ym.ui.button"
                 android:text="Подтвердить"
                 android:layout_gravity="left"
                 android:layout_marginTop="10dp"
-        />
-    
+                />
+
+    </LinearLayout>
 </LinearLayout>

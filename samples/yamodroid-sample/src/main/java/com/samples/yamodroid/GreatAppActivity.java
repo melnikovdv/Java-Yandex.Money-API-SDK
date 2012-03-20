@@ -221,7 +221,7 @@ public class GreatAppActivity extends Activity {
 
             String paymentId = values.getString(ActivityParams.PAYMENT_OUT_OPERATION_ID);
             if (paymentId != null) {
-                Toast.makeText(GreatAppActivity.this, "p2p payment successfully finished. Payment id: " + paymentId, Toast.LENGTH_LONG).show();
+                Toast.makeText(GreatAppActivity.this, "payment successfully finished. Payment id: " + paymentId, Toast.LENGTH_LONG).show();
             }
         }
 
@@ -231,7 +231,7 @@ public class GreatAppActivity extends Activity {
 
         public void onException(Exception exception) {
             Toast.makeText(GreatAppActivity.this, "Exception: " + exception.getClass().getName(), Toast.LENGTH_LONG)
-                    .show();
+                    .show();            
         }
 
         public void onCancel() {

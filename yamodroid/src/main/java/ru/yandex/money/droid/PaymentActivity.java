@@ -10,8 +10,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import ru.yandex.money.api.InsufficientScopeException;
 import ru.yandex.money.api.InvalidTokenException;
@@ -47,11 +45,8 @@ public class PaymentActivity extends Activity {
     private boolean showResultDialog;
     private boolean p2pFlag;
 
-    private Button btnPayFromCard;
     private Button btnPay;
     private TextView tvDescr;
-    private LinearLayout layoutPaywithCard;
-    private EditText edtCVC;
     private PaymentShopParcelable shopParams;
 
     @Override
@@ -89,11 +84,7 @@ public class PaymentActivity extends Activity {
             new RequestPaymentP2pTask().execute(params);
         } else {
             setContentView(R.layout.ymd_payment_shop);
-//            btnPayFromCard = (Button) findViewById(R.id.btn_send_card);
             btnPay = (Button) findViewById(R.id.btn_pay);
-//            layoutPaywithCard =
-//                    (LinearLayout) findViewById(R.id.ll_pay_with_card);
-//            edtCVC = (EditText) findViewById(R.id.edt_cvc);
 
             TextView tvSum = (TextView) findViewById(R.id.tv_sum);
             tvSum.setText("");
@@ -110,9 +101,7 @@ public class PaymentActivity extends Activity {
     @Override
     public void onBackPressed() {
         Intent intent = new Intent();
-        intent.putExtra(ActivityParams.PAYMENT_OUT_IS_SUCCESS,
-                false);
-        intent.putExtra(ActivityParams.PAYMENT_OUT_ERROR, Consts.USER_CANCELLED);
+        intent.putExtra(ActivityParams.PAYMENT_OUT_IS_SUCCESS, false);        
         this.setResult(Activity.RESULT_CANCELED, intent);
         finish();
     }
@@ -180,7 +169,8 @@ public class PaymentActivity extends Activity {
                         @Override
                         public void onClick(View view) {
                             new ProcessPaymentTask(PaymentActivity.this, clientId, accessToken,
-                                    resp.getResponse().getRequestId(), MoneySource.wallet, showResultDialog, null).execute();
+                                    resp.getResponse().getRequestId(), MoneySource.wallet, showResultDialog, null)
+                                    .execute();
                         }
                     });
                 } else {
@@ -245,43 +235,29 @@ public class PaymentActivity extends Activity {
             if (resp.getException() == null) {
                 if (resp.getResponse().isSuccess()) {
                     tvDescr.setText(resp.getResponse().getContract());
-
-//                    if (resp.getResponse().getMoneySource().getCard().getAllowed()) {
-//                        layoutPaywithCard.setVisibility(View.VISIBLE);
-//                        btnPayFromCard.setOnClickListener(new View.OnClickListener() {
-//                            public void onClick(View v) {
-//                                ProcPayParam param = new ProcPayParam(
-//                                        resp.getResponse().getRequestId(),
-//                                        MoneySource.card,
-//                                        edtCVC.getText().toString());
-//                                new ProcessPaymentTask().execute(param);
-//                            }
-//                        });
-//                    } else
-//                        layoutPaywithCard.setVisibility(View.GONE);
-
-//                    if (resp.getResponse().getMoneySource().getWallet().getAllowed()) {
-//                        btnPay.setVisibility(View.VISIBLE);
-//                        btnPay.setOnClickListener(new View.OnClickListener() {
-//                            public void onClick(View v) {
-//                                ProcPayParam param = new ProcPayParam(
-//                                        resp.getResponse().getRequestId(),
-//                                        MoneySource.wallet);
-//                                new ProcessPaymentTask().execute(param);
-//                            }
-//                        });
-//                    }
-                    btnPay.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            Intent paymentConfirm = new Intent(PaymentActivity.this, PaymentConfirmActivity.class);
-                            paymentConfirm.putExtra(PAYMENT_IN_CLIENT_ID, clientId);
-                            paymentConfirm.putExtra(PAYMENT_IN_ACCESS_TOKEN, accessToken);
-                            paymentConfirm.putExtra(PAYMENT_IN_SHOW_RESULT_DIALOG, showResultDialog);
-                            paymentConfirm.putExtra(PAYMENT_SHOP_IN_PARAMS, shopParams);
-                            startActivityForResult(paymentConfirm, PAYMENT_CONFIRM_ACTIVITY_CODE);
-                        }
-                    });
+                    if (resp.getResponse().getMoneySource().getCard().getAllowed()) {
+                        btnPay.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                Intent paymentConfirm = new Intent(PaymentActivity.this, PaymentConfirmActivity.class);
+                                paymentConfirm.putExtra(PAYMENT_IN_CLIENT_ID, clientId);
+                                paymentConfirm.putExtra(PAYMENT_IN_ACCESS_TOKEN, accessToken);
+                                paymentConfirm.putExtra(PAYMENT_IN_SHOW_RESULT_DIALOG, showResultDialog);
+                                paymentConfirm.putExtra(PAYMENT_SHOP_IN_PARAMS, shopParams);                                
+                                paymentConfirm.putExtra(PaymentConfirmActivity.PAYMENT_CONFIRM_IN_REQUEST_ID,
+                                        resp.getResponse().getRequestId());
+                                startActivityForResult(paymentConfirm, PAYMENT_CONFIRM_ACTIVITY_CODE);
+                            }
+                        });
+                    } else {                        
+                        btnPay.setOnClickListener(new View.OnClickListener() {
+                            public void onClick(View v) {
+                                new ProcessPaymentTask(PaymentActivity.this, clientId, accessToken,
+                                        resp.getResponse().getRequestId(), MoneySource.wallet, 
+                                        showResultDialog, null).execute();
+                            }
+                        });                                                                        
+                    }                    
                 } else {
                     Intent intent = new Intent();
                     intent.putExtra(ActivityParams.PAYMENT_OUT_IS_SUCCESS, false);
@@ -351,11 +327,13 @@ public class PaymentActivity extends Activity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == PAYMENT_CONFIRM_ACTIVITY_CODE) {
 
+            boolean isSuccess = false;
             Exception exception = null;
             String error = null;
             String paymentId = null;
 
-            boolean isSuccess = data.getBooleanExtra(ActivityParams.PAYMENT_OUT_IS_SUCCESS, false);
+            if (data.hasExtra(ActivityParams.PAYMENT_OUT_IS_SUCCESS))
+                isSuccess = data.getBooleanExtra(ActivityParams.PAYMENT_OUT_IS_SUCCESS, false);
             if (data.hasExtra(ActivityParams.PAYMENT_OUT_EXCEPTION))
                 exception = (Exception) data.getSerializableExtra(ActivityParams.PAYMENT_OUT_EXCEPTION);
             if (data.hasExtra(ActivityParams.PAYMENT_OUT_ERROR))
