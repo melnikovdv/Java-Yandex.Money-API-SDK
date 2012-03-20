@@ -176,6 +176,14 @@ ymd.showPaymentShop(yourAppActivity, CODE_PAYMENT_SHOP, accessToken, sum,
                         patternId, params, showResultDialog, dialogListener);
 ```
 
+### callback 
+
+Не забывайте в `onActivityResult` добавлять вызов. Это даст библиотеке возможность обрабатывать полученные 
+результаты работы activities библиотеки.
+
+```java
+ymd.callbackOnResult(requestCode, resultCode, data);
+```
 
 ### Интерфейс `YandexMoneyDroid.DialogListener`
 
