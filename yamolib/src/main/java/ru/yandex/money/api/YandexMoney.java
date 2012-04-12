@@ -85,6 +85,9 @@ public interface YandexMoney {
     public ReceiveOAuthTokenResponse receiveOAuthToken(String code,
             String redirectUri) throws IOException, InsufficientScopeException;
 
+    public ReceiveOAuthTokenResponse receiveOAuthToken(String code,
+            String redirectUri, String clientSecret) throws IOException, InsufficientScopeException;
+
     /**
      * Метод получения информации о текущем состоянии счета пользователя.
      * Требуемые права токена: account-info
