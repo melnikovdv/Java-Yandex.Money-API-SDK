@@ -38,9 +38,14 @@ public class YandexMoneyDroid {
 
     public void authorize(Activity activity, int activityCode, String redirectUri,
                           Collection<Permission> permissions, boolean showResultDialog, DialogListener dialogListener) {
+        authorize(activity, activityCode, redirectUri, permissions, null, showResultDialog, dialogListener);
+    }
+
+    public void authorize(Activity activity, int activityCode, String redirectUri,
+            Collection<Permission> permissions, String clientSecret, boolean showResultDialog, DialogListener dialogListener) {
         activityCodeAuth = activityCode;
         dialogListenerAuth = dialogListener;
-        Intent auth = IntentCreator.createAuth(activity, clientId, redirectUri, permissions, showResultDialog);
+        Intent auth = IntentCreator.createAuth(activity, clientId, redirectUri, permissions, clientSecret, showResultDialog);
         activity.startActivityForResult(auth, activityCodeAuth);
     }
 

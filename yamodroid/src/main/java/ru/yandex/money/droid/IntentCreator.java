@@ -36,7 +36,7 @@ public class IntentCreator {
      */
     public static Intent createAuth(final Activity activity,
                                     final String clientId, final String redirectUri,
-                                    final Collection<Permission> permissions,
+                                    final Collection<Permission> permissions, final String clientSecret,                                    
                                     boolean showResultDialog) {
         checkMainParams(clientId, "token", activity);
 
@@ -44,6 +44,7 @@ public class IntentCreator {
         intent.putExtra(AuthActivity.AUTH_IN_CLIENT_ID, clientId);
         intent.putExtra(AuthActivity.AUTH_IN_REDIRECT_URI, redirectUri);
         intent.putExtra(AuthActivity.AUTH_IN_SHOW_RES_DLG, showResultDialog);
+        intent.putExtra(AuthActivity.AUTH_IN_SECRET, clientSecret);
 
         YandexMoneyImpl yandexMoney = new YandexMoneyImpl(clientId);
         String authUri =

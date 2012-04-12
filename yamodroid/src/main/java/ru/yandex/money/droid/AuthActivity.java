@@ -30,6 +30,7 @@ public class AuthActivity extends Activity {
     private String clientId;
     private String redirectUri;
     private String authUri;
+    private String clientSecret;
 
     private WebView authView;
 
@@ -37,9 +38,10 @@ public class AuthActivity extends Activity {
     public static final String AUTH_IN_REDIRECT_URI = "redirect_uri";
     public static final String AUTH_IN_CLIENT_ID = "client_id";
     public static final String AUTH_IN_AUTH_URI = "authorize_uri";
+    public static final String AUTH_IN_SECRET = "client_secret";
 
     public static String AUTH_CODE = "code";
-    public static final String AUTH = "Авторизация";
+    public static final String AUTH = "Авторизация";    
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,8 +89,8 @@ public class AuthActivity extends Activity {
 
     private void setupIntentParams() {
         clientId = getIntent().getStringExtra(AuthActivity.AUTH_IN_CLIENT_ID);
-        redirectUri =
-                getIntent().getStringExtra(AuthActivity.AUTH_IN_REDIRECT_URI);
+        redirectUri = getIntent().getStringExtra(AuthActivity.AUTH_IN_REDIRECT_URI);
+        clientSecret = getIntent().getStringExtra(AuthActivity.AUTH_IN_SECRET);        
         authUri = getIntent().getStringExtra(AuthActivity.AUTH_IN_AUTH_URI);
     }
 
@@ -101,7 +103,11 @@ public class AuthActivity extends Activity {
         AndroidHttpClient client = Utils.httpClient();
         YandexMoney ym = Utils.getYandexMoney(clientId, client);
         try {
-            ReceiveOAuthTokenResponse resp = ym.receiveOAuthToken(code, redirectUri);
+            ReceiveOAuthTokenResponse resp;
+            if (clientSecret == null)
+                resp = ym.receiveOAuthToken(code, redirectUri);
+            else
+                resp = ym.receiveOAuthToken(code, redirectUri, clientSecret);
             return new ReceiveTokenResp(resp, null);            
         } catch (IOException e) {
             return new ReceiveTokenResp(null, e);
