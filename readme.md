@@ -37,6 +37,10 @@ GettingStarted Maven-плагина для Android [тут](http://code.google.c
 
 ### Changelog
 
+**12.04.2012 yamodroid 1.1.1 and yamolib 1.1.1
+
+* добавлена поддержка client_secret в yamodroid и прокинут метод в интерфейс yamolib
+
 **20.03.2012 yamodroid 1.1.0**
 
 * добавлен класс YandexMoneyDroid и интерфейс лисенера для удобной обработки результатов работы методов API (onSuccess,
