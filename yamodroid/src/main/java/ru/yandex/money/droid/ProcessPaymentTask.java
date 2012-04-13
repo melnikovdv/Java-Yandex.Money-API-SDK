@@ -135,7 +135,9 @@ class ProcessPaymentTask extends AsyncTask<Void, Void, ProcessPaymentTask.Proces
                 activity.finish();
             }
         });
-        return builder.create();
+        AlertDialog dialog = builder.create();
+        dialog.setCanceledOnTouchOutside(false);
+        return dialog;
     }
 
     public class ProcessPaymentResp {

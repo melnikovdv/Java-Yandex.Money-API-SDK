@@ -146,7 +146,10 @@ public class AuthActivity extends Activity {
                 finish();
             }
         });
-        return builder.create();
+        
+        AlertDialog dialog = builder.create();
+        dialog.setCanceledOnTouchOutside(false);
+        return dialog;
     }
 
     private class AuthWebViewClient extends WebViewClient {
