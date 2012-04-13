@@ -85,7 +85,9 @@ public class YandexMoneyDroid {
 
     public void callbackOnResult(int requestCode, int resultCode, Intent data) {
 
-        boolean isSuccess = data.getBooleanExtra(ActivityParams.AUTH_OUT_IS_SUCCESS, false);
+        boolean isSuccess = false;
+        if (data != null)
+            isSuccess = data.getBooleanExtra(ActivityParams.AUTH_OUT_IS_SUCCESS, false);
 
         if (requestCode == activityCodeAuth) {
             if (resultCode == Activity.RESULT_OK) {
