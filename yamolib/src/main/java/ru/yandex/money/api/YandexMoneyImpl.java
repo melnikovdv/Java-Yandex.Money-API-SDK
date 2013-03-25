@@ -130,6 +130,10 @@ public class YandexMoneyImpl implements YandexMoney, Serializable {
         return parseJson(httpResp.getEntity(), ReceiveOAuthTokenResponse.class);
     }
 
+    public void revokeOAuthToken(String accessToken) throws InvalidTokenException, IOException {
+        execPostRequest(YandexMoney.URI_YM_API + "/revoke", null, accessToken);
+    }
+
     public AccountInfoResponse accountInfo(String accessToken)
             throws IOException, InvalidTokenException, InsufficientScopeException {
         HttpResponse resp =
