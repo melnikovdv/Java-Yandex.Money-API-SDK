@@ -89,6 +89,15 @@ public interface YandexMoney {
             String redirectUri, String clientSecret) throws IOException, InsufficientScopeException;
 
     /**
+     * Метод для отзыва токена авторизации. При отзыве токена, все права, выданные этому токену, будут отменены.
+     *
+     * @param accessToken токен авторизации пользователя
+     * @throws IOException           ошибка связи с сервером Яндекс.Денег
+     * @throws InvalidTokenException указан несуществующий, просроченный, или отозванный токен
+     */
+    public void revokeOAuthToken(String accessToken) throws IOException, InvalidTokenException;
+
+    /**
      * Метод получения информации о текущем состоянии счета пользователя.
      * Требуемые права токена: account-info
      *
