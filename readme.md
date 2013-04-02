@@ -37,7 +37,11 @@ GettingStarted Maven-плагина для Android [тут](http://code.google.c
 
 ### Changelog
 
-**12.04.2012 yamodroid 1.1.1 and yamolib 1.1.1
+**25.03.2013 yamolib **
+
+* token revokation support
+
+**12.04.2012 yamodroid 1.1.1 and yamolib 1.1.1**
 
 * добавлена поддержка client_secret в yamodroid и прокинут метод в интерфейс yamolib
 
