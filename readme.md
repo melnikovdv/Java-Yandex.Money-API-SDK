@@ -37,6 +37,10 @@ GettingStarted Maven-плагина для Android [тут](http://code.google.c
 
 ### Changelog
 
+**12.07.2013**
+
+* fix http connection handling
+
 **25.03.2013 yamolib**
 
 * token revokation support
