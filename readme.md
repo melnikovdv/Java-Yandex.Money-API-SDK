@@ -6,7 +6,7 @@
 
 **yamolib** (aka Yandex Money Library) - java-библиотека для работы с API. [Посмотреть](https://github.com/melnikovdv/Java-Yandex.Money-API-SDK/tree/master/yamolib).
 
-**yamodroid** (aka Yandex Money Droid Library) - *deprecated* android-библиотека для работы c API. [Посмотреть](https://github.com/melnikovdv/Java-Yandex.Money-API-SDK/tree/master/yamodroid).
+**yamodroid** (aka Yandex Money Droid Library) - **deprecated** android-библиотека для работы c API. [Посмотреть](https://github.com/melnikovdv/Java-Yandex.Money-API-SDK/tree/master/yamodroid).
 
 **samples** - проект-агрегатор для тестовых приложений использования библиотек. [Посмотреть](https://github.com/melnikovdv/Java-Yandex.Money-API-SDK/tree/master/samples).
 
@@ -20,7 +20,7 @@
     |
     |- yamolib
     |
-    |- yamodroid *deprecated*
+    |- yamodroid (deprecated)
     |
     |- samples
         |
