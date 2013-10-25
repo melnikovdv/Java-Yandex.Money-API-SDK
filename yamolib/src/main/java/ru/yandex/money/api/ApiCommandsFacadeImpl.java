@@ -21,10 +21,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * <p>Класс для работы с API Яндекс.Деньги. Реализует интерфейс YandexMoney.</p>
@@ -42,6 +40,13 @@ import java.util.Set;
 public class ApiCommandsFacadeImpl implements ApiCommandsFacade, Serializable {
 
     private static final long serialVersionUID = 1L;
+
+    private static final ThreadLocal<SimpleDateFormat> RFC_3339 = new ThreadLocal<SimpleDateFormat>() {
+        @Override
+        protected SimpleDateFormat initialValue() {
+            return new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ssZ");
+        }
+    };
 
     /**
      * Кодировка для url encoding/decoding
@@ -128,31 +133,47 @@ public class ApiCommandsFacadeImpl implements ApiCommandsFacade, Serializable {
     public OperationHistoryResponse operationHistory(String accessToken, Integer startRecord, Integer records,
             Set<OperationHistoryType> operationsType) throws IOException,
             InvalidTokenException, InsufficientScopeException {
-        return operationHistory(accessToken, startRecord, records, operationsType, false);
+        return operationHistory(accessToken, startRecord, records, operationsType, null, null, null, null);
     }
 
     public OperationHistoryResponse operationHistory(String accessToken,
-            Integer startRecord, Integer records,
-            Set<OperationHistoryType> operationsType, boolean fetchDetails) throws IOException,
+                                                     Integer startRecord, Integer records,
+                                                     Set<OperationHistoryType> operationsType, Boolean fetchDetails,
+                                                     Date till, Date from, String label) throws IOException,
             InvalidTokenException, InsufficientScopeException {
 
         List<NameValuePair> params = new ArrayList<NameValuePair>();
-        if (startRecord != null) {
-            params.add(new BasicNameValuePair("start_record", String.valueOf(startRecord)));
-        }
-        if (records != null) {
-            params.add(new BasicNameValuePair("records", String.valueOf(records)));
-        }
-        if (operationsType != null && !operationsType.isEmpty()) {
-            params.add(new BasicNameValuePair("type", joinHistoryTypes(operationsType)));
-        }
-        params.add(new BasicNameValuePair("details", Boolean.toString(fetchDetails)));
-        // todo Параметры from, till, label
+
+        addParamIfNotNull("start_record", startRecord, params);
+        addParamIfNotNull("records", records, params);
+        addParamIfNotNull("type", joinHistoryTypes(operationsType), params);
+        addParamIfNotNull("details", fetchDetails, params);
+        addParamIfNotNull("till", till, params);
+        addParamIfNotNull("from", from, params);
+        addParamIfNotNull("label", label, params);
+
         return executeForJsonObjectFunc(uriYamoneyApi + "/operation-history", params, accessToken,
                 OperationHistoryResponse.class);
     }
 
+    private void addParamIfNotNull(String paramName, Object value, List<NameValuePair> params) {
+        if (value != null) {
+            params.add(new BasicNameValuePair(paramName, String.valueOf(value)));
+        }
+    }
+
+    private void addParamIfNotNull(String paramName, Date date, List<NameValuePair> params) {
+        if (date == null) {
+            return;
+        }
+        String value = RFC_3339.get().format(date).replaceAll("(\\d\\d)(\\d\\d)$", "$1:$2");
+        params.add(new BasicNameValuePair(paramName, value));
+    }
+
     private String joinHistoryTypes(Set<OperationHistoryType> operationsType) {
+        if (operationsType == null || operationsType.isEmpty()) {
+            return null;
+        }
         StringBuilder result = new StringBuilder();
         for (OperationHistoryType op : operationsType) {
             result.append(op.toString()).append(" ");
