@@ -49,22 +49,36 @@ public class ApiCommandsFacadeImpl implements ApiCommandsFacade, Serializable {
     private static final String CHARSET = "UTF-8";
 
     private final HttpClient client;
+    private final String uriYamoneyApi;
+
+    /**
+     * Создает экземпляр класса.
+     * @param client todo
+     */
+    public ApiCommandsFacadeImpl(HttpClient client) {
+        this(client, URI_YM_API);
+    }
 
     /**
      * Создает экземпляр класса. Внутри создается httpClient
      * с переданными в параметрах ConnectionManager и HttpParams. Это может
      * быть нужно для нескольких одновременных соединений.
-     * @param client todo
+     * @param client настроенный HttpClient для взаимодействия с сервером Яндекс.Деньги.
+     *               Для request-payment и process-payment может понядобиться httpClient
+     *               c таймаутом до 60 секунд.
+     * @param yandexMoneyTestUrl адрес тестововго хоста. Используйте для отладки,
+     *                           если у вас есть "эмулятор" Яндекс.Денег
      */
-    public ApiCommandsFacadeImpl(HttpClient client) {
+    public ApiCommandsFacadeImpl(HttpClient client, String yandexMoneyTestUrl) {
         this.client = client;
+        this.uriYamoneyApi = yandexMoneyTestUrl;
     }
 
     public void revokeOAuthToken(String accessToken) throws InvalidTokenException, IOException {
         HttpResponse response = null;
 
         try {
-            response = execPostRequest(ApiCommandsFacade.URI_YM_API + "/revoke", null, accessToken);
+            response = execPostRequest(uriYamoneyApi + "/revoke", null, accessToken);
             if (response.getStatusLine().getStatusCode() == 401)
                 throw new InvalidTokenException("invalid token");
 
@@ -82,7 +96,7 @@ public class ApiCommandsFacadeImpl implements ApiCommandsFacade, Serializable {
 
     public AccountInfoResponse accountInfo(String accessToken)
             throws IOException, InvalidTokenException, InsufficientScopeException {
-        return executeForJsonObjectFunc(ApiCommandsFacade.URI_YM_API + "/account-info", null, accessToken, AccountInfoResponse.class);
+        return executeForJsonObjectFunc(uriYamoneyApi + "/account-info", null, accessToken, AccountInfoResponse.class);
     }
 
     public OperationHistoryResponse operationHistory(String accessToken)
@@ -124,7 +138,7 @@ public class ApiCommandsFacadeImpl implements ApiCommandsFacade, Serializable {
         if (!sType.equals("")) {
             params.add(new BasicNameValuePair("type", sType));
         }
-        return executeForJsonObjectFunc(ApiCommandsFacade.URI_YM_API + "/operation-history", params, accessToken,
+        return executeForJsonObjectFunc(uriYamoneyApi + "/operation-history", params, accessToken,
                 OperationHistoryResponse.class);
     }
 
@@ -135,7 +149,7 @@ public class ApiCommandsFacadeImpl implements ApiCommandsFacade, Serializable {
         List<NameValuePair> params = new ArrayList<NameValuePair>();
         params.add(new BasicNameValuePair("operation_id", operationId));
 
-        return executeForJsonObjectFunc(ApiCommandsFacade.URI_YM_API + "/operation-details", params, accessToken,
+        return executeForJsonObjectFunc(uriYamoneyApi + "/operation-details", params, accessToken,
                 OperationDetailResponse.class);
     }
 
@@ -150,7 +164,7 @@ public class ApiCommandsFacadeImpl implements ApiCommandsFacade, Serializable {
         params.add(new BasicNameValuePair("comment", comment));
         params.add(new BasicNameValuePair("message", message));
 
-        return executeForJsonObjectFunc(ApiCommandsFacade.URI_YM_API + "/request-payment", params, accessToken,
+        return executeForJsonObjectFunc(uriYamoneyApi + "/request-payment", params, accessToken,
                 RequestPaymentResponse.class);
     }
 
@@ -163,7 +177,7 @@ public class ApiCommandsFacadeImpl implements ApiCommandsFacade, Serializable {
         for (String name : params.keySet())
             pars.add(new BasicNameValuePair(name, params.get(name)));
 
-        return executeForJsonObjectFunc(ApiCommandsFacade.URI_YM_API + "/request-payment", pars, accessToken,
+        return executeForJsonObjectFunc(uriYamoneyApi + "/request-payment", pars, accessToken,
                 RequestPaymentResponse.class);
     }
 
@@ -192,7 +206,7 @@ public class ApiCommandsFacadeImpl implements ApiCommandsFacade, Serializable {
         if (csc != null && (moneySource.equals(MoneySource.card)))
             params.add(new BasicNameValuePair("csc", csc));
 
-        return executeForJsonObjectFunc(ApiCommandsFacade.URI_YM_API + "/process-payment",
+        return executeForJsonObjectFunc(uriYamoneyApi + "/process-payment",
                 params, accessToken, ProcessPaymentResponse.class);
     }
 
