@@ -11,9 +11,9 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import ru.yandex.money.api.ApiCommandsFacade;
 import ru.yandex.money.api.InsufficientScopeException;
 import ru.yandex.money.api.InvalidTokenException;
-import ru.yandex.money.api.YandexMoney;
 import ru.yandex.money.api.response.AccountInfoResponse;
 import ru.yandex.money.droid.ActivityParams;
 import ru.yandex.money.droid.Utils;
@@ -191,7 +191,7 @@ public class GreatAppActivity extends Activity {
             AndroidHttpClient client = Utils.httpClient();
             try {
                 if (isAuthorized(false)) {
-                    YandexMoney ym = Utils.getYandexMoney(Consts.CLIENT_ID, client);
+                    ApiCommandsFacade ym = Utils.getYandexMoney(Consts.CLIENT_ID, client);
                     return ym.accountInfo(restoreToken());
                 }
             } catch (InsufficientScopeException e) {

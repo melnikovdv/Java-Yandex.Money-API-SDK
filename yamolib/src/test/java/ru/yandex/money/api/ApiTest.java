@@ -10,7 +10,7 @@ public class ApiTest {
 
     @Test
     public void TestSimple() {
-        YandexMoney ym = new YandexMoneyImpl(CLIENT_ID);
+        ApiCommandsFacade ym = new YandexMoneyImpl(CLIENT_ID);
     }
 
 }

@@ -11,9 +11,9 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
+import ru.yandex.money.api.ApiCommandsFacade;
 import ru.yandex.money.api.InsufficientScopeException;
 import ru.yandex.money.api.InvalidTokenException;
-import ru.yandex.money.api.YandexMoney;
 import ru.yandex.money.api.enums.MoneySource;
 import ru.yandex.money.api.response.RequestPaymentResponse;
 
@@ -194,7 +194,7 @@ public class PaymentActivity extends Activity {
                 P2pParams... params) {
             AndroidHttpClient client = Utils.httpClient();
             try {
-                YandexMoney ym = Utils.getYandexMoney(clientId, client);
+                ApiCommandsFacade ym = Utils.getYandexMoney(clientId, client);
                 RequestPaymentResponse resp = ym.requestPaymentP2P(accessToken,
                         params[0].getTo(),
                         BigDecimal.valueOf(params[0].getSum()),
@@ -278,7 +278,7 @@ public class PaymentActivity extends Activity {
         protected RequestPaymentResp doInBackground(PaymentShopParcelable... params) {
             AndroidHttpClient client = Utils.httpClient();
             try {
-                YandexMoney ym = Utils.getYandexMoney(clientId, client);
+                ApiCommandsFacade ym = Utils.getYandexMoney(clientId, client);
                 RequestPaymentResponse resp = ym.requestPaymentShop(accessToken,
                         params[0].getPatternId(), params[0].getParams());
                 return new RequestPaymentResp(resp, null);
