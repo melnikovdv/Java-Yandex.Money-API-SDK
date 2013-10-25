@@ -53,7 +53,9 @@ public class ApiCommandsFacadeImpl implements ApiCommandsFacade, Serializable {
 
     /**
      * Создает экземпляр класса.
-     * @param client todo
+     * @param client настроенный HttpClient для взаимодействия с сервером Яндекс.Деньги.
+     *               Для request-payment и process-payment может понядобиться httpClient
+     *               c таймаутом до 60 секунд.
      */
     public ApiCommandsFacadeImpl(HttpClient client) {
         this(client, URI_YM_API);
@@ -94,6 +96,14 @@ public class ApiCommandsFacadeImpl implements ApiCommandsFacade, Serializable {
         }
     }
 
+    /**
+     * Запрос данных о счете. Баланс, статус идентифицированнности, является ли профессиональным счетом todo ссылки на описание статусов
+     * @param accessToken string токен авторизации пользователя
+     * @return Данные счета
+     * @throws IOException При сетевых ошибках
+     * @throws InvalidTokenException Если токен некорректен, или отозван
+     * @throws InsufficientScopeException Если для данного токена нет прав на использование account-info
+     */
     public AccountInfoResponse accountInfo(String accessToken)
             throws IOException, InvalidTokenException, InsufficientScopeException {
         return executeForJsonObjectFunc(uriYamoneyApi + "/account-info", null, accessToken, AccountInfoResponse.class);
@@ -115,18 +125,16 @@ public class ApiCommandsFacadeImpl implements ApiCommandsFacade, Serializable {
         return operationHistory(accessToken, startRecord, records, null);
     }
 
-    public OperationHistoryResponse operationHistory(String accessToken,
-            Integer startRecord, Integer records,
+    public OperationHistoryResponse operationHistory(String accessToken, Integer startRecord, Integer records,
             Set<OperationHistoryType> operationsType) throws IOException,
             InvalidTokenException, InsufficientScopeException {
+        return operationHistory(accessToken, startRecord, records, operationsType, false);
+    }
 
-        String sType = "";
-        if (operationsType != null) {
-            for (OperationHistoryType op : operationsType) {
-                sType = sType + op.toString() + " ";
-            }
-            sType = sType.trim();
-        }
+    public OperationHistoryResponse operationHistory(String accessToken,
+            Integer startRecord, Integer records,
+            Set<OperationHistoryType> operationsType, boolean fetchDetails) throws IOException,
+            InvalidTokenException, InsufficientScopeException {
 
         List<NameValuePair> params = new ArrayList<NameValuePair>();
         if (startRecord != null) {
@@ -135,11 +143,21 @@ public class ApiCommandsFacadeImpl implements ApiCommandsFacade, Serializable {
         if (records != null) {
             params.add(new BasicNameValuePair("records", String.valueOf(records)));
         }
-        if (!sType.equals("")) {
-            params.add(new BasicNameValuePair("type", sType));
+        if (operationsType != null && !operationsType.isEmpty()) {
+            params.add(new BasicNameValuePair("type", joinHistoryTypes(operationsType)));
         }
+        params.add(new BasicNameValuePair("details", Boolean.toString(fetchDetails)));
+        // todo Параметры from, till, label
         return executeForJsonObjectFunc(uriYamoneyApi + "/operation-history", params, accessToken,
                 OperationHistoryResponse.class);
+    }
+
+    private String joinHistoryTypes(Set<OperationHistoryType> operationsType) {
+        StringBuilder result = new StringBuilder();
+        for (OperationHistoryType op : operationsType) {
+            result.append(op.toString()).append(" ");
+        }
+        return result.toString().trim();
     }
 
     public OperationDetailResponse operationDetail(String accessToken,
@@ -227,6 +245,7 @@ public class ApiCommandsFacadeImpl implements ApiCommandsFacade, Serializable {
         }
     }
 
+    // todo Дубль
     private HttpResponse execPostRequest(String url, List<NameValuePair> params,
             String accessToken) throws IOException {
         HttpPost post = new HttpPost(url);
@@ -247,6 +266,7 @@ public class ApiCommandsFacadeImpl implements ApiCommandsFacade, Serializable {
         }
     }
 
+    // todo Дубль
     private void checkCommonResponse(HttpResponse httpResp) throws
             InternalServerErrorException, InsufficientScopeException {
         int iCode = httpResp.getStatusLine().getStatusCode();
@@ -270,6 +290,7 @@ public class ApiCommandsFacadeImpl implements ApiCommandsFacade, Serializable {
         checkCommonResponse(httpResp);
     }
 
+    // todo Дубль
     private <T> T parseJson(HttpEntity entity, Class<T> classOfT) throws IOException {
         InputStream is = entity.getContent();
 

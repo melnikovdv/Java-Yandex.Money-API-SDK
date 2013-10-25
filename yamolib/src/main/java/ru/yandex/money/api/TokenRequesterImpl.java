@@ -158,8 +158,7 @@ public class TokenRequesterImpl implements TokenRequester, Serializable {
             throw new IllegalStateException("response http entity is empty");
     }
 
-    private <T> T parseJson(HttpEntity entity, Class<T> classOfT)
-            throws IOException {
+    private <T> T parseJson(HttpEntity entity, Class<T> classOfT) throws IOException {
         InputStream is = entity.getContent();
 
         try {
