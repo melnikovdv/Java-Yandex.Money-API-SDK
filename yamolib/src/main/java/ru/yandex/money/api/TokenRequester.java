@@ -31,11 +31,6 @@ public interface TokenRequester {
      */
     String URI_YM_TOKEN =
             "https://sp-money.yandex.ru/oauth/token";
-    /**
-     * URI для мобильного обмена временного токена на постоянный
-     */
-    String URI_YM_TOKEN_MOBILE =
-            "https://m.sp-money.yandex.ru/oauth/token";
 
     /**
      * Метод OAuth-аутентификации приложения для получения временного
