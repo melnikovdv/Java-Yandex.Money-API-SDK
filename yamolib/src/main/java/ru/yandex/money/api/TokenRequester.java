@@ -7,6 +7,12 @@ import java.io.IOException;
 import java.util.Collection;
 
 /**
+ * Интерфейс для процедуры запроса платежного токена.
+ * Процесс состоит из двух этапов:
+ * <ol>
+ *     <li>формирование uri для запроса выдачи временного токена</li>
+ *     <li>обмен временного токена на постоянный</li>
+ * </ol>
  * <p/>
  * <p/>
  * Copyright 2012 Yandex Money, All rights reserved.
@@ -17,17 +23,18 @@ import java.util.Collection;
  */
 public interface TokenRequester {
     /**
-     * URI адреса для OAuth-авторизации
+     * URI адреса для OAuth-авторизации. Пользователь приходит на этот адрес через браузер
      */
     String URI_YM_AUTH =
             "https://sp-money.yandex.ru/oauth/authorize";
     /**
-     * URI адрес для мобильной OAuth-авторизации
+     * URI адрес для мобильной OAuth-авторизации. Пользователь приходит на этот адрес через браузер мобильного
      */
     String URI_YM_AUTH_MOBILE =
             "https://m.sp-money.yandex.ru/oauth/authorize";
     /**
-     * URI для обмена временного токена на постоянный
+     * URI для обмена временного токена на постоянный. Здесь пользователь не участвует напрямую.
+     * Запрос этого uri должен быть выполнен приложением минуя браузер. В ответ придет JSON с итоговым токеном.
      */
     String URI_YM_TOKEN =
             "https://sp-money.yandex.ru/oauth/token";
