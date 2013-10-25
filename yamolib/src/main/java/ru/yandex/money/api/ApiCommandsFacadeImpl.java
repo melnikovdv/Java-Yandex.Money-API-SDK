@@ -1,14 +1,8 @@
 package ru.yandex.money.api;
 
-import com.google.gson.FieldNamingPolicy;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonParseException;
-import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
@@ -17,8 +11,6 @@ import ru.yandex.money.api.enums.OperationHistoryType;
 import ru.yandex.money.api.response.*;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
@@ -48,13 +40,8 @@ public class ApiCommandsFacadeImpl implements ApiCommandsFacade, Serializable {
         }
     };
 
-    /**
-     * Кодировка для url encoding/decoding
-     */
-    private static final String CHARSET = "UTF-8";
-
-    private final HttpClient client;
     private final String uriYamoneyApi;
+    private final YamoneyClient yamoneyClient;
 
     /**
      * Создает экземпляр класса.
@@ -77,28 +64,8 @@ public class ApiCommandsFacadeImpl implements ApiCommandsFacade, Serializable {
      *                           если у вас есть "эмулятор" Яндекс.Денег
      */
     public ApiCommandsFacadeImpl(HttpClient client, String yandexMoneyTestUrl) {
-        this.client = client;
+        this.yamoneyClient = new YamoneyClient(client);
         this.uriYamoneyApi = yandexMoneyTestUrl;
-    }
-
-    public void revokeOAuthToken(String accessToken) throws InvalidTokenException, IOException {
-        HttpResponse response = null;
-
-        try {
-            response = execPostRequest(uriYamoneyApi + "/revoke", null, accessToken);
-            if (response.getStatusLine().getStatusCode() == 401)
-                throw new InvalidTokenException("invalid token");
-
-            if (response.getStatusLine().getStatusCode() == 400)
-                throw new ProtocolRequestException("invalid request");
-
-            if (response.getStatusLine().getStatusCode() == 500)
-                throw new InternalServerErrorException("internal yandex.money server error");
-        } finally {
-            if (response != null) {
-                EntityUtils.consume(response.getEntity());
-            }
-        }
     }
 
     /**
@@ -111,7 +78,7 @@ public class ApiCommandsFacadeImpl implements ApiCommandsFacade, Serializable {
      */
     public AccountInfoResponse accountInfo(String accessToken)
             throws IOException, InvalidTokenException, InsufficientScopeException {
-        return executeForJsonObjectFunc(uriYamoneyApi + "/account-info", null, accessToken, AccountInfoResponse.class);
+        return yamoneyClient.executeForJsonObjectFunc(uriYamoneyApi + "/account-info", null, accessToken, AccountInfoResponse.class);
     }
 
     public OperationHistoryResponse operationHistory(String accessToken)
@@ -152,7 +119,7 @@ public class ApiCommandsFacadeImpl implements ApiCommandsFacade, Serializable {
         addParamIfNotNull("from", from, params);
         addParamIfNotNull("label", label, params);
 
-        return executeForJsonObjectFunc(uriYamoneyApi + "/operation-history", params, accessToken,
+        return yamoneyClient.executeForJsonObjectFunc(uriYamoneyApi + "/operation-history", params, accessToken,
                 OperationHistoryResponse.class);
     }
 
@@ -188,7 +155,7 @@ public class ApiCommandsFacadeImpl implements ApiCommandsFacade, Serializable {
         List<NameValuePair> params = new ArrayList<NameValuePair>();
         params.add(new BasicNameValuePair("operation_id", operationId));
 
-        return executeForJsonObjectFunc(uriYamoneyApi + "/operation-details", params, accessToken,
+        return yamoneyClient.executeForJsonObjectFunc(uriYamoneyApi + "/operation-details", params, accessToken,
                 OperationDetailResponse.class);
     }
 
@@ -203,7 +170,7 @@ public class ApiCommandsFacadeImpl implements ApiCommandsFacade, Serializable {
         params.add(new BasicNameValuePair("comment", comment));
         params.add(new BasicNameValuePair("message", message));
 
-        return executeForJsonObjectFunc(uriYamoneyApi + "/request-payment", params, accessToken,
+        return yamoneyClient.executeForJsonObjectFunc(uriYamoneyApi + "/request-payment", params, accessToken,
                 RequestPaymentResponse.class);
     }
 
@@ -216,7 +183,7 @@ public class ApiCommandsFacadeImpl implements ApiCommandsFacade, Serializable {
         for (String name : params.keySet())
             pars.add(new BasicNameValuePair(name, params.get(name)));
 
-        return executeForJsonObjectFunc(uriYamoneyApi + "/request-payment", pars, accessToken,
+        return yamoneyClient.executeForJsonObjectFunc(uriYamoneyApi + "/request-payment", pars, accessToken,
                 RequestPaymentResponse.class);
     }
 
@@ -245,84 +212,26 @@ public class ApiCommandsFacadeImpl implements ApiCommandsFacade, Serializable {
         if (csc != null && (moneySource.equals(MoneySource.card)))
             params.add(new BasicNameValuePair("csc", csc));
 
-        return executeForJsonObjectFunc(uriYamoneyApi + "/process-payment",
+        return yamoneyClient.executeForJsonObjectFunc(uriYamoneyApi + "/process-payment",
                 params, accessToken, ProcessPaymentResponse.class);
     }
 
-    private <T> T executeForJsonObjectFunc(String url, List<NameValuePair> params, String accessToken, Class<T> classOfT)
-            throws InsufficientScopeException,
-            IOException, InvalidTokenException {
+    public void revokeOAuthToken(String accessToken) throws InvalidTokenException, IOException {
         HttpResponse response = null;
-
         try {
-            response = execPostRequest(url, params, accessToken);
-            checkFuncResponse(response);
+            response = yamoneyClient.execPostRequest(new HttpPost(uriYamoneyApi + "/revoke"), accessToken, null);
+            if (response.getStatusLine().getStatusCode() == 401)
+                throw new InvalidTokenException("invalid token");
 
-            return parseJson(response.getEntity(), classOfT);
+            if (response.getStatusLine().getStatusCode() == 400)
+                throw new ProtocolRequestException("invalid request");
+
+            if (response.getStatusLine().getStatusCode() == 500)
+                throw new InternalServerErrorException("internal yandex.money server error");
         } finally {
             if (response != null) {
                 EntityUtils.consume(response.getEntity());
             }
-        }
-    }
-
-    // todo Дубль
-    private HttpResponse execPostRequest(String url, List<NameValuePair> params,
-            String accessToken) throws IOException {
-        HttpPost post = new HttpPost(url);
-
-        if (params != null) {
-            post.setEntity(new UrlEncodedFormEntity(params, CHARSET));
-        }
-
-        if (accessToken != null) {
-            post.addHeader("Authorization", "Bearer " + accessToken);
-        }
-
-        try {
-            return client.execute(post);
-        } catch (IOException e) {
-            post.abort();
-            throw e;
-        }
-    }
-
-    // todo Дубль
-    private void checkCommonResponse(HttpResponse httpResp) throws
-            InternalServerErrorException, InsufficientScopeException {
-        int iCode = httpResp.getStatusLine().getStatusCode();
-
-        if (iCode == 400)
-            throw new ProtocolRequestException("invalid request");
-        if (iCode == 403)
-            throw new InsufficientScopeException("insufficient scope");
-        if (iCode == 500)
-            throw new InternalServerErrorException("internal yandex.money server error");
-
-        if (httpResp.getEntity() == null)
-            throw new IllegalStateException("response http entity is empty");
-    }
-
-    private void checkFuncResponse(HttpResponse httpResp) throws
-            InvalidTokenException, InsufficientScopeException,
-            InternalServerErrorException {
-        if (httpResp.getStatusLine().getStatusCode() == 401)
-            throw new InvalidTokenException("invalid token");
-        checkCommonResponse(httpResp);
-    }
-
-    // todo Дубль
-    private <T> T parseJson(HttpEntity entity, Class<T> classOfT) throws IOException {
-        InputStream is = entity.getContent();
-
-        try {
-            Gson gson = new GsonBuilder().setFieldNamingPolicy(
-                    FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).create();
-            return gson.fromJson(
-                    new InputStreamReader(is, CHARSET),
-                    classOfT);
-        } catch (JsonParseException e) {
-            throw new IllegalStateException("response decoding failed", e);
         }
     }
 }
