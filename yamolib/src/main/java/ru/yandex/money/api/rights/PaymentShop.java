@@ -10,8 +10,4 @@ public class PaymentShop extends AbstractLimitedPermission {
     public PaymentShop() {
         super("payment-shop");
     }
-
-    public Permission limit(int duration, String sum) {
-        return super.limit(duration, sum);
-    }
 }

@@ -8,29 +8,77 @@ import ru.yandex.money.api.enums.Destination;
  * @author dvmelnikov
  */
 
-public class Payment extends AbstractDestinationPermission {
+public class Payment extends AbstractLimitedPermission {
+
+    private String destination;
+
+    public Payment() {
+        super("payment");
+    }
 
     public Payment(Destination destinationType, String destination, int duration, String sum) {
-        super("payment");
-        if (destinationType == Destination.toAccount)
-            destinationToAccount(destination);
-        if (destinationType == Destination.toPattern)
-            destinationToPattern(destination);
-        this.limit(duration, sum);
+        this();
+        setDestination(destinationType, destination).limit(duration, sum);
     }
 
     /**
      * Одноразовый токен
-     * @param destinationType
-     * @param destination
-     * @param sum
+     * @param destinationType Тип платежа: в магазин, либо p2p
+     * @param destination Получатель
+     * @param sum Сумма платежа
      */
     public Payment(Destination destinationType, String destination, String sum) {
-        super("payment");
+        this();
+        setDestination(destinationType, destination).limit(sum);
+    }
+
+    private AbstractLimitedPermission setDestination(Destination destinationType, String destination) {
         if (destinationType == Destination.toAccount)
-            destinationToAccount(destination);
-        if (destinationType == Destination.toPattern)
-            destinationToPattern(destination);
-        this.limit(sum);
+            return toAccount(destination);
+        else if (destinationType == Destination.toPattern)
+            return toPattern(destination);
+
+        return this;
+    }
+
+    /**
+     * Указание паттерна платежа в магазин, подключенный к Яндекс.Деньги
+     * @param patternId Идентификатор шаблона платежа. Перейти на страницу оплаты для этого
+     *                  магазина можно по ссылке https://money.yandex.ru/shop.xml?scid={patternId}
+     * @return
+     */
+    public AbstractLimitedPermission toPattern(String patternId) {
+        destination = "to-pattern(\"" + patternId + "\")";
+        return this;
+    }
+
+    public AbstractLimitedPermission toAccount(String account) {
+        destination = "to-account(\"" + account + "\")";
+        return this;
+    }
+
+    /**
+     * Указание получателя p2p платежа и типа идентификатора. Можно выполнять платежи
+     * идентифицируя получателя по его email, номеру телефона или номеру счета
+     *
+     * @param receiver Идентификатор получателя
+     * @param identifierType Тип получателя
+     * @return
+     */
+    public Payment toAccount(String receiver, IdentifierType identifierType) {
+        destination = "to-account(\"" + receiver + "\",\""+ identifierType + "\")";
+        return this;
+    }
+
+    public String value() {
+        if (destination == null) {
+            throw new IllegalStateException("destination is not specified");
+        }
+
+        String res = name + "." + destination;
+        if (limit != null) {
+            return res + "." + limit;
+        }
+        return res;
     }
 }

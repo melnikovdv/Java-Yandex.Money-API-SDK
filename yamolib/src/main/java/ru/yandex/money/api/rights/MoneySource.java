@@ -6,13 +6,14 @@ package ru.yandex.money.api.rights;
  * @author dvmelnikov
  */
 
-public class MoneySource extends AbstractPermission {
+public class MoneySource implements Permission {
+
+    private static final String WALLET = "wallet";
+    private static final String CARD = "card";
+
 
     private boolean wallet;
     private boolean card;
-
-    private String WALLET = "wallet";
-    private String CARD = "card";
 
     /**
      * Создание права money-source
@@ -20,25 +21,20 @@ public class MoneySource extends AbstractPermission {
      * @param card разрешение на оплату с привязанной банковской карты
      */
     public MoneySource(boolean wallet, boolean card) {
-        super("money-source");
         this.wallet = wallet;
         this.card = card;
     }
 
     public String value() {
+        if (!wallet && !card) {
+            throw new IllegalArgumentException("money-source expected");
+        }
         String params;
         if (wallet && card)
-             params = source(WALLET) + "," + source(CARD);
+            params = WALLET + "\",\"" + CARD;
         else  {
-            if (card)
-                params = source(CARD);
-            else
-                params = source(WALLET);
+            params = card ? CARD : WALLET;
         }
-        return super.value() + "(" + params + ")";
-    }
-
-    private String source(String name) {
-        return "\"" + name + "\"";
+        return "money-source(\"" + params + "\")";
     }
 }
