@@ -18,7 +18,7 @@ import java.io.InputStreamReader;
 import java.io.Serializable;
 import java.util.List;
 
-public class YamoneyClient implements Serializable {
+class YamoneyClient implements Serializable {
 
     /**
      * Кодировка для url encoding/decoding
