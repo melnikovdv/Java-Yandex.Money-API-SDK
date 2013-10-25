@@ -9,6 +9,7 @@ import org.apache.http.util.EntityUtils;
 import ru.yandex.money.api.enums.MoneySource;
 import ru.yandex.money.api.enums.OperationHistoryType;
 import ru.yandex.money.api.response.*;
+import ru.yandex.money.api.rights.IdentifierType;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -17,7 +18,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
- * <p>Класс для работы с API Яндекс.Деньги. Реализует интерфейс YandexMoney.</p>
+ * <p>Класс для работы с командами API Яндекс.Деньги. </p>
  * <p>За бесопанстость работы с удаленным сервером овечает Apache HttpClient.
  * Он по умолчанию работает в режиме BrowserCompatHostnameVerifier,
  * этот параметр указывает клиенту, что нужно проверять цепочку сертификатов
@@ -155,23 +156,53 @@ public class ApiCommandsFacadeImpl implements ApiCommandsFacade, Serializable {
         List<NameValuePair> params = new ArrayList<NameValuePair>();
         params.add(new BasicNameValuePair("operation_id", operationId));
 
-        return yamoneyClient.executeForJsonObjectFunc(uriYamoneyApi + "/operation-details", params, accessToken,
-                OperationDetailResponse.class);
+        return yamoneyClient.executeForJsonObjectFunc(uriYamoneyApi + "/operation-details",
+                params, accessToken, OperationDetailResponse.class);
     }
 
-    public RequestPaymentResponse requestPaymentP2P(String accessToken,
-            String to, BigDecimal amount, String comment,
-            String message) throws IOException, InvalidTokenException,
-            InsufficientScopeException {
+    public RequestPaymentResponse requestPaymentP2P(String accessToken, String to,
+                                                    BigDecimal amount, String comment, String message)
+            throws IOException, InvalidTokenException, InsufficientScopeException {
+
         List<NameValuePair> params = new ArrayList<NameValuePair>();
+        params.add(new BasicNameValuePair("amount", String.valueOf(amount)));
+        return requestPaymentP2P(accessToken, to, comment, message, null, params);
+    }
+
+    public RequestPaymentResponse requestPaymentP2P(String accessToken, String to, IdentifierType identifierType,
+                                                    BigDecimal amount, String comment, String message, String label)
+            throws IOException, InvalidTokenException, InsufficientScopeException {
+
+        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        params.add(new BasicNameValuePair("amount", String.valueOf(amount)));
+        addParamIfNotNull("identifier_type", identifierType, params);
+        return requestPaymentP2P(accessToken, to, comment, message, label, params);
+    }
+
+    public RequestPaymentResponse requestPaymentP2PDue(String accessToken, String to, IdentifierType identifierType,
+                                                       BigDecimal amountDue, String comment, String message,
+                                                       String label)
+            throws IOException, InvalidTokenException, InsufficientScopeException {
+
+        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        params.add(new BasicNameValuePair("amount_due", String.valueOf(amountDue)));
+        addParamIfNotNull("identifier_type", identifierType, params);
+        return requestPaymentP2P(accessToken, to, comment, message, label, params);
+    }
+
+    private RequestPaymentResponse requestPaymentP2P(String accessToken, String to,
+                                                     String comment, String message, String label,
+                                                     List<NameValuePair> params)
+            throws IOException, InvalidTokenException, InsufficientScopeException {
+
         params.add(new BasicNameValuePair("pattern_id", "p2p"));
         params.add(new BasicNameValuePair("to", to));
-        params.add(new BasicNameValuePair("amount", String.valueOf(amount)));
-        params.add(new BasicNameValuePair("comment", comment));
-        params.add(new BasicNameValuePair("message", message));
+        addParamIfNotNull("comment", comment, params);
+        addParamIfNotNull("message", message, params);
+        addParamIfNotNull("label", label, params);
 
-        return yamoneyClient.executeForJsonObjectFunc(uriYamoneyApi + "/request-payment", params, accessToken,
-                RequestPaymentResponse.class);
+        return yamoneyClient.executeForJsonObjectFunc(uriYamoneyApi + "/request-payment",
+                params, accessToken, RequestPaymentResponse.class);
     }
 
     public RequestPaymentResponse requestPaymentShop(String accessToken,
@@ -180,23 +211,23 @@ public class ApiCommandsFacadeImpl implements ApiCommandsFacade, Serializable {
 
         List<NameValuePair> pars = new ArrayList<NameValuePair>();
         pars.add(new BasicNameValuePair("pattern_id", patternId));
-        for (String name : params.keySet())
+        for (String name : params.keySet()) {
             pars.add(new BasicNameValuePair(name, params.get(name)));
+        }
 
         return yamoneyClient.executeForJsonObjectFunc(uriYamoneyApi + "/request-payment", pars, accessToken,
                 RequestPaymentResponse.class);
     }
 
-    public ProcessPaymentResponse processPaymentByWallet(String accessToken,
-            String requestId) throws IOException, InsufficientScopeException,
-            InvalidTokenException {
+    public ProcessPaymentResponse processPaymentByWallet(String accessToken, String requestId)
+            throws IOException, InsufficientScopeException, InvalidTokenException {
+
         return processPayment(accessToken, requestId, MoneySource.wallet, null);
     }
 
-    public ProcessPaymentResponse processPaymentByCard(String accessToken,
-            String requestId, String csc)
-            throws IOException, InsufficientScopeException,
-            InvalidTokenException {
+    public ProcessPaymentResponse processPaymentByCard(String accessToken, String requestId, String csc)
+            throws IOException, InsufficientScopeException, InvalidTokenException {
+
         return processPayment(accessToken, requestId, MoneySource.card, csc);
     }
 
@@ -207,11 +238,10 @@ public class ApiCommandsFacadeImpl implements ApiCommandsFacade, Serializable {
 
         List<NameValuePair> params = new ArrayList<NameValuePair>();
         params.add(new BasicNameValuePair("request_id", requestId));
-        params.add(
-                new BasicNameValuePair("money_source", moneySource.toString()));
-        if (csc != null && (moneySource.equals(MoneySource.card)))
+        params.add(new BasicNameValuePair("money_source", moneySource.toString()));
+        if (csc != null && (moneySource.equals(MoneySource.card))) {
             params.add(new BasicNameValuePair("csc", csc));
-
+        }
         return yamoneyClient.executeForJsonObjectFunc(uriYamoneyApi + "/process-payment",
                 params, accessToken, ProcessPaymentResponse.class);
     }

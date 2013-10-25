@@ -2,6 +2,7 @@ package ru.yandex.money.api;
 
 import ru.yandex.money.api.enums.OperationHistoryType;
 import ru.yandex.money.api.response.*;
+import ru.yandex.money.api.rights.IdentifierType;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -143,10 +144,8 @@ public interface ApiCommandsFacade {
      * @param to          номер счета получателя платежа (счет Яндекс.Денег)
      * @param amount      сумма перевода. Представляет собой число с фиксированной точкой,
      *                    два знака после точки.
-     * @param comment     название платежа, отображается только в истории платежей
-     *                    отправителя.
-     * @param message     сообщение получателю платежа.
-     * @return возвращает экземпляр класса {@link ru.yandex.money.api.response.RequestPaymentResponse}
+     * @param comment     название платежа, отображается только в истории платежей *                    отправителя.
+     * @param message     сообщение получателю платежа.    @return возвращает экземпляр класса {@link ru.yandex.money.api.response.RequestPaymentResponse}
      * @throws java.io.IOException          ошибка связи с сервером Яндекс.Денег
      * @throws ru.yandex.money.api.InsufficientScopeException   запрошена операция, на которую у
      *                                      токена нет прав.
@@ -157,6 +156,62 @@ public interface ApiCommandsFacade {
                                              String to, BigDecimal amount, String comment,
                                              String message) throws IOException, InvalidTokenException,
             InsufficientScopeException;
+
+    /**
+     * <p>Запрос p2p перевода другому пользователю.</p>
+     * <b>Внимание</b>: перевод на счет пользователя, чей токен указывается в параметрах,
+     * невозможен. Т.е. самому себе делать переводы нельзя.
+     *
+     *
+     *
+     * @param accessToken токен авторизации пользователя
+     * @param to          идентификатор получателя платежа (счет Яндекс.Денег)
+     * @param identifierType тип указания получателя платежа (платеж по номеру телефона, по e-mail или по номеру счета)
+     * @param amount      сумма перевода. Представляет собой число с фиксированной точкой,
+     *                    два знака после точки.
+     * @param comment     название платежа, отображается только в истории платежей
+ *                    отправителя.
+     * @param message     сообщение получателю платежа.    @return возвращает экземпляр класса {@link ru.yandex.money.api.response.RequestPaymentResponse}
+     * @param label       Метка платежа (непустая строка до 64 символов) Может осутствовать.
+     *                    Методы запроса истории позволяют вытащить все платежи пользователя по указанной ветке.
+     * @throws java.io.IOException          ошибка связи с сервером Яндекс.Денег
+     * @throws ru.yandex.money.api.InsufficientScopeException   запрошена операция, на которую у
+     *                                      токена нет прав.
+     * @throws ru.yandex.money.api.InvalidTokenException        указан несуществующий, просроченный, или отозванный токен.
+     * @throws ru.yandex.money.api.InternalServerErrorException техническая ошибка сервера Яндекс.Денег
+     */
+    RequestPaymentResponse requestPaymentP2P(String accessToken,
+                                             String to, IdentifierType identifierType, BigDecimal amount, String comment,
+                                             String message, String label) throws IOException, InvalidTokenException,
+            InsufficientScopeException;
+
+    /**
+     * <p>Запрос p2p перевода другому пользователю.</p>
+     * <p><b>Внимание</b>: Указанная в пераметре amountDue сумма будет зачислена на счет получателя. С отправителя
+     * будет снята бОльшая сумма, с учетом комиссии.</p>
+     *
+     * <p><b>Внимание</b>: перевод на счет пользователя, чей токен указывается в параметрах,
+     * невозможен. Т.е. самому себе делать переводы нельзя.</p>
+     *
+     *
+     * @param accessToken токен авторизации пользователя
+     * @param to          идентификатор получателя платежа (счет Яндекс.Денег)
+     * @param identifierType тип указания получателя платежа (платеж по номеру телефона, по e-mail или по номеру счета)
+     * @param amountDue   сумма перевода. Представляет собой число с фиксированной точкой,
+     *                    два знака после точки.
+     * @param comment     название платежа, отображается только в истории платежей
+ *                    отправителя.
+     * @param message     сообщение получателю платежа.
+     * @return возвращает экземпляр класса {@link ru.yandex.money.api.response.RequestPaymentResponse}
+     * @throws java.io.IOException          ошибка связи с сервером Яндекс.Денег
+     * @throws ru.yandex.money.api.InsufficientScopeException   запрошена операция, на которую у токена нет прав.
+     * @throws ru.yandex.money.api.InvalidTokenException        указан несуществующий, просроченный, или отозванный токен.
+     * @throws ru.yandex.money.api.InternalServerErrorException техническая ошибка сервера Яндекс.Денег
+     */
+    RequestPaymentResponse requestPaymentP2PDue(String accessToken,
+                                                String to, IdentifierType identifierType, BigDecimal amountDue,
+                                                String comment, String message, String label) throws IOException,
+            InvalidTokenException, InsufficientScopeException;
 
     /**
      * Запрос оплаты в магазин.

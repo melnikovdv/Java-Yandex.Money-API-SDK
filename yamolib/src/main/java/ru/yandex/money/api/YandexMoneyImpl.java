@@ -5,6 +5,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.CoreProtocolPNames;
 import ru.yandex.money.api.enums.OperationHistoryType;
 import ru.yandex.money.api.response.*;
+import ru.yandex.money.api.rights.IdentifierType;
 import ru.yandex.money.api.rights.Permission;
 
 import java.io.IOException;
@@ -123,10 +124,24 @@ public class YandexMoneyImpl implements YandexMoney, Serializable {
         return apiCommandsFacade.operationDetail(accessToken, operationId);
     }
 
-    public RequestPaymentResponse requestPaymentP2P(String accessToken,
-            String to, BigDecimal amount, String comment,
-            String message) throws IOException, InvalidTokenException,
-            InsufficientScopeException {
+    public RequestPaymentResponse requestPaymentP2PDue(String accessToken, String to, IdentifierType identifierType,
+                                                       BigDecimal amountDue, String comment, String message, String label)
+            throws IOException, InvalidTokenException, InsufficientScopeException {
+
+        return apiCommandsFacade.requestPaymentP2PDue(accessToken, to, identifierType, amountDue, comment, message, label);
+    }
+
+    public RequestPaymentResponse requestPaymentP2P(String accessToken, String to, IdentifierType identifierType,
+                                                    BigDecimal amount, String comment, String message, String label)
+            throws IOException, InvalidTokenException, InsufficientScopeException {
+
+        return apiCommandsFacade.requestPaymentP2P(accessToken, to, identifierType, amount, comment, message, label);
+    }
+
+    public RequestPaymentResponse requestPaymentP2P(String accessToken, String to, BigDecimal amount,
+                                                    String comment, String message)
+            throws IOException, InvalidTokenException, InsufficientScopeException {
+
         return apiCommandsFacade.requestPaymentP2P(accessToken, to, amount, comment, message);
     }
 
@@ -143,10 +158,9 @@ public class YandexMoneyImpl implements YandexMoney, Serializable {
         return apiCommandsFacade.processPaymentByWallet(accessToken, requestId);
     }
 
-    public ProcessPaymentResponse processPaymentByCard(String accessToken,
-            String requestId, String csc)
-            throws IOException, InsufficientScopeException,
-            InvalidTokenException {
+    public ProcessPaymentResponse processPaymentByCard(String accessToken, String requestId, String csc)
+            throws IOException, InsufficientScopeException, InvalidTokenException {
+
         return apiCommandsFacade.processPaymentByCard(accessToken, requestId, csc);
     }
 }
