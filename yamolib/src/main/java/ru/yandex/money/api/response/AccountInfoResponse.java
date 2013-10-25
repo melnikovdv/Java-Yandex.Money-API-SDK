@@ -17,6 +17,8 @@ public class AccountInfoResponse implements Serializable {
     private String account;
     private BigDecimal balance;
     private String currency;
+    private Boolean identified;
+    private String account_type;
 
     private AccountInfoResponse() {
     }
@@ -46,12 +48,28 @@ public class AccountInfoResponse implements Serializable {
         return currency;
     }
 
+    /**
+     * @return true, если пользователь идентифицирован в системе Яндекс.Денег
+     */
+    public Boolean getIdentified() {
+        return identified;
+    }
+
+    /**
+     * @return Тип счета в системе Яндекс.Денег. "personal" либо "professional"
+     */
+    public String getAccountType() {
+        return account_type;
+    }
+
     @Override
     public String toString() {
         return "AccountInfoResponse{" +
                 "account='" + account + '\'' +
                 ", balance=" + balance +
                 ", currency='" + currency + '\'' +
+                ", identified=" + identified +
+                ", account_type='" + account_type + '\'' +
                 '}';
     }
 }
