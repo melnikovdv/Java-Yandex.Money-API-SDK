@@ -24,6 +24,7 @@ public class ProcessPaymentResponse implements Serializable {
     private String payer;
     private String payee;
     private BigDecimal creditAmount;
+    private Boolean test_payment;
 
     private ProcessPaymentResponse() {
     }
@@ -117,6 +118,14 @@ public class ProcessPaymentResponse implements Serializable {
         return creditAmount;
     }
 
+    public String getErrorDescription() {
+        return error_description;
+    }
+
+    public Boolean isTestPayment() {
+        return test_payment;
+    }
+
     @Override
     public String toString() {
         return "ProcessPaymentResponse{" +
@@ -128,6 +137,7 @@ public class ProcessPaymentResponse implements Serializable {
                 ", payer='" + payer + '\'' +
                 ", payee='" + payee + '\'' +
                 ", creditAmount=" + creditAmount +
+                ", test_payment=" + test_payment +
                 '}';
     }
 }

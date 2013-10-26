@@ -27,6 +27,7 @@ public class RequestPaymentResponse implements Serializable {
     private BigDecimal balance;
     private Boolean recipient_identified;
     private String recipient_account_type;
+    private Boolean test_payment;
 
     private RequestPaymentResponse() {
     }
@@ -76,6 +77,14 @@ public class RequestPaymentResponse implements Serializable {
      */
     public Status getStatus() {
         return status;
+    }
+
+    public String getErrorDescription() {
+        return error_description;
+    }
+
+    public Boolean isTestPayment() {
+        return test_payment;
     }
 
     /**
@@ -153,6 +162,7 @@ public class RequestPaymentResponse implements Serializable {
                 ", requestId='" + requestId + '\'' +
                 ", contract='" + contract + '\'' +
                 ", balance=" + balance +
+                ", test_payment=" + test_payment +
                 ", recipient_identified=" + recipient_identified +
                 ", recipient_account_type='" + recipient_account_type + '\'' +
                 '}';
