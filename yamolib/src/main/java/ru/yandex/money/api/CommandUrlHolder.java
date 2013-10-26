@@ -8,7 +8,7 @@ package ru.yandex.money.api;
  *
  * @author OneHalf
  */
-interface CommandUrlHolder {
+public interface CommandUrlHolder {
 
     CommandUrlHolder DEFAULT = new ConstantUrlHolder(ApiCommandsFacade.URI_YM_API);
 

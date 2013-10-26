@@ -48,7 +48,7 @@ public class ApiCommandsFacadeImpl implements ApiCommandsFacade, Serializable {
         }
     };
 
-    private final CommandUrlHolder.ConstantUrlHolder uri;
+    private final CommandUrlHolder uri;
     private final YamoneyClient yamoneyClient;
 
     /**
@@ -62,6 +62,17 @@ public class ApiCommandsFacadeImpl implements ApiCommandsFacade, Serializable {
     }
 
     /**
+     * Создает экземпляр класса.
+     * @param client настроенный HttpClient для взаимодействия с сервером Яндекс.Деньги.
+     *               Для request-payment и process-payment может понядобиться httpClient
+     *               c таймаутом до 60 секунд.
+     */
+    public ApiCommandsFacadeImpl(HttpClient client, CommandUrlHolder urlHolder) {
+        this.yamoneyClient = new YamoneyClient(client);
+        this.uri = urlHolder;
+    }
+
+    /**
      * Создает экземпляр класса. Внутри создается httpClient
      * с переданными в параметрах ConnectionManager и HttpParams. Это может
      * быть нужно для нескольких одновременных соединений.
@@ -72,8 +83,7 @@ public class ApiCommandsFacadeImpl implements ApiCommandsFacade, Serializable {
      *                           если у вас есть "эмулятор" Яндекс.Денег
      */
     public ApiCommandsFacadeImpl(HttpClient client, String yandexMoneyTestUrl) {
-        this.yamoneyClient = new YamoneyClient(client);
-        this.uri = new CommandUrlHolder.ConstantUrlHolder(yandexMoneyTestUrl);
+        this(client, new CommandUrlHolder.ConstantUrlHolder(yandexMoneyTestUrl));
     }
 
     /**
