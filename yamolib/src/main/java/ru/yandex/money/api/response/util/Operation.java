@@ -17,6 +17,7 @@ public class Operation implements Serializable {
     
     protected String operationId;
     protected String patternId;
+    protected String status;
     protected MoneyDirection direction;
     protected BigDecimal amount;
     protected Date datetime;
@@ -113,6 +114,22 @@ public class Operation implements Serializable {
     }
 
     /**
+     * Получение статуса платежа. Присутствует для всех записей.
+     * Может принимать значения:
+     * <ul>
+     *     <li>success - платеж завершен успешно</li>
+     *     <li>in_progress - платеж выполнен, но не завершен.
+     *       Имеет смысл только плтежей с протекцией и платежей до востребования</li>
+     *     <li>refused - получатель отверг получение платежа,
+     *       либо истек срок действия платежа с протекцией/до востребования</li>
+     * </ul>
+     * @return статус платежа
+     */
+    public String getStatus() {
+        return status;
+    }
+
+    /**
      * Поле присутствует только при запросе operation-history с параметром details=true,
      * или при запросе operation-detail
      *
@@ -145,6 +162,7 @@ public class Operation implements Serializable {
                 "operationId='" + operationId + '\'' +
                 ", patternId='" + patternId + '\'' +
                 ", title='" + title + '\'' +
+                ", status='" + status + '\'' +
                 ", direction=" + direction +
                 ", amount=" + amount +
                 ", datetime=" + datetime +
