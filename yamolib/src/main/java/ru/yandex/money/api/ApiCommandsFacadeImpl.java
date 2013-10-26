@@ -41,10 +41,10 @@ public class ApiCommandsFacadeImpl implements ApiCommandsFacade, Serializable {
     public static final String PROCESS_PAYMENT_COMMAND_NAME = "process-payment";
     public static final String REVOKE_COMMAND_NAME = "revoke";
 
-    private static final ThreadLocal<SimpleDateFormat> RFC_3339 = new ThreadLocal<SimpleDateFormat>() {
+    static final ThreadLocal<SimpleDateFormat> RFC_3339 = new ThreadLocal<SimpleDateFormat>() {
         @Override
         protected SimpleDateFormat initialValue() {
-            return new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ssZ");
+            return new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
         }
     };
 
@@ -133,8 +133,8 @@ public class ApiCommandsFacadeImpl implements ApiCommandsFacade, Serializable {
         addParamIfNotNull("records", records, params);
         addParamIfNotNull("type", joinHistoryTypes(operationsType), params);
         addParamIfNotNull("details", fetchDetails, params);
-        addParamIfNotNull("till", till, params);
         addParamIfNotNull("from", from, params);
+        addParamIfNotNull("till", till, params);
         addParamIfNotNull("label", label, params);
 
         return yamoneyClient.executeForJsonObjectFunc(uri.getUrlForCommand(OPERATION_HISTORY_COMMAND_NAME), params, accessToken,
