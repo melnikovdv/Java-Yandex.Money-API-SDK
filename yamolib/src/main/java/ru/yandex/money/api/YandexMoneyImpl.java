@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Map;
 import java.util.Set;
 
@@ -49,7 +50,7 @@ public class YandexMoneyImpl implements YandexMoney, Serializable {
         this(clientId, createHttpClient(60100));
     }
 
-    private static HttpClient createHttpClient(int socketTimeout) {
+    static HttpClient createHttpClient(int socketTimeout) {
         DefaultHttpClient httpClient = new DefaultHttpClient();
         httpClient.getParams().setParameter(CoreProtocolPNames.USER_AGENT, USER_AGENT);
         HttpConnectionParams.setConnectionTimeout(httpClient.getParams(), 4000);
@@ -120,6 +121,14 @@ public class YandexMoneyImpl implements YandexMoney, Serializable {
         return apiCommandsFacade.operationHistory(accessToken, startRecord, records, operationsType);
     }
 
+    public OperationHistoryResponse operationHistory(String accessToken, Integer startRecord, Integer records,
+                                                     Set<OperationHistoryType> operationsType, Boolean fetchDetails,
+                                                     Date from, Date till, String label)
+            throws IOException, InvalidTokenException, InsufficientScopeException {
+
+        return apiCommandsFacade.operationHistory(accessToken, startRecord, records, operationsType, fetchDetails, from, till, label);
+    }
+
     public OperationDetailResponse operationDetail(String accessToken,
             String operationId) throws IOException, InvalidTokenException,
             InsufficientScopeException {
@@ -146,6 +155,11 @@ public class YandexMoneyImpl implements YandexMoney, Serializable {
             throws IOException, InvalidTokenException, InsufficientScopeException {
 
         return apiCommandsFacade.requestPaymentP2P(accessToken, to, amount, comment, message);
+    }
+
+    @Override
+    public RequestPaymentResponse requestPaymentToPhone(String accessToken, String phone, String amount) throws InsufficientScopeException, InvalidTokenException, IOException {
+        return apiCommandsFacade.requestPaymentToPhone(accessToken, phone, amount);
     }
 
     public RequestPaymentResponse requestPaymentShop(String accessToken,

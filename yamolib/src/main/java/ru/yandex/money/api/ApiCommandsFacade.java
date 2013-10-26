@@ -6,6 +6,7 @@ import ru.yandex.money.api.rights.IdentifierType;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.Map;
 import java.util.Set;
 
@@ -136,6 +137,29 @@ public interface ApiCommandsFacade {
             InsufficientScopeException;
 
     /**
+     *
+     *
+     * @param accessToken токен авторизации пользователя
+     * @param startRecord запись с которой начинать вывод
+     * @param records     количество записей
+     * @param operationsType Типы операций ("payment" и/или "deposition")
+     * @param fetchDetails Извлекать ли детали операции (по умолчанию - false)
+     *                     Если равен true, то набор данных операций содержит те же поля, что и operation-details
+     * @param from Дата, с которой следует запросить данные истории
+     * @param till Дата, до которой следует запросить данные истории
+     * @param label Метка платежа
+     * @return возвращает экземпляр класса {@link ru.yandex.money.api.response.OperationHistoryResponse}
+     * @throws java.io.IOException        ошибка связи с сервером Яндекс.Денег
+     * @throws ru.yandex.money.api.InsufficientScopeException запрошена операция, на которую у токена нет прав.
+     * @throws ru.yandex.money.api.InvalidTokenException      указан несуществующий, просроченный, или отозванный токен.
+     */
+    OperationHistoryResponse operationHistory(String accessToken,
+                                              Integer startRecord, Integer records,
+                                              Set<OperationHistoryType> operationsType, Boolean fetchDetails,
+                                              Date from, Date till, String label) throws IOException,
+            InvalidTokenException, InsufficientScopeException;
+
+    /**
      * <p>Запрос p2p перевода другому пользователю.</p>
      * <b>Внимание</b>: перевод на счет пользователя, чей токен указывается в параметрах,
      * невозможен. Т.е. самому себе делать переводы нельзя.
@@ -230,6 +254,23 @@ public interface ApiCommandsFacade {
     RequestPaymentResponse requestPaymentShop(String accessToken,
                                               String patternId, Map<String, String> params) throws IOException,
             InvalidTokenException, InsufficientScopeException;
+
+    /**
+     * Запрос на пополнение счета мобильного телефона.
+     * Яндекс.Деньги определят оператора по номеру телефона
+     *
+     * @param accessToken токен авторизации пользователя
+     * @param phone       идентификатор шаблона платежа
+     * @param amount      пользовательские параметры шаблона платежа, требуемые
+     *                    магазином.
+     * @return возвращает экземпляр класса {@link ru.yandex.money.api.response.RequestPaymentResponse}
+     * @throws java.io.IOException                              ошибка связи с сервером Яндекс.Денег
+     * @throws ru.yandex.money.api.InsufficientScopeException   запрошена операция, на которую у токена нет прав.
+     * @throws ru.yandex.money.api.InvalidTokenException        указан несуществующий, просроченный, или отозванный токен.
+     * @throws ru.yandex.money.api.InternalServerErrorException техническая ошибка сервера Яндекс.Денег
+     */
+    RequestPaymentResponse requestPaymentToPhone(String accessToken, String phone, String amount)
+            throws InsufficientScopeException, InvalidTokenException, IOException;
 
     /**
      * Метод подтверждения платежа с оплатой с привязанной карты.

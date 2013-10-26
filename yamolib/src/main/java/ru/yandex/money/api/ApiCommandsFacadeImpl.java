@@ -124,7 +124,7 @@ public class ApiCommandsFacadeImpl implements ApiCommandsFacade, Serializable {
     public OperationHistoryResponse operationHistory(String accessToken,
                                                      Integer startRecord, Integer records,
                                                      Set<OperationHistoryType> operationsType, Boolean fetchDetails,
-                                                     Date till, Date from, String label) throws IOException,
+                                                     Date from, Date till, String label) throws IOException,
             InvalidTokenException, InsufficientScopeException {
 
         List<NameValuePair> params = new ArrayList<NameValuePair>();
@@ -193,6 +193,18 @@ public class ApiCommandsFacadeImpl implements ApiCommandsFacade, Serializable {
         addParamIfNotNull("message", message, params);
         addParamIfNotNull("label", label, params);
 
+        return yamoneyClient.executeForJsonObjectFunc(uri.getUrlForCommand(REQUEST_PAYMENT_COMMAND_NAME),
+                params, accessToken, RequestPaymentResponse.class);
+    }
+
+    @Override
+    public RequestPaymentResponse requestPaymentToPhone(String accessToken, String phone, String amount)
+            throws InsufficientScopeException, InvalidTokenException, IOException {
+
+        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        params.add(new BasicNameValuePair("pattern_id", "phone-topup"));
+        params.add(new BasicNameValuePair("phone-number", phone));
+        params.add(new BasicNameValuePair("amount", amount));
         return yamoneyClient.executeForJsonObjectFunc(uri.getUrlForCommand(REQUEST_PAYMENT_COMMAND_NAME),
                 params, accessToken, RequestPaymentResponse.class);
     }
