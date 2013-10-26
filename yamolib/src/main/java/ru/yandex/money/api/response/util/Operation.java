@@ -26,6 +26,7 @@ public class Operation implements Serializable {
     protected String message;
     protected Boolean codepro;
     protected String details;
+    protected String label;
 
     protected Operation() {
     }
@@ -134,6 +135,10 @@ public class Operation implements Serializable {
         return details;
     }
 
+    public String getLabel() {
+        return label;
+    }
+
     @Override
     public String toString() {
         return "Operation{" +
@@ -148,6 +153,7 @@ public class Operation implements Serializable {
                 ", message='" + message + '\'' +
                 ", codepro=" + codepro +
                 ", details='" + details + '\'' +
+                ", label='" + label + '\'' +
                 '}';
     }
 }
