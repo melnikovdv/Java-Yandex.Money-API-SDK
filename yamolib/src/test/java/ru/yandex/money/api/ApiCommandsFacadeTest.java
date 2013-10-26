@@ -49,6 +49,11 @@ public class ApiCommandsFacadeTest {
     }
 
     @Test
+    public void testFundraisingStats() throws InsufficientScopeException, InvalidTokenException, IOException {
+        System.out.println(facade.fundraisingStats(AUTH_TOKEN, "incoming payment"));
+    }
+
+    @Test
     public void testOperationHistoryByPeriod() throws InsufficientScopeException, InvalidTokenException, IOException {
         Date from = createDate(2013, 10, 11, 23, 0);
         Date till = createDate(2013, 10, 11, 1, 0);

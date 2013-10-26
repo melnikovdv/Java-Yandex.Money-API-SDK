@@ -144,12 +144,14 @@ public interface ApiCommandsFacade {
      * @param records     количество записей
      * @param operationsType Типы операций ("payment" и/или "deposition")
      * @param fetchDetails Извлекать ли детали операции (по умолчанию - false)
-     *                     Если равен true, то набор данных операций содержит те же поля, что и operation-details
+     *                     Если равен true, то набор данных операций содержит те же поля, что и operation-details.
+     *                     Для выполнения метода с запросом деталей, токен должен обладать
+     *                     и правом operation-history и правом operation-details
      * @param from Дата, с которой следует запросить данные истории
      * @param till Дата, до которой следует запросить данные истории
      * @param label Метка платежа
      * @return возвращает экземпляр класса {@link ru.yandex.money.api.response.OperationHistoryResponse}
-     * @throws java.io.IOException        ошибка связи с сервером Яндекс.Денег
+     * @throws java.io.IOException        ошибка связи с сервером Ян.Денег
      * @throws ru.yandex.money.api.InsufficientScopeException запрошена операция, на которую у токена нет прав.
      * @throws ru.yandex.money.api.InvalidTokenException      указан несуществующий, просроченный, или отозванный токен.
      */
@@ -158,6 +160,19 @@ public interface ApiCommandsFacade {
                                               Set<OperationHistoryType> operationsType, Boolean fetchDetails,
                                               Date from, Date till, String label) throws IOException,
             InvalidTokenException, InsufficientScopeException;
+
+    /**
+     * Команда запроса статистики по входящим платежам пользователя, выполненных с определенной меткой.
+     * Требует права токена operation-details
+     *
+     * @param accessToken токен авторизации пользователя
+     * @param label Метка, по которой производились входящие платежи
+     * @throws java.io.IOException                            ошибка связи с сервером Яндекс.Денег
+     * @throws ru.yandex.money.api.InsufficientScopeException запрошена операция, на которую у токена нет прав.
+     * @throws ru.yandex.money.api.InvalidTokenException      указан несуществующий, просроченный, или отозванный токен.
+     */
+    FundraisingStatsResponse fundraisingStats(String accessToken, String label)
+            throws IOException, InvalidTokenException, InsufficientScopeException;
 
     /**
      * <p>Запрос p2p перевода другому пользователю.</p>

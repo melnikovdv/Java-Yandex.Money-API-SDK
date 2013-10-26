@@ -129,6 +129,11 @@ public class YandexMoneyImpl implements YandexMoney, Serializable {
         return apiCommandsFacade.operationHistory(accessToken, startRecord, records, operationsType, fetchDetails, from, till, label);
     }
 
+    @Override
+    public FundraisingStatsResponse fundraisingStats(String accessToken, String label) throws IOException, InvalidTokenException, InsufficientScopeException {
+        return apiCommandsFacade.fundraisingStats(accessToken, label);
+    }
+
     public OperationDetailResponse operationDetail(String accessToken,
             String operationId) throws IOException, InvalidTokenException,
             InsufficientScopeException {

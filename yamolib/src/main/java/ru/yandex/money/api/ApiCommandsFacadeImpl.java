@@ -40,6 +40,7 @@ public class ApiCommandsFacadeImpl implements ApiCommandsFacade, Serializable {
     public static final String REQUEST_PAYMENT_COMMAND_NAME = "request-payment";
     public static final String PROCESS_PAYMENT_COMMAND_NAME = "process-payment";
     public static final String REVOKE_COMMAND_NAME = "revoke";
+    public static final String FUNDRAISING_STATS_COMMAND_NAME = "fundraising-stats";
 
     static final ThreadLocal<SimpleDateFormat> RFC_3339 = new ThreadLocal<SimpleDateFormat>() {
         @Override
@@ -139,6 +140,16 @@ public class ApiCommandsFacadeImpl implements ApiCommandsFacade, Serializable {
 
         return yamoneyClient.executeForJsonObjectFunc(uri.getUrlForCommand(OPERATION_HISTORY_COMMAND_NAME), params, accessToken,
                 OperationHistoryResponse.class);
+    }
+
+    @Override
+    public FundraisingStatsResponse fundraisingStats(String accessToken, String label)
+            throws IOException, InvalidTokenException, InsufficientScopeException {
+
+        ArrayList<NameValuePair> params = new ArrayList<NameValuePair>();
+        params.add(new BasicNameValuePair("label", label));
+        return yamoneyClient.executeForJsonObjectFunc(
+                uri.getUrlForCommand(FUNDRAISING_STATS_COMMAND_NAME), params, accessToken, FundraisingStatsResponse.class);
     }
 
     public OperationDetailResponse operationDetail(String accessToken,
