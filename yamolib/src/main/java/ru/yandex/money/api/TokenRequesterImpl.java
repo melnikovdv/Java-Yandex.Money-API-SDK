@@ -4,8 +4,6 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import ru.yandex.money.api.response.ReceiveOAuthTokenResponse;
-import ru.yandex.money.api.rights.AccountInfo;
-import ru.yandex.money.api.rights.OperationHistory;
 import ru.yandex.money.api.rights.Permission;
 
 import java.io.IOException;
@@ -14,7 +12,6 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -94,15 +91,13 @@ public class TokenRequesterImpl implements TokenRequester, Serializable {
         return clientId;
     }
 
-    private String makeScope(Collection<Permission> scope) {
-        if (scope == null) {
-            scope = new LinkedList<Permission>();
-            scope.add(new AccountInfo());
-            scope.add(new OperationHistory());
+    private String makeScope(Collection<Permission> permissions) {
+        if (permissions == null) {
+            throw new IllegalArgumentException("permissions expected");
         }
 
         StringBuilder sBuilder = new StringBuilder();
-        for (Permission s : scope) {
+        for (Permission s : permissions) {
             sBuilder = sBuilder.append(" ").append(s.value());
         }
 
