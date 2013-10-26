@@ -24,6 +24,8 @@ public class RequestPaymentResponse implements Serializable {
     private String requestId;
     private String contract;
     private BigDecimal balance;
+    private Boolean recipient_identified;
+    private String recipient_account_type;
 
     private RequestPaymentResponse() {
     }
@@ -118,10 +120,26 @@ public class RequestPaymentResponse implements Serializable {
 
     /**
      * @return текущий остаток на счете пользователя.
-     * Присутствует только при успешном выполнении метода requestPayment*.
+     * Присутствует только при успешном выполнении метода requestPayment и при наличии у токена права account-info
      */
     public BigDecimal getBalance() {
         return balance;
+    }
+
+    /**
+     * @return тип счета <u>получателя</u>. ("personal" либо "professional")
+     * Присутствует только при успешном выполнении метода requestPayment при p2p переводе
+     */
+    public String getRecipientAccountType() {
+        return recipient_account_type;
+    }
+
+    /**
+     * @return Признак идентифицированности <u>получателя</u>
+     * Присутствует только при успешном выполнении метода requestPayment при p2p переводе
+     */
+    public Boolean getRecipientIdentified() {
+        return recipient_identified;
     }
 
     @Override
@@ -133,6 +151,8 @@ public class RequestPaymentResponse implements Serializable {
                 ", requestId='" + requestId + '\'' +
                 ", contract='" + contract + '\'' +
                 ", balance=" + balance +
+                ", recipient_identified=" + recipient_identified +
+                ", recipient_account_type='" + recipient_account_type + '\'' +
                 '}';
     }
 }
