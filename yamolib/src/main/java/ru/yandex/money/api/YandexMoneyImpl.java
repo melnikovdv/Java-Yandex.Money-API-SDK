@@ -3,6 +3,7 @@ package ru.yandex.money.api;
 import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.CoreProtocolPNames;
+import org.apache.http.params.HttpConnectionParams;
 import ru.yandex.money.api.enums.OperationHistoryType;
 import ru.yandex.money.api.response.*;
 import ru.yandex.money.api.rights.IdentifierType;
@@ -45,12 +46,14 @@ public class YandexMoneyImpl implements YandexMoney, Serializable {
      * @param clientId идентификатор приложения в системе Яндекс.Деньги
      */
     public YandexMoneyImpl(String clientId) {
-        this(clientId, createHttpClient());
+        this(clientId, createHttpClient(60100));
     }
 
-    private static HttpClient createHttpClient() {
+    private static HttpClient createHttpClient(int socketTimeout) {
         DefaultHttpClient httpClient = new DefaultHttpClient();
         httpClient.getParams().setParameter(CoreProtocolPNames.USER_AGENT, USER_AGENT);
+        HttpConnectionParams.setConnectionTimeout(httpClient.getParams(), 4000);
+        HttpConnectionParams.setSoTimeout(httpClient.getParams(), socketTimeout);
         return httpClient;
     }
 
