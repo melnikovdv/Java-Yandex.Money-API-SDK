@@ -34,6 +34,13 @@ public class ApiCommandsFacadeImpl implements ApiCommandsFacade, Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    public static final String ACCOUNT_INFO_COMMAND_NAME = "account-info";
+    public static final String OPERATION_HISTORY_COMMAND_NAME = "operation-history";
+    public static final String OPERATION_DETAILS_COMMAND_NAME = "operation-details";
+    public static final String REQUEST_PAYMENT_COMMAND_NAME = "request-payment";
+    public static final String PROCESS_PAYMENT_COMMAND_NAME = "process-payment";
+    public static final String REVOKE_COMMAND_NAME = "revoke";
+
     private static final ThreadLocal<SimpleDateFormat> RFC_3339 = new ThreadLocal<SimpleDateFormat>() {
         @Override
         protected SimpleDateFormat initialValue() {
@@ -41,7 +48,7 @@ public class ApiCommandsFacadeImpl implements ApiCommandsFacade, Serializable {
         }
     };
 
-    private final String uriYamoneyApi;
+    private final CommandUrlHolder.ConstantUrlHolder uri;
     private final YamoneyClient yamoneyClient;
 
     /**
@@ -66,7 +73,7 @@ public class ApiCommandsFacadeImpl implements ApiCommandsFacade, Serializable {
      */
     public ApiCommandsFacadeImpl(HttpClient client, String yandexMoneyTestUrl) {
         this.yamoneyClient = new YamoneyClient(client);
-        this.uriYamoneyApi = yandexMoneyTestUrl;
+        this.uri = new CommandUrlHolder.ConstantUrlHolder(yandexMoneyTestUrl);
     }
 
     /**
@@ -79,7 +86,7 @@ public class ApiCommandsFacadeImpl implements ApiCommandsFacade, Serializable {
      */
     public AccountInfoResponse accountInfo(String accessToken)
             throws IOException, InvalidTokenException, InsufficientScopeException {
-        return yamoneyClient.executeForJsonObjectFunc(uriYamoneyApi + "/account-info", null, accessToken, AccountInfoResponse.class);
+        return yamoneyClient.executeForJsonObjectFunc(uri.getUrlForCommand(ACCOUNT_INFO_COMMAND_NAME), null, accessToken, AccountInfoResponse.class);
     }
 
     public OperationHistoryResponse operationHistory(String accessToken)
@@ -120,33 +127,8 @@ public class ApiCommandsFacadeImpl implements ApiCommandsFacade, Serializable {
         addParamIfNotNull("from", from, params);
         addParamIfNotNull("label", label, params);
 
-        return yamoneyClient.executeForJsonObjectFunc(uriYamoneyApi + "/operation-history", params, accessToken,
+        return yamoneyClient.executeForJsonObjectFunc(uri.getUrlForCommand(OPERATION_HISTORY_COMMAND_NAME), params, accessToken,
                 OperationHistoryResponse.class);
-    }
-
-    private void addParamIfNotNull(String paramName, Object value, List<NameValuePair> params) {
-        if (value != null) {
-            params.add(new BasicNameValuePair(paramName, String.valueOf(value)));
-        }
-    }
-
-    private void addParamIfNotNull(String paramName, Date date, List<NameValuePair> params) {
-        if (date == null) {
-            return;
-        }
-        String value = RFC_3339.get().format(date).replaceAll("(\\d\\d)(\\d\\d)$", "$1:$2");
-        params.add(new BasicNameValuePair(paramName, value));
-    }
-
-    private String joinHistoryTypes(Set<OperationHistoryType> operationsType) {
-        if (operationsType == null || operationsType.isEmpty()) {
-            return null;
-        }
-        StringBuilder result = new StringBuilder();
-        for (OperationHistoryType op : operationsType) {
-            result.append(op.toString()).append(" ");
-        }
-        return result.toString().trim();
     }
 
     public OperationDetailResponse operationDetail(String accessToken,
@@ -156,7 +138,7 @@ public class ApiCommandsFacadeImpl implements ApiCommandsFacade, Serializable {
         List<NameValuePair> params = new ArrayList<NameValuePair>();
         params.add(new BasicNameValuePair("operation_id", operationId));
 
-        return yamoneyClient.executeForJsonObjectFunc(uriYamoneyApi + "/operation-details",
+        return yamoneyClient.executeForJsonObjectFunc(uri.getUrlForCommand(OPERATION_DETAILS_COMMAND_NAME),
                 params, accessToken, OperationDetailResponse.class);
     }
 
@@ -201,7 +183,7 @@ public class ApiCommandsFacadeImpl implements ApiCommandsFacade, Serializable {
         addParamIfNotNull("message", message, params);
         addParamIfNotNull("label", label, params);
 
-        return yamoneyClient.executeForJsonObjectFunc(uriYamoneyApi + "/request-payment",
+        return yamoneyClient.executeForJsonObjectFunc(uri.getUrlForCommand(REQUEST_PAYMENT_COMMAND_NAME),
                 params, accessToken, RequestPaymentResponse.class);
     }
 
@@ -215,7 +197,7 @@ public class ApiCommandsFacadeImpl implements ApiCommandsFacade, Serializable {
             pars.add(new BasicNameValuePair(name, params.get(name)));
         }
 
-        return yamoneyClient.executeForJsonObjectFunc(uriYamoneyApi + "/request-payment", pars, accessToken,
+        return yamoneyClient.executeForJsonObjectFunc(uri.getUrlForCommand(REQUEST_PAYMENT_COMMAND_NAME), pars, accessToken,
                 RequestPaymentResponse.class);
     }
 
@@ -242,14 +224,14 @@ public class ApiCommandsFacadeImpl implements ApiCommandsFacade, Serializable {
         if (csc != null && (moneySource.equals(MoneySource.card))) {
             params.add(new BasicNameValuePair("csc", csc));
         }
-        return yamoneyClient.executeForJsonObjectFunc(uriYamoneyApi + "/process-payment",
+        return yamoneyClient.executeForJsonObjectFunc(uri.getUrlForCommand(PROCESS_PAYMENT_COMMAND_NAME),
                 params, accessToken, ProcessPaymentResponse.class);
     }
 
     public void revokeOAuthToken(String accessToken) throws InvalidTokenException, IOException {
         HttpResponse response = null;
         try {
-            response = yamoneyClient.execPostRequest(new HttpPost(uriYamoneyApi + "/revoke"), accessToken, null);
+            response = yamoneyClient.execPostRequest(new HttpPost(uri.getUrlForCommand(REVOKE_COMMAND_NAME)), accessToken, null);
             if (response.getStatusLine().getStatusCode() == 401)
                 throw new InvalidTokenException("invalid token");
 
@@ -263,5 +245,30 @@ public class ApiCommandsFacadeImpl implements ApiCommandsFacade, Serializable {
                 EntityUtils.consume(response.getEntity());
             }
         }
+    }
+
+    private void addParamIfNotNull(String paramName, Object value, List<NameValuePair> params) {
+        if (value != null) {
+            params.add(new BasicNameValuePair(paramName, String.valueOf(value)));
+        }
+    }
+
+    private void addParamIfNotNull(String paramName, Date date, List<NameValuePair> params) {
+        if (date == null) {
+            return;
+        }
+        String value = RFC_3339.get().format(date).replaceAll("(\\d\\d)(\\d\\d)$", "$1:$2");
+        params.add(new BasicNameValuePair(paramName, value));
+    }
+
+    private String joinHistoryTypes(Set<OperationHistoryType> operationsType) {
+        if (operationsType == null || operationsType.isEmpty()) {
+            return null;
+        }
+        StringBuilder result = new StringBuilder();
+        for (OperationHistoryType op : operationsType) {
+            result.append(op.toString()).append(" ");
+        }
+        return result.toString().trim();
     }
 }
