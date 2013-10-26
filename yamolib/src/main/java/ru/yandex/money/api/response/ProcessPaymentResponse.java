@@ -18,6 +18,7 @@ public class ProcessPaymentResponse implements Serializable {
 
     private Status status;
     private String error;
+    private String error_description;
     private String paymentId;
     private BigDecimal balance;
     private String payer;
@@ -121,6 +122,7 @@ public class ProcessPaymentResponse implements Serializable {
         return "ProcessPaymentResponse{" +
                 "status=" + status +
                 ", error=" + error +
+                ", error_description='" + error_description + '\'' +
                 ", paymentId='" + paymentId + '\'' +
                 ", balance=" + balance +
                 ", payer='" + payer + '\'' +

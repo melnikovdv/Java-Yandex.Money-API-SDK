@@ -20,6 +20,7 @@ public class RequestPaymentResponse implements Serializable {
     
     private Status status;
     private String error;
+    private String error_description;
     private PaymentMethods moneySource;
     private String requestId;
     private String contract;
@@ -147,6 +148,7 @@ public class RequestPaymentResponse implements Serializable {
         return "RequestPaymentResponse{" +
                 "status=" + status +
                 ", error='" + error + '\'' +
+                ", error_description='" + error_description + '\'' +
                 ", moneySource=" + moneySource +
                 ", requestId='" + requestId + '\'' +
                 ", contract='" + contract + '\'' +
