@@ -52,12 +52,16 @@ public class TokenRequesterImpl implements TokenRequester, Serializable {
         this.client = new YamoneyClient(client);
     }
 
-    public String authorizeUri(Collection<Permission> scope, String redirectUri, Boolean mobileMode) {
+    public String authorizeUri(Collection<Permission> permissions, String redirectUri, Boolean mobileMode) {
+        return authorizeUri(makeScope(permissions), redirectUri, mobileMode);
+    }
+
+    public String authorizeUri(String scope, String redirectUri, Boolean mobileMode) {
         try {
             return (mobileMode ? URI_YM_AUTH_MOBILE : URI_YM_AUTH)
                     + "?client_id=" + clientId
                     + "&response_type=code"
-                    + "&scope=" + URLEncoder.encode(makeScope(scope), CHARSET)
+                    + "&scope=" + URLEncoder.encode(scope, CHARSET)
                     + "&redirect_uri=" + URLEncoder.encode(redirectUri, CHARSET);
         } catch (UnsupportedEncodingException e) {
             throw new IllegalStateException("unsupported encoding error", e);

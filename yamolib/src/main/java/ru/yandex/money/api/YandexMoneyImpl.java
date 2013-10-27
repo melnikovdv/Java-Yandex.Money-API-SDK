@@ -74,7 +74,12 @@ public class YandexMoneyImpl implements YandexMoney, Serializable {
         return tokenRequester.getClientId();
     }
 
-    public String authorizeUri(Collection<Permission> scope, String redirectUri, Boolean mobileMode) {
+    public String authorizeUri(Collection<Permission> permissions, String redirectUri, Boolean mobileMode) {
+        return tokenRequester.authorizeUri(permissions, redirectUri, mobileMode);
+    }
+
+    @Override
+    public String authorizeUri(String scope, String redirectUri, Boolean mobileMode) {
         return tokenRequester.authorizeUri(scope, redirectUri, mobileMode);
     }
 

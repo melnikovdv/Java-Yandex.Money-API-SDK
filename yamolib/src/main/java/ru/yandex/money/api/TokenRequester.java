@@ -43,9 +43,7 @@ public interface TokenRequester {
      * Метод OAuth-аутентификации приложения для получения временного
      * кода (токена).
      *
-     * @param scope       список запрашиваемых приложением прав.
-     *                    Если параметр не задан, то будут запрашиваться следующие права:
-     *                    account-info operation-history
+     * @param scope       список запрашиваемых приложением прав. Содержит уже сформированный scope в виде строки.
      * @param redirectUri URI страницы приложения, на который OAuth-сервер
      *                    осуществляет передачу события результата авторизации. Значение этого параметра
      *                    при посимвольном сравнении должно быть идентично значению redirectUri,
@@ -55,7 +53,24 @@ public interface TokenRequester {
      * @return URI, по которому нужно переидти для инициации авторизации
      *
      */
-    String authorizeUri(Collection<Permission> scope,
+    String authorizeUri(String scope, String redirectUri, Boolean mobileMode);
+
+    /**
+     * Метод OAuth-аутентификации приложения для получения временного
+     * кода (токена).
+     *
+     *
+     * @param permissions
+     * @param redirectUri URI страницы приложения, на который OAuth-сервер
+     *                    осуществляет передачу события результата авторизации. Значение этого параметра
+     *                    при посимвольном сравнении должно быть идентично значению redirectUri,
+     *                    указанному при регистрации приложения. При сравнении не учитываются индивидуальные
+     *                    параметры приложения, которые могут быть добавлены в конец строки URI.
+     * @param mobileMode      флаг выбора странички авторизации (мобильный сайт для true и обычный для false)
+     * @return URI, по которому нужно переидти для инициации авторизации
+     *
+     */
+    String authorizeUri(Collection<Permission> permissions,
                         String redirectUri, Boolean mobileMode);
 
     /**
