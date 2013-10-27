@@ -55,7 +55,7 @@ public class ApiCommandsFacadeTestModeTest {
         assertTrue(requestPaymentResponse.isSuccess());
         assertEquals("test-p2p", requestPaymentResponse.getRequestId());
         assertTrue(requestPaymentResponse.isTestPayment());
-        assertTrue(requestPaymentResponse.isPaymentMethodAvailalable(MoneySource.card));
+        assertTrue(requestPaymentResponse.isPaymentMethodAvailable(MoneySource.card));
 
         urlHolder.setTestResult("success");
         ProcessPaymentResponse processPaymentResponse = facade.processPaymentByCard(

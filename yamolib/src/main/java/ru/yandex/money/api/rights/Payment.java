@@ -45,7 +45,7 @@ public class Payment extends AbstractLimitedPermission {
      * Указание паттерна платежа в магазин, подключенный к Яндекс.Деньги
      * @param patternId Идентификатор шаблона платежа. Перейти на страницу оплаты для этого
      *                  магазина можно по ссылке https://money.yandex.ru/shop.xml?scid={patternId}
-     * @return
+     * @return этот же обхект для дальнейшего указания лимитов
      */
     public AbstractLimitedPermission toPattern(String patternId) {
         destination = "to-pattern(\"" + patternId + "\")";
@@ -63,9 +63,9 @@ public class Payment extends AbstractLimitedPermission {
      *
      * @param receiver Идентификатор получателя
      * @param identifierType Тип получателя
-     * @return
+     * @return этот же обхект для дальнейшего указания лимитов
      */
-    public Payment toAccount(String receiver, IdentifierType identifierType) {
+    public AbstractLimitedPermission toAccount(String receiver, IdentifierType identifierType) {
         destination = "to-account(\"" + receiver + "\",\""+ identifierType + "\")";
         return this;
     }

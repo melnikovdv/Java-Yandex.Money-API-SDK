@@ -46,7 +46,7 @@ public class RequestPaymentResponse implements Serializable {
      * @param moneySource элемент перечисления {@link MoneySource}
      * @return Возможна ли оплата способом указанным в параметрах способом
      */
-    public boolean isPaymentMethodAvailalable(MoneySource moneySource) {
+    public boolean isPaymentMethodAvailable(MoneySource moneySource) {
         if (moneySource == null)
              throw new IllegalArgumentException("Money source is empty");
 
