@@ -310,7 +310,7 @@ public interface ApiCommandsFacade {
      * @throws ru.yandex.money.api.InternalServerErrorException
      *                             техническая ошибка сервера Яндекс.Денег
      */
-    RequestPaymentResponse requestPaymentToPhone(String accessToken, String phone, String amount)
+    RequestPaymentResponse requestPaymentToPhone(String accessToken, String phone, BigDecimal amount)
             throws InsufficientScopeException, InvalidTokenException, IOException;
 
     /**

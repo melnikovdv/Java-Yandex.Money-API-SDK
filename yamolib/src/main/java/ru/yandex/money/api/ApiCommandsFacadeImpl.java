@@ -210,13 +210,13 @@ public class ApiCommandsFacadeImpl implements ApiCommandsFacade {
     }
 
     @Override
-    public RequestPaymentResponse requestPaymentToPhone(String accessToken, String phone, String amount)
+    public RequestPaymentResponse requestPaymentToPhone(String accessToken, String phone, BigDecimal amount)
             throws InsufficientScopeException, InvalidTokenException, IOException {
 
         List<NameValuePair> params = new ArrayList<NameValuePair>();
         params.add(new BasicNameValuePair("pattern_id", "phone-topup"));
         params.add(new BasicNameValuePair("phone-number", phone));
-        params.add(new BasicNameValuePair("amount", amount));
+        params.add(new BasicNameValuePair("amount", String.valueOf(amount)));
         return yamoneyClient.executeForJsonObjectFunc(uri.getUrlForCommand(REQUEST_PAYMENT_COMMAND_NAME),
                 params, accessToken, RequestPaymentResponse.class);
     }

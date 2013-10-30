@@ -165,8 +165,8 @@ public class YandexMoneyImpl implements YandexMoney {
         return apiCommandsFacade.requestPaymentP2P(accessToken, to, amount, comment, message);
     }
 
-    @Override
-    public RequestPaymentResponse requestPaymentToPhone(String accessToken, String phone, String amount) throws InsufficientScopeException, InvalidTokenException, IOException {
+    public RequestPaymentResponse requestPaymentToPhone(String accessToken, String phone, BigDecimal amount)
+            throws InsufficientScopeException, InvalidTokenException, IOException {
         return apiCommandsFacade.requestPaymentToPhone(accessToken, phone, amount);
     }
 

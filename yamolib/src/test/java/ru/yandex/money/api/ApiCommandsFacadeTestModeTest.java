@@ -35,7 +35,7 @@ public class ApiCommandsFacadeTestModeTest {
     @Test
     public void testRequestPaymentToPhone() throws InsufficientScopeException, InvalidTokenException, IOException {
         urlHolder.setTestResult("limit_exceeded");
-        System.out.println(facade.requestPaymentToPhone(AUTH_TOKEN, "79111234567", "1.50"));
+        System.out.println(facade.requestPaymentToPhone(AUTH_TOKEN, "79111234567", BigDecimal.valueOf(1.50)));
     }
 
     @Test

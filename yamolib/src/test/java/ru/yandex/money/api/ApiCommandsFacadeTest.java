@@ -3,12 +3,14 @@ package ru.yandex.money.api;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
+import ru.yandex.money.api.enums.OperationHistoryType;
 import ru.yandex.money.api.rights.IdentifierType;
 
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.EnumSet;
 
 import static org.junit.Assert.assertEquals;
 
@@ -34,7 +36,7 @@ public class ApiCommandsFacadeTest {
 
     @Test
     public void testRequestPaymentToPhone() throws InsufficientScopeException, InvalidTokenException, IOException {
-        System.out.println(facade.requestPaymentToPhone(AUTH_TOKEN, "79111234567", "1.50"));
+        System.out.println(facade.requestPaymentToPhone(AUTH_TOKEN, "79111234567", BigDecimal.valueOf(1.50)));
     }
 
     @Test
@@ -45,7 +47,7 @@ public class ApiCommandsFacadeTest {
 
     @Test
     public void testOperationHistory() throws InsufficientScopeException, InvalidTokenException, IOException {
-        System.out.println(facade.operationHistory(AUTH_TOKEN, 0, 5, null, true, null, null, "labeled payment"));
+        System.out.println(facade.operationHistory(AUTH_TOKEN, 0, 5, EnumSet.of(OperationHistoryType.deposition), true, null, null, "labeled payment"));
     }
 
     @Test
