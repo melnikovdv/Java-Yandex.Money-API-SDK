@@ -10,7 +10,6 @@ import ru.yandex.money.api.rights.IdentifierType;
 import ru.yandex.money.api.rights.Permission;
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.Date;
@@ -30,9 +29,7 @@ import java.util.Set;
  * @author dvmelnikov
  */
 
-public class YandexMoneyImpl implements YandexMoney, Serializable {
-
-    private static final long serialVersionUID = 1L;
+public class YandexMoneyImpl implements YandexMoney {
 
     private static final String USER_AGENT = "yamolib";
 
@@ -64,6 +61,7 @@ public class YandexMoneyImpl implements YandexMoney, Serializable {
      * быть нужно для нескольких одновременных соединений.
      *
      * @param clientId идентификатор приложения в системе Яндекс.Деньги
+     * @param client   настроенный httpClient с использованием нужной ключницы и таймаутов
      */
     public YandexMoneyImpl(final String clientId, HttpClient client) {
         this.tokenRequester = new TokenRequesterImpl(clientId, client);
@@ -84,12 +82,12 @@ public class YandexMoneyImpl implements YandexMoney, Serializable {
     }
 
     public ReceiveOAuthTokenResponse receiveOAuthToken(String code,
-            String redirectUri) throws IOException, InsufficientScopeException {
+                                                       String redirectUri) throws IOException, InsufficientScopeException {
         return tokenRequester.receiveOAuthToken(code, redirectUri);
     }
 
     public ReceiveOAuthTokenResponse receiveOAuthToken(String code,
-            String redirectUri, String clientSecret) throws IOException, InsufficientScopeException {
+                                                       String redirectUri, String clientSecret) throws IOException, InsufficientScopeException {
         return tokenRequester.receiveOAuthToken(code, redirectUri, clientSecret);
     }
 
@@ -113,14 +111,14 @@ public class YandexMoneyImpl implements YandexMoney, Serializable {
     }
 
     public OperationHistoryResponse operationHistory(String accessToken,
-            Integer startRecord, Integer records) throws IOException,
+                                                     Integer startRecord, Integer records) throws IOException,
             InvalidTokenException, InsufficientScopeException {
         return operationHistory(accessToken, startRecord, records, null);
     }
 
     public OperationHistoryResponse operationHistory(String accessToken,
-            Integer startRecord, Integer records,
-            Set<OperationHistoryType> operationsType) throws IOException,
+                                                     Integer startRecord, Integer records,
+                                                     Set<OperationHistoryType> operationsType) throws IOException,
             InvalidTokenException, InsufficientScopeException {
 
         return apiCommandsFacade.operationHistory(accessToken, startRecord, records, operationsType);
@@ -140,7 +138,7 @@ public class YandexMoneyImpl implements YandexMoney, Serializable {
     }
 
     public OperationDetailResponse operationDetail(String accessToken,
-            String operationId) throws IOException, InvalidTokenException,
+                                                   String operationId) throws IOException, InvalidTokenException,
             InsufficientScopeException {
 
         return apiCommandsFacade.operationDetail(accessToken, operationId);
@@ -173,14 +171,14 @@ public class YandexMoneyImpl implements YandexMoney, Serializable {
     }
 
     public RequestPaymentResponse requestPaymentShop(String accessToken,
-            String patternId, Map<String, String> params) throws IOException,
+                                                     String patternId, Map<String, String> params) throws IOException,
             InvalidTokenException, InsufficientScopeException {
 
         return apiCommandsFacade.requestPaymentShop(accessToken, patternId, params);
     }
 
     public ProcessPaymentResponse processPaymentByWallet(String accessToken,
-            String requestId) throws IOException, InsufficientScopeException,
+                                                         String requestId) throws IOException, InsufficientScopeException,
             InvalidTokenException {
         return apiCommandsFacade.processPaymentByWallet(accessToken, requestId);
     }

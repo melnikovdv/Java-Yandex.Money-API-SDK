@@ -15,10 +15,9 @@ import org.apache.http.util.EntityUtils;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.Serializable;
 import java.util.List;
 
-class YamoneyClient implements Serializable {
+class YamoneyClient {
 
     /**
      * Кодировка для url encoding/decoding

@@ -26,23 +26,24 @@ import java.util.List;
  *
  * @author dvmelnikov
  */
-public class TokenRequesterImpl implements TokenRequester, Serializable {
-
-    private static final long serialVersionUID = 1L;
-
-    private final String clientId;
-    private final YamoneyClient client;
+public class TokenRequesterImpl implements TokenRequester {
 
     /**
      * Кодировка для url encoding/decoding
      */
     private static final String CHARSET = "UTF-8";
 
+    private final String clientId;
+
+    private final YamoneyClient client;
+
     /**
      * Создает экземпляр класса.
      *
      * @param clientId идентификатор приложения в системе Яндекс.Деньги
-     * @param client todo
+     * @param client   настроенный HttpClient для взаимодействия с сервером Яндекс.Деньги.
+     *                 Для request-payment и process-payment может понядобиться httpClient
+     *                 c таймаутом до 60 секунд
      */
     public TokenRequesterImpl(final String clientId, HttpClient client) {
         if (clientId == null || (clientId.equals(""))) {
@@ -69,7 +70,7 @@ public class TokenRequesterImpl implements TokenRequester, Serializable {
     }
 
     public ReceiveOAuthTokenResponse receiveOAuthToken(String code,
-            String redirectUri) throws IOException, InsufficientScopeException {
+                                                       String redirectUri) throws IOException, InsufficientScopeException {
         List<NameValuePair> params = new ArrayList<NameValuePair>();
         params.add(new BasicNameValuePair("grant_type", "authorization_code"));
         params.add(new BasicNameValuePair("client_id", clientId));
@@ -80,7 +81,7 @@ public class TokenRequesterImpl implements TokenRequester, Serializable {
     }
 
     public ReceiveOAuthTokenResponse receiveOAuthToken(String code,
-            String redirectUri, String clientSecret) throws IOException, InsufficientScopeException {
+                                                       String redirectUri, String clientSecret) throws IOException, InsufficientScopeException {
         List<NameValuePair> params = new ArrayList<NameValuePair>();
         params.add(new BasicNameValuePair("grant_type", "authorization_code"));
         params.add(new BasicNameValuePair("client_id", clientId));

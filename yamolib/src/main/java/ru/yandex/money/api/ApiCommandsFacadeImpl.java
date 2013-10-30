@@ -12,7 +12,6 @@ import ru.yandex.money.api.response.*;
 import ru.yandex.money.api.rights.IdentifierType;
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -30,9 +29,7 @@ import java.util.*;
  * @author dvmelnikov
  */
 
-public class ApiCommandsFacadeImpl implements ApiCommandsFacade, Serializable {
-
-    private static final long serialVersionUID = 1L;
+public class ApiCommandsFacadeImpl implements ApiCommandsFacade {
 
     public static final String ACCOUNT_INFO_COMMAND_NAME = "account-info";
     public static final String OPERATION_HISTORY_COMMAND_NAME = "operation-history";
@@ -54,6 +51,7 @@ public class ApiCommandsFacadeImpl implements ApiCommandsFacade, Serializable {
 
     /**
      * Создает экземпляр класса.
+     *
      * @param client настроенный HttpClient для взаимодействия с сервером Яндекс.Деньги.
      *               Для request-payment и process-payment может понядобиться httpClient
      *               c таймаутом до 60 секунд.
@@ -64,6 +62,7 @@ public class ApiCommandsFacadeImpl implements ApiCommandsFacade, Serializable {
 
     /**
      * Создает экземпляр класса.
+     *
      * @param client настроенный HttpClient для взаимодействия с сервером Яндекс.Деньги.
      *               Для request-payment и process-payment может понядобиться httpClient
      *               c таймаутом до 60 секунд.
@@ -77,9 +76,10 @@ public class ApiCommandsFacadeImpl implements ApiCommandsFacade, Serializable {
      * Создает экземпляр класса. Внутри создается httpClient
      * с переданными в параметрах ConnectionManager и HttpParams. Это может
      * быть нужно для нескольких одновременных соединений.
-     * @param client настроенный HttpClient для взаимодействия с сервером Яндекс.Деньги.
-     *               Для request-payment и process-payment может понядобиться httpClient
-     *               c таймаутом до 60 секунд.
+     *
+     * @param client             настроенный HttpClient для взаимодействия с сервером Яндекс.Деньги.
+     *                           Для request-payment и process-payment может понядобиться httpClient
+     *                           c таймаутом до 60 секунд.
      * @param yandexMoneyTestUrl адрес тестововго хоста. Используйте для отладки,
      *                           если у вас есть "эмулятор" Яндекс.Денег
      */
@@ -88,11 +88,12 @@ public class ApiCommandsFacadeImpl implements ApiCommandsFacade, Serializable {
     }
 
     /**
-     * Запрос данных о счете. Баланс, статус идентифицированнности, является ли профессиональным счетом todo ссылки на описание статусов
+     * Запрос данных о счете. Баланс, статус идентифицированнности, является ли профессиональным счетом.
+     *
      * @param accessToken string токен авторизации пользователя
      * @return Данные счета
-     * @throws IOException При сетевых ошибках
-     * @throws InvalidTokenException Если токен некорректен, или отозван
+     * @throws IOException                При сетевых ошибках
+     * @throws InvalidTokenException      Если токен некорректен, или отозван
      * @throws InsufficientScopeException Если для данного токена нет прав на использование account-info
      */
     public AccountInfoResponse accountInfo(String accessToken)
@@ -111,13 +112,13 @@ public class ApiCommandsFacadeImpl implements ApiCommandsFacade, Serializable {
     }
 
     public OperationHistoryResponse operationHistory(String accessToken,
-            Integer startRecord, Integer records) throws IOException,
+                                                     Integer startRecord, Integer records) throws IOException,
             InvalidTokenException, InsufficientScopeException {
         return operationHistory(accessToken, startRecord, records, null);
     }
 
     public OperationHistoryResponse operationHistory(String accessToken, Integer startRecord, Integer records,
-            Set<OperationHistoryType> operationsType) throws IOException,
+                                                     Set<OperationHistoryType> operationsType) throws IOException,
             InvalidTokenException, InsufficientScopeException {
         return operationHistory(accessToken, startRecord, records, operationsType, null, null, null, null);
     }
@@ -153,7 +154,7 @@ public class ApiCommandsFacadeImpl implements ApiCommandsFacade, Serializable {
     }
 
     public OperationDetailResponse operationDetail(String accessToken,
-            String operationId) throws IOException, InvalidTokenException,
+                                                   String operationId) throws IOException, InvalidTokenException,
             InsufficientScopeException {
 
         List<NameValuePair> params = new ArrayList<NameValuePair>();
@@ -221,7 +222,7 @@ public class ApiCommandsFacadeImpl implements ApiCommandsFacade, Serializable {
     }
 
     public RequestPaymentResponse requestPaymentShop(String accessToken,
-            String patternId, Map<String, String> params) throws IOException,
+                                                     String patternId, Map<String, String> params) throws IOException,
             InvalidTokenException, InsufficientScopeException {
 
         List<NameValuePair> pars = new ArrayList<NameValuePair>();
@@ -247,7 +248,7 @@ public class ApiCommandsFacadeImpl implements ApiCommandsFacade, Serializable {
     }
 
     private ProcessPaymentResponse processPayment(String accessToken,
-            String requestId, MoneySource moneySource, String csc)
+                                                  String requestId, MoneySource moneySource, String csc)
             throws IOException, InsufficientScopeException,
             InvalidTokenException {
 
