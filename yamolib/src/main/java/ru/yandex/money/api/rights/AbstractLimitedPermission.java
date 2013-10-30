@@ -8,7 +8,9 @@ import java.util.regex.Pattern;
  * @author dvmelnikov
  */
 
-public class AbstractLimitedPermission extends AbstractPermission {
+public abstract class AbstractLimitedPermission extends AbstractPermission {
+
+    public static final Pattern SUM_PATTERN = Pattern.compile("\\d{1,15}(\\.\\d\\d)?");
 
     protected String limit;
 
@@ -23,12 +25,10 @@ public class AbstractLimitedPermission extends AbstractPermission {
      * @param sum лимит суммы
      * @return само себя (право)
      */
-    protected Permission limit(int duration, String sum) {
+    public Permission limit(int duration, String sum) {
+        checkSum(sum);
+
         limit = "limit(" + duration + "," + sum + ")";
-
-        if (!checkSum(sum))
-            throw new IllegalArgumentException("sum is not valid");               
-
         return this;
     }
 
@@ -38,24 +38,24 @@ public class AbstractLimitedPermission extends AbstractPermission {
      * @param sum лимит суммы
      * @return само себя (право)
      */
-    protected Permission limit(String sum) {
+    public Permission limit(String sum) {
+        checkSum(sum);
+
         limit = "limit(," + sum + ")";
-
-        if (!checkSum(sum))
-            throw new IllegalArgumentException("sum is not valid");
-
         return this;
     }
 
-    private boolean checkSum(String sum) {
-        Pattern p = Pattern.compile("\\d{1,15}(|\\.\\d\\d)");
-        return p.matcher(sum).matches();
+    private void checkSum(String sum) {
+        if (!SUM_PATTERN.matcher(sum).matches()) {
+            throw new IllegalArgumentException("sum is not valid");
+        }
     }
 
     public String value() {
-        String res = super.value();
-        if (limit != null)
-            res = res + "." + limit;
-        return res;
+        String rule = super.value();
+        if (limit != null) {
+            return rule + "." + limit;
+        }
+        return rule;
     }
 }

@@ -8,9 +8,9 @@ import android.net.http.AndroidHttpClient;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.widget.TextView;
+import ru.yandex.money.api.ApiCommandsFacade;
 import ru.yandex.money.api.InsufficientScopeException;
 import ru.yandex.money.api.InvalidTokenException;
-import ru.yandex.money.api.YandexMoney;
 import ru.yandex.money.api.enums.MoneyDirection;
 import ru.yandex.money.api.response.OperationDetailResponse;
 
@@ -87,7 +87,7 @@ public class DetailHistoryActivity extends Activity {
         @Override
         protected HistoryDetailResp doInBackground(String... params) {
             AndroidHttpClient client = Utils.httpClient();
-            YandexMoney ym = Utils.getYandexMoney(clientId, client);
+            ApiCommandsFacade ym = Utils.getYandexMoney(clientId, client);
             try {
                 OperationDetailResponse resp = ym.operationDetail(accessToken, params[0]);
                 return new HistoryDetailResp(resp, null);

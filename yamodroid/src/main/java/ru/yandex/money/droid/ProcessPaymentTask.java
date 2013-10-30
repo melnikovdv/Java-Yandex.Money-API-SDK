@@ -7,9 +7,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.http.AndroidHttpClient;
 import android.os.AsyncTask;
+import ru.yandex.money.api.ApiCommandsFacade;
 import ru.yandex.money.api.InsufficientScopeException;
 import ru.yandex.money.api.InvalidTokenException;
-import ru.yandex.money.api.YandexMoney;
 import ru.yandex.money.api.enums.MoneySource;
 import ru.yandex.money.api.response.ProcessPaymentResponse;
 
@@ -56,7 +56,7 @@ class ProcessPaymentTask extends AsyncTask<Void, Void, ProcessPaymentTask.Proces
             Void... params) {
         AndroidHttpClient client = Utils.httpClient();
         try {
-            YandexMoney ym = Utils.getYandexMoney(clientId, client);
+            ApiCommandsFacade ym = Utils.getYandexMoney(clientId, client);
             ProcessPaymentResponse resp = null;
             if (moneySource == MoneySource.wallet)
                 resp = ym.processPaymentByWallet(accessToken, requestId);

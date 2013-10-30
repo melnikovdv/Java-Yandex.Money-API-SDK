@@ -1,11 +1,11 @@
 package ru.yandex.money.api;
 
-import org.junit.Assert;
 import org.junit.Test;
-import ru.yandex.money.api.enums.Destination;
 import ru.yandex.money.api.rights.MoneySource;
 import ru.yandex.money.api.rights.Payment;
 import ru.yandex.money.api.rights.PaymentP2P;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * @author dvmelnikov
@@ -14,37 +14,15 @@ import ru.yandex.money.api.rights.PaymentP2P;
 public class RightTest {
     @Test
     public void moneySourceTest() {
-        MoneySource right;
-
-        right = new MoneySource(true, true);
-        Assert.assertTrue(right.value().equals("money-source(\"wallet\",\"card\")"));
-
-        right = new MoneySource(true, false);
-        Assert.assertTrue(right.value().equals("money-source(\"wallet\")"));
-
-        right = new MoneySource(false, true);
-        Assert.assertTrue(right.value().equals("money-source(\"card\")"));
-
-        right = new MoneySource(false, false);
-        Assert.assertTrue(right.value().equals("money-source(\"wallet\")"));
+        assertEquals("money-source(\"wallet\",\"card\")", new MoneySource(true, true).value());
+        assertEquals("money-source(\"wallet\")", new MoneySource(true, false).value());
+        assertEquals("money-source(\"card\")", new MoneySource(false, true).value());
     }
 
     @Test
     public void paymentTest() {
-        PaymentP2P p2p;
-        String s;
-
-        p2p = new PaymentP2P();
-        s = p2p.limit(10, "10.50").value();
-        Assert.assertTrue(s.equals("payment-p2p.limit(10,10.50)"));
-
-        p2p = new PaymentP2P();
-        s = p2p.limit(1, "3000").value();
-        Assert.assertTrue(s.equals("payment-p2p.limit(1,3000)"));
-
-        Payment p;
-
-        p = new Payment(Destination.toAccount, "41001901291751", 1, "100");
-        System.out.println(p.value());
+        assertEquals("payment-p2p.limit(10,10.50)", new PaymentP2P().limit(10, "10.50").value());
+        assertEquals("payment-p2p.limit(1,3000)", new PaymentP2P().limit(1, "3000").value());
+        assertEquals("payment.to-account(\"41001901291751\").limit(1,100)", new Payment().toAccount("41001901291751").limit(1, "100").value());
     }
 }

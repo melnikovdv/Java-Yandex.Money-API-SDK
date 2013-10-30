@@ -6,9 +6,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.http.AndroidHttpClient;
 import android.os.AsyncTask;
+import ru.yandex.money.api.ApiCommandsFacade;
 import ru.yandex.money.api.InsufficientScopeException;
 import ru.yandex.money.api.InvalidTokenException;
-import ru.yandex.money.api.YandexMoney;
 import ru.yandex.money.api.response.OperationHistoryResponse;
 import ru.yandex.money.api.response.util.Operation;
 
@@ -72,7 +72,7 @@ class LoadHistoryTask extends AsyncTask<Integer, Void, LoadHistoryTask.HistoryRe
     @Override
     protected HistoryResp doInBackground(Integer... params) {
         AndroidHttpClient client = Utils.httpClient();
-        YandexMoney ym = Utils.getYandexMoney(clientId, client);
+        ApiCommandsFacade ym = Utils.getYandexMoney(clientId, client);
         try {
             OperationHistoryResponse resp = ym.operationHistory(accessToken, params[0]);
             return new HistoryResp(resp, null);            

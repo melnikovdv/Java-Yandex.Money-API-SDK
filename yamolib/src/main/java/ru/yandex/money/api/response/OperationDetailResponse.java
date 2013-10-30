@@ -14,11 +14,6 @@ public class OperationDetailResponse extends Operation {
     private static final long serialVersionUID = -8469292472444798257L;
 
     private String error;
-    private String sender;
-    private String recipient;
-    private String message;
-    private Boolean codepro;
-    private String details;
 
     private OperationDetailResponse() {
         super();
@@ -44,56 +39,12 @@ public class OperationDetailResponse extends Operation {
         return error;
     }
 
-    /**
-     * @return возвращает номер счета отправителя перевода. Присутствует для
-     * входящих переводов от других пользователей.
-     */
-    public String getSender() {
-        return sender;
-    }
-
-    /**
-     * @return возвращает номер счета отправителя перевода. Присутствует для
-     * входящих переводов от других пользователей.
-     */
-    public String getRecipient() {
-        return recipient;
-    }
-
-    /**
-     * @return возвращает комментарий к переводу. Присутствует для
-     * переводов другим пользователям.
-     */
-    public String getMessage() {
-        return message;
-    }
-
-    /**
-     * @return возвращает признак перевод защищен кодом протекции.
-     * Присутствует для переводов другим пользователям.
-     */
-    public Boolean getCodepro() {
-        return codepro;
-    }
-
-    /**
-     * @return возвращает детальное описание платежа.
-     * Строка произвольного формата, может содержать любые символы и
-     * переводы строк.
-     */
-    public String getDetails() {
-        return details;
-    }
-
     @Override
     public String toString() {
+        if (isSuccess()) {
+            return super.toString();
+        }
         return "OperationDetailResponse{" +
-                "error='" + error + '\'' +
-                ", sender='" + sender + '\'' +
-                ", recipient='" + recipient + '\'' +
-                ", message='" + message + '\'' +
-                ", codepro=" + codepro +
-                ", details='" + details + '\'' +
-                '}';
+                "error='" + error + "\'}";
     }
 }

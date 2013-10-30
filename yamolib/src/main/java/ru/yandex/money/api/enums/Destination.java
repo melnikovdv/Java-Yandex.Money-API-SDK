@@ -5,6 +5,6 @@ package ru.yandex.money.api.enums;
  */
 
 public enum Destination {
-        toAccount,
-        toPattern;
-    }
+    toAccount,
+    toPattern
+}
