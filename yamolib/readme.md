@@ -122,7 +122,7 @@
           token, 0, 5, EnumSet.of(OperationHistoryType.deposition), true, lastWeek, null, "На подарок Васе Пупкину");
 
 #### operation-details
-Запрос деатлей платежа по его идентификатору. operationId может быть получен из результата processPayment, из operation-history или из http-нотификации:
+Запрос деатлей платежа по его идентификатору. `operationId` может быть получен из результата processPayment, из operation-history или из http-нотификации:
 
       OperationDetailsResponse details = apiCommandsFacade.operationDetail(token, operationId);
 
