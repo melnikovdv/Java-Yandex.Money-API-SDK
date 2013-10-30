@@ -7,7 +7,6 @@ import ru.yandex.money.api.response.ReceiveOAuthTokenResponse;
 import ru.yandex.money.api.rights.Permission;
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -72,23 +71,22 @@ public class TokenRequesterImpl implements TokenRequester {
     public ReceiveOAuthTokenResponse receiveOAuthToken(String code,
                                                        String redirectUri) throws IOException, InsufficientScopeException {
         List<NameValuePair> params = new ArrayList<NameValuePair>();
-        params.add(new BasicNameValuePair("grant_type", "authorization_code"));
-        params.add(new BasicNameValuePair("client_id", clientId));
-        params.add(new BasicNameValuePair("code", code));
-        params.add(new BasicNameValuePair("redirect_uri", redirectUri));
-
-        return client.executeForJsonObjectCommon(TokenRequester.URI_YM_TOKEN, params, ReceiveOAuthTokenResponse.class);
+        return receiveOAuthToken(code, redirectUri, params);
     }
 
-    public ReceiveOAuthTokenResponse receiveOAuthToken(String code,
-                                                       String redirectUri, String clientSecret) throws IOException, InsufficientScopeException {
+    public ReceiveOAuthTokenResponse receiveOAuthToken(String code, String redirectUri,
+                                                       String clientSecret) throws IOException, InsufficientScopeException {
         List<NameValuePair> params = new ArrayList<NameValuePair>();
+        params.add(new BasicNameValuePair("client_secret", clientSecret));
+        return receiveOAuthToken(code, redirectUri, params);
+    }
+
+    private ReceiveOAuthTokenResponse receiveOAuthToken(String code, String redirectUri,
+                                                        List<NameValuePair> params) throws InsufficientScopeException, IOException {
         params.add(new BasicNameValuePair("grant_type", "authorization_code"));
         params.add(new BasicNameValuePair("client_id", clientId));
         params.add(new BasicNameValuePair("code", code));
         params.add(new BasicNameValuePair("redirect_uri", redirectUri));
-        params.add(new BasicNameValuePair("client_secret", clientSecret));
-
         return client.executeForJsonObjectCommon(TokenRequester.URI_YM_TOKEN, params, ReceiveOAuthTokenResponse.class);
     }
 
