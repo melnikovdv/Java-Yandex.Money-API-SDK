@@ -51,7 +51,7 @@ public class AccountInfoResponse implements Serializable {
     /**
      * @return true, если пользователь идентифицирован в системе Яндекс.Денег
      */
-    public Boolean getIdentified() {
+    public Boolean isIdentified() {
         return identified;
     }
 

@@ -3,6 +3,7 @@ package ru.yandex.money.api;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
+import ru.yandex.money.api.response.ReceiveOAuthTokenResponse;
 import ru.yandex.money.api.rights.*;
 
 import java.io.IOException;
@@ -10,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Unit tests.
@@ -46,6 +48,8 @@ public class TokenRequesterTest {
     @Test @Ignore("Не работает автоматически")
     public void testGetAuthToken() throws IOException, InsufficientScopeException {
         String reqToken = "70B006...B46C9E72";
-        System.out.println(requester.receiveOAuthToken(reqToken, "http://ya.ru"));
+        ReceiveOAuthTokenResponse receiveOAuthTokenResponse = requester.receiveOAuthToken(reqToken, "http://ya.ru");
+        System.out.println(receiveOAuthTokenResponse);
+        assertTrue(receiveOAuthTokenResponse.isSuccess());
     }
 }
