@@ -123,10 +123,12 @@
 
 #### operation-details
 Запрос деатлей платежа по его идентификатору. operationId может быть получен из результата processPayment, из operation-history или из http-нотификации:
-OperationDetailsResponse details = apiCommandsFacade.operationDetail(token, operationId);
+
+      OperationDetailsResponse details = apiCommandsFacade.operationDetail(token, operationId);
 
 #### request-payment/process-payment
 Пример p2p перевода с привязанной карты:
+
         RequestPaymentResponse requestPaymentResponse = apiCommandsFacade.requestPaymentP2P(
                 token, "410011234567890", BigDecimal.TEN, "comment", "message");
 
@@ -154,10 +156,12 @@ OperationDetailsResponse details = apiCommandsFacade.operationDetail(token, oper
 
 #### Тестовые платежи
 Отличается создание объекта с командами:
+
         CommandUrlHolder urlHolder = new TestUrlHolder();
         ApiCommandsFacade apiCommandsFacade = new ApiCommandsFacadeImpl(httpClient, urlHolder);
 
 Далее перед вызовом команды выставляется ожидаемое поведение:
+
         urlHolder.setTestCard("available");        // означает, что система должа показывать, что у пользователя карта привязана
         urlHolder.setTestPayment(true);            // переводит запросы в боевой/тестовый режим
         urlHolder.setTestResult("illegal_params"); // Сервер Яндекс.Деньги будет возвращать указанную ошибку. при запросах платежа. Код ошибки должен быть из списка реально возможных кодов для вызываемой команды
