@@ -33,7 +33,7 @@
         Статус запроса платежа: <%= resp.getStatus() %> <br/>
         Доступные методы проведения платежа: <%= resp.getMoneySource() %>; <br/>
         Возможна ли оплата с привязанной карты: <%= resp
-            .isPaymentMethodAvailalable(
+            .isPaymentMethodAvailable(
                     MoneySource.card) %> <br/>
         Возможна ли оплата из кошелька: <%= resp.isPaymentMethodAvailalable(
             MoneySource.wallet) %> <br/>
