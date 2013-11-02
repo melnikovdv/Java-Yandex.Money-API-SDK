@@ -35,7 +35,7 @@
         Возможна ли оплата с привязанной карты: <%= resp
             .isPaymentMethodAvailable(
                     MoneySource.card) %> <br/>
-        Возможна ли оплата из кошелька: <%= resp.isPaymentMethodAvailalable(
+        Возможна ли оплата из кошелька: <%= resp.isPaymentMethodAvailable(
             MoneySource.wallet) %> <br/>
         Идентификтаор платежа: <%= resp.getRequestId() %>; <br/>
         Контракт: <%= resp.getContract() %>; <br/>
