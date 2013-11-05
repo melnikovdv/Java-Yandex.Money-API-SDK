@@ -73,9 +73,9 @@
                         Статус запроса платежа: <%= resp.getStatus() %> <br />
                         Код ошибки при проведении платежа: <%= resp.getError() %>; <br />
                         Доступные методы проведения платежа: <%= resp.getMoneySource() %>; <br />
-                        Возможна ли оплата с привязанной карты: <%= resp.isPaymentMethodAvailalable(
+                        Возможна ли оплата с привязанной карты: <%= resp.isPaymentMethodAvailable(
                             MoneySource.card) %> <br />
-                        Возможна ли оплата из кошелька: <%= resp.isPaymentMethodAvailalable(
+                        Возможна ли оплата из кошелька: <%= resp.isPaymentMethodAvailable(
                             MoneySource.wallet) %> <br />
                         Идентификтаор платежа: <%= resp.getRequestId() %>; <br />
                         Контракт: <%= resp.getContract() %>; <br />
