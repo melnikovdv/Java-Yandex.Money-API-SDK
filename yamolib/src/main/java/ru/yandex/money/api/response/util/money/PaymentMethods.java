@@ -83,6 +83,18 @@ public class PaymentMethods {
          */
         private String type;
 
+        public boolean isCscRequired() {
+            return csc_required;
+        }
+
+        public String getPanFragment() {
+            return pan_fragment;
+        }
+
+        public String getType() {
+            return type;
+        }
+
         @Override
         public String toString() {
             return "CardElement{" +
