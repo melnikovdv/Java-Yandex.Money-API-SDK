@@ -25,7 +25,7 @@ public class PaymentMethods {
     /**
      * @return объект типа {@link ru.yandex.money.api.response.util.money.PaymentMethods.Element}
      */
-    public Element getCard() {
+    public CardElement getCard() {
         return card;
     }
 
