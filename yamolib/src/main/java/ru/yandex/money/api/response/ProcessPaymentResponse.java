@@ -1,6 +1,7 @@
 package ru.yandex.money.api.response;
 
 import ru.yandex.money.api.enums.Status;
+import ru.yandex.money.api.response.util.ProcessPaymentError;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -17,7 +18,7 @@ public class ProcessPaymentResponse implements Serializable {
     private static final long serialVersionUID = -7677898505314637271L;
 
     private Status status;
-    private String error;
+    private ProcessPaymentError error;
     private String error_description;
     private String paymentId;
     private BigDecimal balance;
@@ -73,7 +74,7 @@ public class ProcessPaymentResponse implements Serializable {
      * либо превышен лимит платежной системы для данного пользователя.</li>
      * </ul>
      */
-    public String getError() {
+    public ProcessPaymentError getError() {
         return error;
     }
 
