@@ -4,9 +4,9 @@ import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParseException;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.http.*;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
@@ -24,6 +24,8 @@ class YamoneyClient {
      */
     private static final String CHARSET = "UTF-8";
 
+    private static final Log LOGGER = LogFactory.getLog(YamoneyClient.class);
+
     private final HttpClient httpClient;
 
     public YamoneyClient(HttpClient httpClient) {
@@ -34,7 +36,6 @@ class YamoneyClient {
             throws InsufficientScopeException, IOException {
 
         HttpResponse response = null;
-
         try {
             response = execPostRequest(new HttpPost(url), params);
             checkCommonResponse(response);
@@ -54,11 +55,18 @@ class YamoneyClient {
 
     HttpResponse execPostRequest(HttpPost httpPost, List<NameValuePair> params) throws IOException {
         if (params != null) {
+            LOGGER.info("request parameters: " + params);
             httpPost.setEntity(new UrlEncodedFormEntity(params, CHARSET));
         }
 
         try {
-            return httpClient.execute(httpPost);
+            HttpResponse response = httpClient.execute(httpPost);
+            int iCode = response.getStatusLine().getStatusCode();
+            if (iCode != HttpStatus.SC_OK) {
+                Header wwwAuthenticate = response.getFirstHeader("WWW-Authenticate");
+                LOGGER.info("http status: " + iCode + ", WWW-Authenticate: " + wwwAuthenticate);
+            }
+            return response;
         } catch (IOException e) {
             httpPost.abort();
             throw e;
@@ -69,11 +77,11 @@ class YamoneyClient {
             InternalServerErrorException, InsufficientScopeException {
         int iCode = httpResp.getStatusLine().getStatusCode();
 
-        if (iCode == 400)
+        if (iCode == HttpStatus .SC_BAD_REQUEST)
             throw new ProtocolRequestException("invalid request");
-        if (iCode == 403)
+        if (iCode == HttpStatus.SC_FORBIDDEN)
             throw new InsufficientScopeException("insufficient scope");
-        if (iCode == 500)
+        if (iCode == HttpStatus.SC_INTERNAL_SERVER_ERROR)
             throw new InternalServerErrorException("internal yandex.money server error");
 
         if (httpResp.getEntity() == null)
@@ -86,7 +94,9 @@ class YamoneyClient {
         try {
             Gson gson = new GsonBuilder().setFieldNamingPolicy(
                     FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).create();
-            return gson.fromJson(new InputStreamReader(is, CHARSET), classOfT);
+            T result = gson.fromJson(new InputStreamReader(is, CHARSET), classOfT);
+            LOGGER.info("result: " + result);
+            return result;
         } catch (JsonParseException e) {
             throw new IllegalStateException("response decoding failed", e);
         }
