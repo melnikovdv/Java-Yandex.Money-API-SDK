@@ -16,6 +16,7 @@ public class PaymentMethods {
     }
 
     /**
+     * Если возращает <code>null</code>, значит на счету нет достаточного количества средств для платежа
      * @return объект типа {@link ru.yandex.money.api.response.util.money.PaymentMethods.Element}
      */
     public Element getWallet() {
@@ -23,6 +24,7 @@ public class PaymentMethods {
     }
 
     /**
+     * Если возращает <code>null</code>, значит к счету не привязана карта
      * @return объект типа {@link ru.yandex.money.api.response.util.money.PaymentMethods.Element}
      */
     public CardElement getCard() {
