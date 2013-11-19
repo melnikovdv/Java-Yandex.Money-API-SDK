@@ -9,8 +9,8 @@ package ru.yandex.money.api.response.util.money;
 
 public class PaymentMethods {
 
-    private Element wallet = new Element();
-    private CardElement card = new CardElement();
+    private Element wallet;
+    private CardElement card;
 
     private PaymentMethods() {
     }
@@ -70,7 +70,7 @@ public class PaymentMethods {
     public class CardElement extends Element {
         /**
          * Признак разрешенности платежа с карты без card security code
-         * Возможен для некоторых типов платежей для которых низка вероятность мошенничества.
+         * Возможен для некоторых типов платежей, для которых низка вероятность мошенничества.
          */
         private boolean csc_required = true;
         /**
