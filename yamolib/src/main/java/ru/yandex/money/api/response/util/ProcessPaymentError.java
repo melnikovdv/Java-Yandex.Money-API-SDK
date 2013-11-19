@@ -1,6 +1,8 @@
 package ru.yandex.money.api.response.util;
 
 /**
+ * Ошибки, возникающие на шаге подтверждения контракта
+ *
  * Date: 18.11.13 20:38
  *
  * @author sergeev
