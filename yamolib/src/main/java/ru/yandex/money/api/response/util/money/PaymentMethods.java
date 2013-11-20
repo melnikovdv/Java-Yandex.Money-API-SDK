@@ -9,13 +9,14 @@ package ru.yandex.money.api.response.util.money;
 
 public class PaymentMethods {
 
-    private Element wallet = new Element();
-    private Element card = new Element();
+    private Element wallet;
+    private CardElement card;
 
     private PaymentMethods() {
     }
 
     /**
+     * Если возращает <code>null</code>, значит на счету нет достаточного количества средств для платежа
      * @return объект типа {@link ru.yandex.money.api.response.util.money.PaymentMethods.Element}
      */
     public Element getWallet() {
@@ -23,9 +24,10 @@ public class PaymentMethods {
     }
 
     /**
+     * Если возращает <code>null</code>, значит к счету не привязана карта
      * @return объект типа {@link ru.yandex.money.api.response.util.money.PaymentMethods.Element}
      */
-    public Element getCard() {
+    public CardElement getCard() {
         return card;
     }
 
@@ -45,7 +47,7 @@ public class PaymentMethods {
      */
     public class Element {
 
-        private boolean allowed = false;
+        protected boolean allowed = false;
 
         private Element() {
         }
@@ -63,6 +65,45 @@ public class PaymentMethods {
         public String toString() {
             return "Element{" +
                     "allow=" + allowed +
+                    '}';
+        }
+    }
+
+    public class CardElement extends Element {
+        /**
+         * Признак разрешенности платежа с карты без card security code
+         * Возможен для некоторых типов платежей, для которых низка вероятность мошенничества.
+         */
+        private boolean csc_required = true;
+        /**
+         * Маскированный номер карты
+         */
+        private String pan_fragment;
+
+        /**
+         * Тип карты (VISA, MasterCard)
+         */
+        private String type;
+
+        public boolean isCscRequired() {
+            return csc_required;
+        }
+
+        public String getPanFragment() {
+            return pan_fragment;
+        }
+
+        public String getType() {
+            return type;
+        }
+
+        @Override
+        public String toString() {
+            return "CardElement{" +
+                    "allow=" + allowed +
+                    ", csc_required=" + csc_required +
+                    ", pan_fragment='" + pan_fragment + '\'' +
+                    ", type='" + type + '\'' +
                     '}';
         }
     }
