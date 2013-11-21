@@ -37,7 +37,11 @@ GettingStarted Maven-плагина для Android [тут](http://code.google.c
 
 ### Changelog
 
-**18.11.13 yamolib 1.2.0 **
+**21.11.13 yamolib 1.2.1**
+
+* Добавлено логирование вызовов api
+
+**18.11.13 yamolib 1.2.0**
 
 * На request-payment добавлены данные привязанной карты. (тип, часть номера, возможность платить без csc)
 
