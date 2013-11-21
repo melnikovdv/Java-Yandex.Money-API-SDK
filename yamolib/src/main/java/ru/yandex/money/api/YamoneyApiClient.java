@@ -15,6 +15,7 @@ import org.apache.http.util.EntityUtils;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.URI;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -56,7 +57,7 @@ class YamoneyApiClient {
     }
 
     HttpResponse execPostRequest(HttpPost httpPost, List<NameValuePair> params) throws IOException {
-        logParameters(params);
+        logParameters(httpPost.getURI(), params);
         httpPost.setEntity(new UrlEncodedFormEntity(params, CHARSET));
 
         try {
@@ -73,7 +74,7 @@ class YamoneyApiClient {
         }
     }
 
-    private void logParameters(List<NameValuePair> params) {
+    private void logParameters(URI uri, List<NameValuePair> params) {
         if (!LOGGER.isInfoEnabled()) {
             return;
         }
@@ -87,7 +88,7 @@ class YamoneyApiClient {
                 paramsForLog.put(param.getName(), param.getValue());
             }
         }
-        LOGGER.info("request parameters: " + paramsForLog);
+        LOGGER.info("request url '" + uri +"' with parameters: " + paramsForLog);
     }
 
     void checkCommonResponse(HttpResponse httpResp) throws
