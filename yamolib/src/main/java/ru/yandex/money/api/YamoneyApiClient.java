@@ -82,7 +82,7 @@ class YamoneyApiClient {
         Map<String, String> paramsForLog = new HashMap<String, String>();
         for (NameValuePair param : params) {
             if (param.getName().equalsIgnoreCase("csc")) {
-                paramsForLog.put(param.getName(), param.getValue());
+                paramsForLog.put(param.getName(), "***");
             }
             else {
                 paramsForLog.put(param.getName(), param.getValue());
