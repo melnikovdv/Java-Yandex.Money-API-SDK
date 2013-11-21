@@ -32,5 +32,13 @@
 
     <build>
         <finalName>yamolib-sample</finalName>
+        <resources>
+            <resource>
+                <directory>src/main/config</directory>
+                <includes>
+                    <include>log4j.xml</include>
+                </includes>
+            </resource>
+        </resources>
     </build>
 </project>
