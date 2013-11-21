@@ -4,9 +4,9 @@ import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParseException;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.http.*;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
@@ -15,18 +15,23 @@ import org.apache.http.util.EntityUtils;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.URI;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-class YamoneyClient {
+class YamoneyApiClient {
 
     /**
      * Кодировка для url encoding/decoding
      */
     private static final String CHARSET = "UTF-8";
 
+    private static final Log LOGGER = LogFactory.getLog(YamoneyApiClient.class);
+
     private final HttpClient httpClient;
 
-    public YamoneyClient(HttpClient httpClient) {
+    public YamoneyApiClient(HttpClient httpClient) {
         this.httpClient = httpClient;
     }
 
@@ -34,7 +39,6 @@ class YamoneyClient {
             throws InsufficientScopeException, IOException {
 
         HttpResponse response = null;
-
         try {
             response = execPostRequest(new HttpPost(url), params);
             checkCommonResponse(response);
@@ -53,31 +57,55 @@ class YamoneyClient {
     }
 
     HttpResponse execPostRequest(HttpPost httpPost, List<NameValuePair> params) throws IOException {
-        if (params != null) {
-            httpPost.setEntity(new UrlEncodedFormEntity(params, CHARSET));
-        }
+        logParameters(httpPost.getURI(), params);
+        httpPost.setEntity(new UrlEncodedFormEntity(params, CHARSET));
 
         try {
-            return httpClient.execute(httpPost);
+            HttpResponse response = httpClient.execute(httpPost);
+            int iCode = response.getStatusLine().getStatusCode();
+            if (iCode != HttpStatus.SC_OK) {
+                Header wwwAuthenticate = response.getFirstHeader("WWW-Authenticate");
+                LOGGER.info("http status: " + iCode + ", WWW-Authenticate: " + wwwAuthenticate);
+            }
+            return response;
         } catch (IOException e) {
             httpPost.abort();
             throw e;
         }
     }
 
+    private void logParameters(URI uri, List<NameValuePair> params) {
+        if (!LOGGER.isInfoEnabled()) {
+            return;
+        }
+        // Пишем в логи все параметры, кроме кода карточки
+        Map<String, String> paramsForLog = new HashMap<String, String>();
+        for (NameValuePair param : params) {
+            if (param.getName().equalsIgnoreCase("csc")) {
+                paramsForLog.put(param.getName(), param.getValue());
+            }
+            else {
+                paramsForLog.put(param.getName(), param.getValue());
+            }
+        }
+        LOGGER.info("request url '" + uri +"' with parameters: " + paramsForLog);
+    }
+
     void checkCommonResponse(HttpResponse httpResp) throws
             InternalServerErrorException, InsufficientScopeException {
-        int iCode = httpResp.getStatusLine().getStatusCode();
 
-        if (iCode == 400)
-            throw new ProtocolRequestException("invalid request");
-        if (iCode == 403)
-            throw new InsufficientScopeException("insufficient scope");
-        if (iCode == 500)
-            throw new InternalServerErrorException("internal yandex.money server error");
+        switch (httpResp.getStatusLine().getStatusCode()) {
+            case HttpStatus.SC_BAD_REQUEST:
+                throw new ProtocolRequestException("invalid request");
+            case HttpStatus.SC_FORBIDDEN:
+                throw new InsufficientScopeException("insufficient scope");
+            case HttpStatus.SC_INTERNAL_SERVER_ERROR:
+                throw new InternalServerErrorException("internal yandex.money server error");
+        }
 
-        if (httpResp.getEntity() == null)
+        if (httpResp.getEntity() == null) {
             throw new IllegalStateException("response http entity is empty");
+        }
     }
 
     <T> T parseJson(HttpEntity entity, Class<T> classOfT) throws IOException {
@@ -86,7 +114,11 @@ class YamoneyClient {
         try {
             Gson gson = new GsonBuilder().setFieldNamingPolicy(
                     FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).create();
-            return gson.fromJson(new InputStreamReader(is, CHARSET), classOfT);
+            T result = gson.fromJson(new InputStreamReader(is, CHARSET), classOfT);
+            if (LOGGER.isInfoEnabled()) {
+                LOGGER.info("result: " + result);
+            }
+            return result;
         } catch (JsonParseException e) {
             throw new IllegalStateException("response decoding failed", e);
         }

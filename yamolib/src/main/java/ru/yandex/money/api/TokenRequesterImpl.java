@@ -34,7 +34,7 @@ public class TokenRequesterImpl implements TokenRequester {
 
     private final String clientId;
 
-    private final YamoneyClient client;
+    private final YamoneyApiClient client;
 
     /**
      * Создает экземпляр класса.
@@ -49,7 +49,7 @@ public class TokenRequesterImpl implements TokenRequester {
             throw new IllegalArgumentException("client_id is empty");
         }
         this.clientId = clientId;
-        this.client = new YamoneyClient(client);
+        this.client = new YamoneyApiClient(client);
     }
 
     public String authorizeUri(Collection<Permission> permissions, String redirectUri, Boolean mobileMode) {

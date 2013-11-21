@@ -102,9 +102,13 @@ public class PaymentMethods {
             return "CardElement{" +
                     "allow=" + allowed +
                     ", csc_required=" + csc_required +
-                    ", pan_fragment='" + pan_fragment + '\'' +
+                    ", pan_fragment='" + getPanFragmentForLog() + '\'' +
                     ", type='" + type + '\'' +
                     '}';
+        }
+
+        private String getPanFragmentForLog() {
+            return pan_fragment == null ? null : pan_fragment.replaceAll("^\\d+", "");
         }
     }
 }

@@ -58,7 +58,14 @@ public class ReceiveOAuthTokenResponse implements Serializable {
     public String toString() {
         return "ReceiveOAuthTokenResponse{" +
                 "error='" + error + '\'' +
-                ", accessToken='" + accessToken + '\'' +
+                ", accessToken='" + partOfToken() + '\'' +
                 '}';
+    }
+
+    private String partOfToken() {
+        if (accessToken == null) {
+            return null;
+        }
+        return accessToken.substring(0, 4) + "..." + accessToken.substring(accessToken.length() - 5);
     }
 }
