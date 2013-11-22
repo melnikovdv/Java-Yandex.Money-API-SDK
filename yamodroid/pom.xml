@@ -7,7 +7,6 @@
         <artifactId>aggregator</artifactId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
-    <groupId>ru.yandex.money</groupId>
     <artifactId>yamodroid</artifactId>
     <packaging>apklib</packaging>
     <version>1.1.1-SNAPSHOT</version>
@@ -24,7 +23,7 @@
         <dependency>
             <groupId>ru.yandex.money</groupId>
             <artifactId>yamolib</artifactId>
-            <version>1.2.0-SNAPSHOT</version>
+            <version>1.2.1-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
 
@@ -39,6 +38,11 @@
     <build>
         <plugins>
             <plugin>
+                <configuration>
+                    <sdk>
+                        <platform>19</platform>
+                    </sdk>
+                </configuration>
                 <groupId>com.jayway.maven.plugins.android.generation2</groupId>
                 <artifactId>android-maven-plugin</artifactId>
                 <extensions>true</extensions>

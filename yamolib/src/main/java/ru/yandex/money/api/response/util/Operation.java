@@ -170,7 +170,6 @@ public class Operation implements Serializable {
                 ", recipient='" + recipient + '\'' +
                 ", message='" + message + '\'' +
                 ", codepro=" + codepro +
-                ", details='" + details + '\'' +
                 ", label='" + label + '\'' +
                 '}';
     }

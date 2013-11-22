@@ -1,6 +1,7 @@
 package ru.yandex.money.api;
 
 import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
@@ -47,7 +48,7 @@ public class ApiCommandsFacadeImpl implements ApiCommandsFacade {
     };
 
     private final CommandUrlHolder uri;
-    private final YamoneyClient yamoneyClient;
+    private final YamoneyApiClient yamoneyApiClient;
 
     /**
      * Создает экземпляр класса.
@@ -68,7 +69,7 @@ public class ApiCommandsFacadeImpl implements ApiCommandsFacade {
      *               c таймаутом до 60 секунд.
      */
     public ApiCommandsFacadeImpl(HttpClient client, CommandUrlHolder urlHolder) {
-        this.yamoneyClient = new YamoneyClient(client);
+        this.yamoneyApiClient = new YamoneyApiClient(client);
         this.uri = urlHolder;
     }
 
@@ -98,7 +99,8 @@ public class ApiCommandsFacadeImpl implements ApiCommandsFacade {
      */
     public AccountInfoResponse accountInfo(String accessToken)
             throws IOException, InvalidTokenException, InsufficientScopeException {
-        return yamoneyClient.executeForJsonObjectFunc(uri.getUrlForCommand(ACCOUNT_INFO_COMMAND_NAME), null, accessToken, AccountInfoResponse.class);
+        return yamoneyApiClient.executeForJsonObjectFunc(uri.getUrlForCommand(ACCOUNT_INFO_COMMAND_NAME),
+                Collections.<NameValuePair>emptyList(), accessToken, AccountInfoResponse.class);
     }
 
     public OperationHistoryResponse operationHistory(String accessToken)
@@ -139,7 +141,7 @@ public class ApiCommandsFacadeImpl implements ApiCommandsFacade {
         addParamIfNotNull("till", till, params);
         addParamIfNotNull("label", label, params);
 
-        return yamoneyClient.executeForJsonObjectFunc(uri.getUrlForCommand(OPERATION_HISTORY_COMMAND_NAME), params, accessToken,
+        return yamoneyApiClient.executeForJsonObjectFunc(uri.getUrlForCommand(OPERATION_HISTORY_COMMAND_NAME), params, accessToken,
                 OperationHistoryResponse.class);
     }
 
@@ -149,7 +151,7 @@ public class ApiCommandsFacadeImpl implements ApiCommandsFacade {
 
         ArrayList<NameValuePair> params = new ArrayList<NameValuePair>();
         params.add(new BasicNameValuePair("label", label));
-        return yamoneyClient.executeForJsonObjectFunc(
+        return yamoneyApiClient.executeForJsonObjectFunc(
                 uri.getUrlForCommand(FUNDRAISING_STATS_COMMAND_NAME), params, accessToken, FundraisingStatsResponse.class);
     }
 
@@ -160,7 +162,7 @@ public class ApiCommandsFacadeImpl implements ApiCommandsFacade {
         List<NameValuePair> params = new ArrayList<NameValuePair>();
         params.add(new BasicNameValuePair("operation_id", operationId));
 
-        return yamoneyClient.executeForJsonObjectFunc(uri.getUrlForCommand(OPERATION_DETAILS_COMMAND_NAME),
+        return yamoneyApiClient.executeForJsonObjectFunc(uri.getUrlForCommand(OPERATION_DETAILS_COMMAND_NAME),
                 params, accessToken, OperationDetailResponse.class);
     }
 
@@ -205,7 +207,7 @@ public class ApiCommandsFacadeImpl implements ApiCommandsFacade {
         addParamIfNotNull("message", message, params);
         addParamIfNotNull("label", label, params);
 
-        return yamoneyClient.executeForJsonObjectFunc(uri.getUrlForCommand(REQUEST_PAYMENT_COMMAND_NAME),
+        return yamoneyApiClient.executeForJsonObjectFunc(uri.getUrlForCommand(REQUEST_PAYMENT_COMMAND_NAME),
                 params, accessToken, RequestPaymentResponse.class);
     }
 
@@ -217,7 +219,7 @@ public class ApiCommandsFacadeImpl implements ApiCommandsFacade {
         params.add(new BasicNameValuePair("pattern_id", "phone-topup"));
         params.add(new BasicNameValuePair("phone-number", phone));
         params.add(new BasicNameValuePair("amount", String.valueOf(amount)));
-        return yamoneyClient.executeForJsonObjectFunc(uri.getUrlForCommand(REQUEST_PAYMENT_COMMAND_NAME),
+        return yamoneyApiClient.executeForJsonObjectFunc(uri.getUrlForCommand(REQUEST_PAYMENT_COMMAND_NAME),
                 params, accessToken, RequestPaymentResponse.class);
     }
 
@@ -231,7 +233,7 @@ public class ApiCommandsFacadeImpl implements ApiCommandsFacade {
             pars.add(new BasicNameValuePair(name, params.get(name)));
         }
 
-        return yamoneyClient.executeForJsonObjectFunc(uri.getUrlForCommand(REQUEST_PAYMENT_COMMAND_NAME), pars, accessToken,
+        return yamoneyApiClient.executeForJsonObjectFunc(uri.getUrlForCommand(REQUEST_PAYMENT_COMMAND_NAME), pars, accessToken,
                 RequestPaymentResponse.class);
     }
 
@@ -258,22 +260,23 @@ public class ApiCommandsFacadeImpl implements ApiCommandsFacade {
         if (csc != null && (moneySource.equals(MoneySource.card))) {
             params.add(new BasicNameValuePair("csc", csc));
         }
-        return yamoneyClient.executeForJsonObjectFunc(uri.getUrlForCommand(PROCESS_PAYMENT_COMMAND_NAME),
+        return yamoneyApiClient.executeForJsonObjectFunc(uri.getUrlForCommand(PROCESS_PAYMENT_COMMAND_NAME),
                 params, accessToken, ProcessPaymentResponse.class);
     }
 
     public void revokeOAuthToken(String accessToken) throws InvalidTokenException, IOException {
         HttpResponse response = null;
         try {
-            response = yamoneyClient.execPostRequest(new HttpPost(uri.getUrlForCommand(REVOKE_COMMAND_NAME)), accessToken, null);
-            if (response.getStatusLine().getStatusCode() == 401)
-                throw new InvalidTokenException("invalid token");
-
-            if (response.getStatusLine().getStatusCode() == 400)
-                throw new ProtocolRequestException("invalid request");
-
-            if (response.getStatusLine().getStatusCode() == 500)
-                throw new InternalServerErrorException("internal yandex.money server error");
+            response = yamoneyApiClient.execPostRequest(new HttpPost(uri.getUrlForCommand(REVOKE_COMMAND_NAME)),
+                    accessToken, Collections.<NameValuePair>emptyList());
+            switch (response.getStatusLine().getStatusCode()) {
+                case HttpStatus.SC_UNAUTHORIZED:
+                    throw new InvalidTokenException("invalid token");
+                case HttpStatus.SC_BAD_REQUEST:
+                    throw new ProtocolRequestException("invalid request");
+                case HttpStatus.SC_INTERNAL_SERVER_ERROR:
+                    throw new InternalServerErrorException("internal yandex.money server error");
+            }
         } finally {
             if (response != null) {
                 EntityUtils.consume(response.getEntity());
