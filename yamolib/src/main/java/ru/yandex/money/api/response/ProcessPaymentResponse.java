@@ -18,14 +18,14 @@ public class ProcessPaymentResponse implements Serializable {
     private static final long serialVersionUID = -7677898505314637271L;
 
     private Status status;
-    private ProcessPaymentError error;
-    private String error_description;
+    private String error;
+    private String errorDescription;
     private String paymentId;
     private BigDecimal balance;
     private String payer;
     private String payee;
     private BigDecimal creditAmount;
-    private Boolean test_payment;
+    private Boolean testPayment;
 
     private ProcessPaymentResponse() {
     }
@@ -75,7 +75,7 @@ public class ProcessPaymentResponse implements Serializable {
      * </ul>
      */
     public ProcessPaymentError getError() {
-        return error;
+        return ProcessPaymentError.getByCode(error);
     }
 
     /**
@@ -120,11 +120,11 @@ public class ProcessPaymentResponse implements Serializable {
     }
 
     public String getErrorDescription() {
-        return error_description;
+        return errorDescription;
     }
 
     public Boolean isTestPayment() {
-        return test_payment;
+        return testPayment;
     }
 
     @Override
@@ -132,13 +132,13 @@ public class ProcessPaymentResponse implements Serializable {
         return "ProcessPaymentResponse{" +
                 "status=" + status +
                 ", error=" + error +
-                ", error_description='" + error_description + '\'' +
+                ", error_description='" + errorDescription + '\'' +
                 ", paymentId='" + paymentId + '\'' +
                 ", balance=" + balance +
                 ", payer='" + payer + '\'' +
                 ", payee='" + payee + '\'' +
                 ", creditAmount=" + creditAmount +
-                ", test_payment=" + test_payment +
+                ", test_payment=" + testPayment +
                 '}';
     }
 }
