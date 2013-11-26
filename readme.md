@@ -37,6 +37,10 @@ GettingStarted Maven-плагина для Android [тут](http://code.google.c
 
 ### Changelog
 
+**27.11.13 yamolib 1.2.2**
+
+* Коды ошибок сделаны перечислениями (enum). Может сломать логику приложения, если вы используете выражения вида "response.getError().equals("limit_exceeded")"
+
 **21.11.13 yamolib 1.2.1**
 
 * Добавлено логирование вызовов api
