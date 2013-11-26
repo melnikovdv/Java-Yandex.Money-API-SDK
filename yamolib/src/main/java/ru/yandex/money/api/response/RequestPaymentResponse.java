@@ -47,27 +47,23 @@ public class RequestPaymentResponse implements Serializable {
      * @return Возможна ли оплата способом указанным в параметрах способом
      */
     public boolean isPaymentMethodAvailable(MoneySource moneySource) {
-        if (moneySource == null)
-             throw new IllegalArgumentException("Money source is empty");
+        if (moneySource == null) {
+            throw new IllegalArgumentException("Money source is empty");
+        }
 
-        if (getMoneySource() == null)
+        if (getMoneySource() == null) {
             return false;
-        else {
-            if (moneySource == MoneySource.card) {
-                if (getMoneySource().getCard() == null)
-                    return false;
-                else
-                    return getMoneySource().getCard().getAllowed();
-            }
+        }
 
-            if (moneySource == MoneySource.wallet) {
-                if (getMoneySource().getWallet() == null)
-                    return false;
-                else
-                    return getMoneySource().getWallet().getAllowed();
-            }
+        switch (moneySource) {
+            case card:
+                return getMoneySource().getCard() != null && getMoneySource().getCard().getAllowed();
 
-            return false;
+            case wallet:
+                return getMoneySource().getWallet() != null && getMoneySource().getWallet().getAllowed();
+
+            default:
+                return false;
         }
     }
 

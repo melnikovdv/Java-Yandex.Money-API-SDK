@@ -35,14 +35,13 @@ public class ApiCommandsFacadeTestModeTest {
     @Test
     public void testRequestPaymentToPhone() throws InsufficientScopeException, InvalidTokenException, IOException {
         urlHolder.setTestResult("limit_exceeded");
-        System.out.println(facade.requestPaymentToPhone(AUTH_TOKEN, "79111234567", BigDecimal.valueOf(1.50)));
+        facade.requestPaymentToPhone(AUTH_TOKEN, "79111234567", BigDecimal.valueOf(1.50));
     }
 
     @Test
     public void testRequestP2p() throws InsufficientScopeException, InvalidTokenException, IOException {
         urlHolder.setTestResult("authorization_reject");
-        System.out.println(facade.requestPaymentP2P(AUTH_TOKEN, "onehalf.3544@yandex.ru", IdentifierType.EMAIL,
-                BigDecimal.ONE, "comment", "message", "label"));
+        facade.requestPaymentP2P(AUTH_TOKEN, "onehalf.3544@yandex.ru", IdentifierType.EMAIL, BigDecimal.ONE, "comment", "message", "label");
     }
 
     @Test
@@ -51,7 +50,6 @@ public class ApiCommandsFacadeTestModeTest {
         RequestPaymentResponse requestPaymentResponse = facade.requestPaymentP2P(
                 AUTH_TOKEN, "410011077359617", BigDecimal.ONE, "comment", "message");
 
-        System.out.println(requestPaymentResponse);
         assertTrue(requestPaymentResponse.isSuccess());
         assertEquals("test-p2p", requestPaymentResponse.getRequestId());
         assertTrue(requestPaymentResponse.isTestPayment());
@@ -61,7 +59,6 @@ public class ApiCommandsFacadeTestModeTest {
         ProcessPaymentResponse processPaymentResponse = facade.processPaymentByCard(
                 AUTH_TOKEN, requestPaymentResponse.getRequestId(), "000");
 
-        System.out.println(processPaymentResponse);
         assertTrue(processPaymentResponse.isTestPayment());
         assertTrue(processPaymentResponse.isSuccess());
     }

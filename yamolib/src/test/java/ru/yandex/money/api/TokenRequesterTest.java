@@ -49,7 +49,7 @@ public class TokenRequesterTest {
     public void testGetAuthToken() throws IOException, InsufficientScopeException {
         String reqToken = "70B006...B46C9E72";
         ReceiveOAuthTokenResponse receiveOAuthTokenResponse = requester.receiveOAuthToken(reqToken, "http://ya.ru");
-        System.out.println(receiveOAuthTokenResponse);
         assertTrue(receiveOAuthTokenResponse.isSuccess());
+        System.out.println(receiveOAuthTokenResponse.getAccessToken());
     }
 }

@@ -80,7 +80,7 @@ public class OperationHistoryResponse implements Serializable {
         return "OperationHistoryResponse{" +
                 "error='" + error + '\'' +
                 ", nextRecord='" + nextRecord + '\'' +
-                ", operations=" + operations +
+                ", operations count=" + operations.size() +
                 '}';
     }
 }

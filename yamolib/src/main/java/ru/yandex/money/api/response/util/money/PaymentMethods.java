@@ -1,5 +1,7 @@
 package ru.yandex.money.api.response.util.money;
 
+import java.io.Serializable;
+
 /**
  * Доступные для приложения методы проведения платежа,
  * Присутствует только при успешном выполнении методов {@link ru.yandex.money.api.YandexMoney} requestPayment*.
@@ -7,15 +9,16 @@ package ru.yandex.money.api.response.util.money;
  * @author dvmelnikov
  */
 
-public class PaymentMethods {
+public class PaymentMethods implements Serializable {
 
-    private Element wallet = new Element();
-    private CardElement card = new CardElement();
+    private Element wallet;
+    private CardElement card;
 
     private PaymentMethods() {
     }
 
     /**
+     * Если возращает <code>null</code>, значит на счету нет достаточного количества средств для платежа
      * @return объект типа {@link ru.yandex.money.api.response.util.money.PaymentMethods.Element}
      */
     public Element getWallet() {
@@ -23,6 +26,7 @@ public class PaymentMethods {
     }
 
     /**
+     * Если возращает <code>null</code>, значит к счету не привязана карта
      * @return объект типа {@link ru.yandex.money.api.response.util.money.PaymentMethods.Element}
      */
     public CardElement getCard() {
@@ -43,7 +47,7 @@ public class PaymentMethods {
      *
      * @author dvmelnikov
      */
-    public class Element {
+    public class Element  implements Serializable {
 
         protected boolean allowed = false;
 
@@ -70,7 +74,7 @@ public class PaymentMethods {
     public class CardElement extends Element {
         /**
          * Признак разрешенности платежа с карты без card security code
-         * Возможен для некоторых типов платежей для которых низка вероятность мошенничества.
+         * Возможен для некоторых типов платежей, для которых низка вероятность мошенничества.
          */
         private boolean csc_required = true;
         /**
@@ -100,9 +104,13 @@ public class PaymentMethods {
             return "CardElement{" +
                     "allow=" + allowed +
                     ", csc_required=" + csc_required +
-                    ", pan_fragment='" + pan_fragment + '\'' +
+                    ", pan_fragment='" + getPanFragmentForLog() + '\'' +
                     ", type='" + type + '\'' +
                     '}';
+        }
+
+        private String getPanFragmentForLog() {
+            return pan_fragment == null ? null : pan_fragment.replaceAll("^\\d+", "");
         }
     }
 }
