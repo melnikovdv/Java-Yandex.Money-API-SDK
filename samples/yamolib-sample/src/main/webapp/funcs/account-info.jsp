@@ -14,7 +14,7 @@
 <body>
 <div id="main">
     <h3 id="header">Пример вызова API-функции account-info</h3>
-    <p>Исходный код страницы <a href="https://github.com/melnikovdv/Java-Yandex.Money-API-SDK/blob/master/web/funcs/account-info.jsp">тут</a>.
+    <p>Исходный код страницы <a href="https://github.com/melnikovdv/Java-Yandex.Money-API-SDK/blob/master/samples/yamolib-sample/src/main/webapp/funcs/account-info.jsp">тут</a>.
         Результат выполнения:
     </p>
     <%
