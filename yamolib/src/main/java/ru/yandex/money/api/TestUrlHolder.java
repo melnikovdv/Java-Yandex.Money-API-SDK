@@ -1,5 +1,7 @@
 package ru.yandex.money.api;
 
+import ru.yandex.money.api.response.util.PaymentErrorCode;
+
 /**
  * Объект для формирования url для тестовых запросов.
  * К адресу добавляются GET-параметры, которые определяют, какой ответ должен вернуть сервер Яндекс.Денег
@@ -12,11 +14,18 @@ package ru.yandex.money.api;
  */
 public class TestUrlHolder implements CommandUrlHolder {
 
+    public static final PaymentErrorCode SUCCESS_CODE = new PaymentErrorCode() {
+        @Override
+        public String getCode() {
+            return "success";
+        }
+    };
+
     private final String url;
 
     private volatile boolean testPayment = true;
     private volatile String testCard = null;
-    private volatile String testResult = null;
+    private volatile PaymentErrorCode testResult = null;
 
     public TestUrlHolder() {
         this(ApiCommandsFacade.URI_YM_API);
@@ -54,7 +63,7 @@ public class TestUrlHolder implements CommandUrlHolder {
         this.testCard = testCard;
     }
 
-    public String getTestResult() {
+    public PaymentErrorCode getTestResult() {
         return testResult;
     }
 
@@ -62,7 +71,7 @@ public class TestUrlHolder implements CommandUrlHolder {
      * @param testResult Код ошибки, которую должен вернуть метод Яндекс.Денег
      *                   Чтобы возвращался успех, установите "success" или null
      */
-    public void setTestResult(String testResult) {
+    public void setTestResult(PaymentErrorCode testResult) {
         this.testResult = testResult;
     }
 
@@ -72,7 +81,7 @@ public class TestUrlHolder implements CommandUrlHolder {
             stringBuilder.append("&test_card=").append(testCard);
         }
         if (testResult != null) {
-            stringBuilder.append("&test_result=").append(testResult);
+            stringBuilder.append("&test_result=").append(testResult.getCode());
         }
         return stringBuilder.toString();
     }

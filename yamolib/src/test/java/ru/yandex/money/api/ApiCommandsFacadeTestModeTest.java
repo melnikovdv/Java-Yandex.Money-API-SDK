@@ -6,6 +6,8 @@ import org.junit.Test;
 import ru.yandex.money.api.enums.MoneySource;
 import ru.yandex.money.api.response.ProcessPaymentResponse;
 import ru.yandex.money.api.response.RequestPaymentResponse;
+import ru.yandex.money.api.response.util.ProcessPaymentError;
+import ru.yandex.money.api.response.util.RequestPaymentError;
 import ru.yandex.money.api.rights.IdentifierType;
 
 import java.io.IOException;
@@ -34,19 +36,22 @@ public class ApiCommandsFacadeTestModeTest {
 
     @Test
     public void testRequestPaymentToPhone() throws InsufficientScopeException, InvalidTokenException, IOException {
-        urlHolder.setTestResult("limit_exceeded");
-        facade.requestPaymentToPhone(AUTH_TOKEN, "79111234567", BigDecimal.valueOf(1.50));
+        urlHolder.setTestResult(RequestPaymentError.LIMIT_EXCEEDED);
+        RequestPaymentResponse request = facade.requestPaymentToPhone(AUTH_TOKEN, "79111234567", BigDecimal.valueOf(1.50));
+        assertEquals(RequestPaymentError.LIMIT_EXCEEDED, request.getError());
     }
 
     @Test
     public void testRequestP2p() throws InsufficientScopeException, InvalidTokenException, IOException {
-        urlHolder.setTestResult("authorization_reject");
-        facade.requestPaymentP2P(AUTH_TOKEN, "onehalf.3544@yandex.ru", IdentifierType.EMAIL, BigDecimal.ONE, "comment", "message", "label");
+        urlHolder.setTestResult(ProcessPaymentError.AUTHORIZATION_REJECT);
+        RequestPaymentResponse requestPaymentResponse = facade.requestPaymentP2P(
+                AUTH_TOKEN, "onehalf.3544@yandex.ru", IdentifierType.EMAIL, BigDecimal.ONE, "comment", "message", "label");
+        assertEquals(RequestPaymentError.AUTHORIZATION_REJECT, requestPaymentResponse.getError());
     }
 
     @Test
     public void testPaymentToAccount() throws InsufficientScopeException, InvalidTokenException, IOException {
-        urlHolder.setTestResult("success");
+        urlHolder.setTestResult(TestUrlHolder.SUCCESS_CODE);
         RequestPaymentResponse requestPaymentResponse = facade.requestPaymentP2P(
                 AUTH_TOKEN, "410011077359617", BigDecimal.ONE, "comment", "message");
 
@@ -55,7 +60,7 @@ public class ApiCommandsFacadeTestModeTest {
         assertTrue(requestPaymentResponse.isTestPayment());
         assertTrue(requestPaymentResponse.isPaymentMethodAvailable(MoneySource.card));
 
-        urlHolder.setTestResult("success");
+        urlHolder.setTestResult(TestUrlHolder.SUCCESS_CODE);
         ProcessPaymentResponse processPaymentResponse = facade.processPaymentByCard(
                 AUTH_TOKEN, requestPaymentResponse.getRequestId(), "000");
 
