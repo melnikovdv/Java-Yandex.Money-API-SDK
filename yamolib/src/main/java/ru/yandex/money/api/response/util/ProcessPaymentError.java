@@ -13,7 +13,7 @@ import java.util.Map;
  *
  * @author sergeev
  */
-public enum ProcessPaymentError {
+public enum ProcessPaymentError implements PaymentErrorCode {
 
     /**
      * Недостаточно средств на счете/привязанной карте.
@@ -94,5 +94,9 @@ public enum ProcessPaymentError {
 
     ProcessPaymentError(String code) {
         this.code = code;
+    }
+
+    public String getCode() {
+        return code;
     }
 }

@@ -14,7 +14,7 @@ import java.util.Map;
  *
  * @author OneHalf
  */
-public enum  RequestPaymentError {
+public enum  RequestPaymentError implements PaymentErrorCode {
 
     /**
      * Недостаточно средств на счете.
@@ -36,10 +36,36 @@ public enum  RequestPaymentError {
     ACCOUNT_BLOCKED("account_blocked"),
 
     /**
+     * В авторизации платежа отказано. Возможные причины:
+     * <ul>
+     *     <li>транзакция с текущими параметрами запрещена для данного пользователя;</li>
+     *     <li>пользователь не принял Соглашение об использовании сервиса «Яндекс.Деньги».</li>
+     * </ul>
+     */
+    AUTHORIZATION_REJECT("authorization_reject"),
+
+    /**
      * Магазин отказал в проведении платежа.
      * (Например, товара нет на складе)
      */
     PAYMENT_REFUSED("payment_refused"),
+
+    /**
+     * Обязательные параметры платежа отсутствуют или имеют недопустимые значения.
+     */
+    ILLEGAL_PARAMS("illegal_params"),
+
+    /**
+     * Недопустимое значение параметра label.
+     * (если параметры присутствует, то должен быть не пустым и не содержать больше 64-х символов)
+     */
+    ILLEGAL_PARAM_LABEL("illegal_param_label"),
+
+    /**
+     * При p2p переводе по привязанному номеру телефона указан номер телефона не связанный
+     * со счетом пользователя или получателя платежа.
+     */
+    PHONE_UNKNOWN("phone_unknown"),
 
     /**
      * Прочие ошибки
@@ -78,7 +104,7 @@ public enum  RequestPaymentError {
         this.code = code;
     }
 
-    String getCode() {
+    public String getCode() {
         return code;
     }
 }
