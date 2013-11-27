@@ -1,6 +1,7 @@
 package ru.yandex.money.api.response;
 
 import ru.yandex.money.api.enums.Status;
+import ru.yandex.money.api.response.util.ProcessPaymentError;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -18,13 +19,13 @@ public class ProcessPaymentResponse implements Serializable {
 
     private Status status;
     private String error;
-    private String error_description;
+    private String errorDescription;
     private String paymentId;
     private BigDecimal balance;
     private String payer;
     private String payee;
     private BigDecimal creditAmount;
-    private Boolean test_payment;
+    private Boolean testPayment;
 
     private ProcessPaymentResponse() {
     }
@@ -73,8 +74,8 @@ public class ProcessPaymentResponse implements Serializable {
      * либо превышен лимит платежной системы для данного пользователя.</li>
      * </ul>
      */
-    public String getError() {
-        return error;
+    public ProcessPaymentError getError() {
+        return ProcessPaymentError.getByCode(error);
     }
 
     /**
@@ -119,11 +120,11 @@ public class ProcessPaymentResponse implements Serializable {
     }
 
     public String getErrorDescription() {
-        return error_description;
+        return errorDescription;
     }
 
     public Boolean isTestPayment() {
-        return test_payment;
+        return testPayment;
     }
 
     @Override
@@ -131,13 +132,13 @@ public class ProcessPaymentResponse implements Serializable {
         return "ProcessPaymentResponse{" +
                 "status=" + status +
                 ", error=" + error +
-                ", error_description='" + error_description + '\'' +
+                ", error_description='" + errorDescription + '\'' +
                 ", paymentId='" + paymentId + '\'' +
                 ", balance=" + balance +
                 ", payer='" + payer + '\'' +
                 ", payee='" + payee + '\'' +
                 ", creditAmount=" + creditAmount +
-                ", test_payment=" + test_payment +
+                ", test_payment=" + testPayment +
                 '}';
     }
 }

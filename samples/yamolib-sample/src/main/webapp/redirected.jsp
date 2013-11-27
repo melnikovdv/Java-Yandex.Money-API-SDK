@@ -23,12 +23,12 @@
     %>
 
     Перед тем, как оказаться на этой странице редиректа, у нас был вызов страницы
-    auth.jsp (<a href="https://github.com/melnikovdv/Java-Yandex.Money-API-SDK/blob/master/web/auth.jsp">исходник</a>)
+    auth.jsp (<a href="https://github.com/melnikovdv/Java-Yandex.Money-API-SDK/blob/master/samples/yamolib-sample/src/main/webapp/auth.jsp">исходник</a>)
     Затем сервер Яндекс.Денег вернул нас на эту станицу - redirected.jsp
-    (<a href="https://github.com/melnikovdv/Java-Yandex.Money-API-SDK/blob/master/web/redirected.jsp">исходник</a>),
+    (<a href="https://github.com/melnikovdv/Java-Yandex.Money-API-SDK/blob/master/samples/yamolib-sample/src/main/webapp/redirected.jsp">исходник</a>),
     и мы получили временный код в get-параметрах:
 
-    <p class="code">Временный код: <%= code.substring(1, 20).concat("...") %>
+    <p class="code">Временный код: <%= code.substring(0, 20).concat("...") %>
     </p>
 
     Затем меняем его на постоянный токен. Результат выполнения:
@@ -40,7 +40,7 @@
             if (resp.isSuccess()) {
                 session.setAttribute("token", resp.getAccessToken());
     %>
-    <p class="code">Наш токен: <%= resp.getAccessToken().substring(1, 30).concat("...")  %>
+    <p class="code">Наш токен: <%= resp.getAccessToken().substring(0, 30).concat("...")  %>
     </p>
 
     <p>

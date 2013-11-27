@@ -27,10 +27,8 @@ Yandex.Money API OAuth request...
     scope.add(new Payment(Destination.toPattern, "335", 1, "100"));
     scope.add(new Payment(Destination.toPattern, "343", 1, "100"));
     scope.add(new Payment(Destination.toPattern, "928", 1, "100"));
-//    scope.add(new ShoppingCart());
 
-    String codeReqUri = ym.authorizeUri(scope, Consts.REDIRECT_URI, false);
-    response.sendRedirect(codeReqUri);
+    response.sendRedirect(ym.authorizeUri(scope, Consts.REDIRECT_URI, false));
 %>
 </body>
 </html>
