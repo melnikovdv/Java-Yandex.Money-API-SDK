@@ -44,7 +44,7 @@ public class ApiCommandsFacadeTestModeTest {
     public void testRequestP2p() throws InsufficientScopeException, InvalidTokenException, IOException {
         urlHolder.setTestResult(RequestPaymentError.AUTHORIZATION_REJECT);
         RequestPaymentResponse requestPaymentResponse = facade.requestPaymentP2P(
-                AUTH_TOKEN, "onehalf.3544@yandex.ru", IdentifierType.EMAIL, BigDecimal.ONE, "comment", "message", "label");
+                AUTH_TOKEN, "onehalf.3544@yandex.ru", IdentifierType.email, BigDecimal.ONE, "comment", "message", "label");
         assertEquals(RequestPaymentError.AUTHORIZATION_REJECT, requestPaymentResponse.getError());
     }
 

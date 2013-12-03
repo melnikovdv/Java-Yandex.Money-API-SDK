@@ -19,8 +19,9 @@ import java.util.List;
  * параметрами, добавив параметр startRecord и указав в нем порядковый
  * номер первой записи следующей страницы, полученный ранее
  * из параметра nextRecord.</p>
- * <b>Внимание</b>: при неуспешном результате операции все поля, кроме error и
- * status (если таковые присутствуют), равны null
+ * <p><b>Внимание</b>: при неуспешном результате операции все поля, кроме error и
+ * status (если таковые присутствуют), равны null</p>
+ *
  * @author dvmelnikov
  */
 
@@ -81,7 +82,7 @@ public class OperationHistoryResponse implements Serializable {
         return "OperationHistoryResponse{" +
                 "error='" + error + '\'' +
                 ", nextRecord='" + nextRecord + '\'' +
-                ", operations count=" + operations.size() +
+                ", operations count=" + (operations == null ? "?" : operations.size()) +
                 '}';
     }
 }

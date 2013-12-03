@@ -3,8 +3,8 @@ package ru.yandex.money.api.rights;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
-import static ru.yandex.money.api.rights.IdentifierType.EMAIL;
-import static ru.yandex.money.api.rights.IdentifierType.PHONE;
+import static ru.yandex.money.api.rights.IdentifierType.email;
+import static ru.yandex.money.api.rights.IdentifierType.phone;
 
 /**
  * <p/>
@@ -18,13 +18,13 @@ public class PaymentTest {
 
     @Test
     public void testToEmailWithLimit() throws Exception {
-        Permission payment = new Payment().toAccount("user@yandex.ru", EMAIL).limit(1,"300");
+        Permission payment = new Payment().toAccount("user@yandex.ru", email).limit(1,"300");
         assertEquals("payment.to-account(\"user@yandex.ru\",\"email\").limit(1,300)", payment.value());
     }
 
     @Test
     public void testToPhoneWithoutLimit() throws Exception {
-        Permission payment = new Payment().toAccount("79219990099", PHONE);
+        Permission payment = new Payment().toAccount("79219990099", phone);
         assertEquals("payment.to-account(\"79219990099\",\"phone\")", payment.value());
     }
 
