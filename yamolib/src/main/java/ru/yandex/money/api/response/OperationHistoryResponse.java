@@ -1,6 +1,7 @@
 package ru.yandex.money.api.response;
 
 import ru.yandex.money.api.response.util.Operation;
+import ru.yandex.money.api.response.util.OperationHistoryError;
 
 import java.io.Serializable;
 import java.util.List;
@@ -27,7 +28,7 @@ public class OperationHistoryResponse implements Serializable {
 
     private static final long serialVersionUID = 7329380614477144397L;
     
-    private String error;
+    private OperationHistoryError error;
     private Integer nextRecord;
     private List<Operation> operations;
 
@@ -54,7 +55,7 @@ public class OperationHistoryResponse implements Serializable {
      * <li>Все прочие значения: техническая ошибка, повторите вызов операции позднее.</li>
      * </ul>
      */
-    public String getError() {
+    public OperationHistoryError getError() {
         return error;
     }
 
