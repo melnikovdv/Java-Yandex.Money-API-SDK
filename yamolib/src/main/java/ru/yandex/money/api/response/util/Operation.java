@@ -129,6 +129,10 @@ public class Operation implements Serializable {
         return recipient;
     }
 
+    /**
+     * @return Тип идентификатора получателя перевода.
+     * Присутствует для исходящих переводов другим пользователям.
+     */
     public IdentifierType getRecipientType() {
         return recipientType;
     }

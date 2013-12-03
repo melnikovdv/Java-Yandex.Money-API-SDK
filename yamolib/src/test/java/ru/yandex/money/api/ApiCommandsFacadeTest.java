@@ -1,6 +1,7 @@
 package ru.yandex.money.api;
 
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import ru.yandex.money.api.enums.OperationHistoryType;
 import ru.yandex.money.api.response.OperationHistoryResponse;
@@ -19,7 +20,7 @@ import static org.junit.Assert.assertEquals;
 /**
  * Unit tests.
  */
-//@Ignore("Для ручного тестирования. Нужен токен")
+@Ignore("Для ручного тестирования. Нужен токен")
 public class ApiCommandsFacadeTest {
 
     private static final String AUTH_TOKEN = "410011077359617.E64E40E29C059741C8E11CA862CA2DE1B4F1CFF331CA7098CA07F4279AA385EE947DC1C60357BFE41F1170AA41B60D8B358A31B037F1ECB2982DA6D319D3B3DC041D6B5791766C1A46C1754BDC817F16CB4EC03B38D0FB1E24874322507E559472DE7E042F9E1851E426FE7A4607A412AA893ACA6B9B95E122538C69AB814705";
@@ -79,6 +80,11 @@ public class ApiCommandsFacadeTest {
     @Test
     public void testOperationDetails() throws InsufficientScopeException, InvalidTokenException, IOException {
         facade.operationDetail(AUTH_TOKEN, "434813468870011012");
+    }
+
+    @Test @Ignore
+    public void testRevoke() throws InsufficientScopeException, InvalidTokenException, IOException {
+        facade.revokeOAuthToken(AUTH_TOKEN);
     }
 
 

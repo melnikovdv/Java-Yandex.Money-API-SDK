@@ -65,7 +65,7 @@ class YamoneyApiClient {
             int iCode = response.getStatusLine().getStatusCode();
             if (iCode != HttpStatus.SC_OK) {
                 Header wwwAuthenticate = response.getFirstHeader("WWW-Authenticate");
-                LOGGER.info("http status: " + iCode + ", WWW-Authenticate: " + wwwAuthenticate);
+                LOGGER.info("http status: " + iCode + (wwwAuthenticate == null ? "" : ", " + wwwAuthenticate));
             }
             return response;
         } catch (IOException e) {
