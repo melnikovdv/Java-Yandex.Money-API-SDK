@@ -29,7 +29,7 @@
                 if (resp.isSuccess()) {
     %>
 
-    <p>Исходный код страницы <a href="https://github.com/melnikovdv/Java-Yandex.Money-API-SDK/blob/master/web/funcs/operation-details.jsp">тут</a>.
+    <p>Исходный код страницы <a href="https://github.com/melnikovdv/Java-Yandex.Money-API-SDK/blob/master/samples/yamolib-sample/src/main/webapp/funcs/operation-details.jsp">тут</a>.
         Результат выполнения:
     </p>
     <p class="code">

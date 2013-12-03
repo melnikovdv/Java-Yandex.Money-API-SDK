@@ -164,7 +164,7 @@
 
         urlHolder.setTestCard("available");        // означает, что система должа показывать, что у пользователя карта привязана
         urlHolder.setTestPayment(true);            // переводит запросы в боевой/тестовый режим
-        urlHolder.setTestResult("illegal_params"); // Сервер Яндекс.Деньги будет возвращать указанную ошибку. при запросах платежа. Код ошибки должен быть из списка реально возможных кодов для вызываемой команды
+        urlHolder.setTestResult(RequestPaymentError.ILLEGAL_PARAMS); // Сервер Яндекс.Деньги будет возвращать указанную ошибку. при запросах платежа. Код ошибки должен быть из списка реально возможных кодов для вызываемой команды
 
         RequestPaymentResponse response = apiCommandsFacade.requestPaymentShop(token, "335", Collections.<String,String>emptyMap());
         System.out.println(response); // Распечатает ответ с ошибкой illegal_params

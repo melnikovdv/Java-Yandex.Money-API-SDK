@@ -2,6 +2,7 @@ package ru.yandex.money.api.response;
 
 import ru.yandex.money.api.enums.MoneySource;
 import ru.yandex.money.api.enums.Status;
+import ru.yandex.money.api.response.util.RequestPaymentError;
 import ru.yandex.money.api.response.util.money.PaymentMethods;
 
 import java.io.Serializable;
@@ -94,8 +95,8 @@ public class RequestPaymentResponse implements Serializable {
      * через несколько минут.</li>
      * </ul>
      */
-    public String getError() {
-        return error;
+    public RequestPaymentError getError() {
+        return RequestPaymentError.getByCode(error);
     }
 
     /**

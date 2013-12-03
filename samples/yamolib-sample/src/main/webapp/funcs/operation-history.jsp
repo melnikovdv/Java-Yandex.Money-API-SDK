@@ -26,7 +26,7 @@
                 out.println("В ответе получена ошибка: " + resp.getError());
             else {
     %>
-    <p>Исходный код страницы <a href="https://github.com/melnikovdv/Java-Yandex.Money-API-SDK/blob/master/web/funcs/operation-history.jsp">тут</a>.
+    <p>Исходный код страницы <a href="https://github.com/melnikovdv/Java-Yandex.Money-API-SDK/blob/master/samples/yamolib-sample/src/main/webapp/funcs/operation-history.jsp">тут</a>.
         Результат выполнения:
     </p>
     <p class="code">

@@ -19,7 +19,7 @@
         <dependency>
             <groupId>ru.yandex.money</groupId>
             <artifactId>yamolib</artifactId>
-            <version>1.2.1-SNAPSHOT</version>
+            <version>1.2.2-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
 
@@ -27,6 +27,13 @@
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
             <version>1.2.16</version>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>jsp-api</artifactId>
+            <version>2.0</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 
