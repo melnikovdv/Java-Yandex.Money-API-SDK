@@ -51,6 +51,7 @@ public abstract class AbstractLimitedPermission extends AbstractPermission {
         }
     }
 
+    @Override
     public String value() {
         String rule = super.value();
         if (limit != null) {

@@ -97,34 +97,40 @@ public class ApiCommandsFacadeImpl implements ApiCommandsFacade {
      * @throws InvalidTokenException      Если токен некорректен, или отозван
      * @throws InsufficientScopeException Если для данного токена нет прав на использование account-info
      */
+    @Override
     public AccountInfoResponse accountInfo(String accessToken)
             throws IOException, InvalidTokenException, InsufficientScopeException {
         return yamoneyApiClient.executeForJsonObjectFunc(uri.getUrlForCommand(ACCOUNT_INFO_COMMAND_NAME),
                 Collections.<NameValuePair>emptyList(), accessToken, AccountInfoResponse.class);
     }
 
+    @Override
     public OperationHistoryResponse operationHistory(String accessToken)
             throws IOException, InvalidTokenException, InsufficientScopeException {
         return operationHistory(accessToken, null, null);
     }
 
+    @Override
     public OperationHistoryResponse operationHistory(String accessToken, Integer startRecord)
             throws IOException, InvalidTokenException, InsufficientScopeException {
         return operationHistory(accessToken, startRecord, null);
     }
 
+    @Override
     public OperationHistoryResponse operationHistory(String accessToken,
                                                      Integer startRecord, Integer records) throws IOException,
             InvalidTokenException, InsufficientScopeException {
         return operationHistory(accessToken, startRecord, records, null);
     }
 
+    @Override
     public OperationHistoryResponse operationHistory(String accessToken, Integer startRecord, Integer records,
                                                      Set<OperationHistoryType> operationsType) throws IOException,
             InvalidTokenException, InsufficientScopeException {
         return operationHistory(accessToken, startRecord, records, operationsType, null, null, null, null);
     }
 
+    @Override
     public OperationHistoryResponse operationHistory(String accessToken,
                                                      Integer startRecord, Integer records,
                                                      Set<OperationHistoryType> operationsType, Boolean fetchDetails,
@@ -155,6 +161,7 @@ public class ApiCommandsFacadeImpl implements ApiCommandsFacade {
                 uri.getUrlForCommand(FUNDRAISING_STATS_COMMAND_NAME), params, accessToken, FundraisingStatsResponse.class);
     }
 
+    @Override
     public OperationDetailResponse operationDetail(String accessToken,
                                                    String operationId) throws IOException, InvalidTokenException,
             InsufficientScopeException {
@@ -166,6 +173,7 @@ public class ApiCommandsFacadeImpl implements ApiCommandsFacade {
                 params, accessToken, OperationDetailResponse.class);
     }
 
+    @Override
     public RequestPaymentResponse requestPaymentP2P(String accessToken, String to,
                                                     BigDecimal amount, String comment, String message)
             throws IOException, InvalidTokenException, InsufficientScopeException {
@@ -175,6 +183,7 @@ public class ApiCommandsFacadeImpl implements ApiCommandsFacade {
         return requestPaymentP2P(accessToken, to, comment, message, null, params);
     }
 
+    @Override
     public RequestPaymentResponse requestPaymentP2P(String accessToken, String to, IdentifierType identifierType,
                                                     BigDecimal amount, String comment, String message, String label)
             throws IOException, InvalidTokenException, InsufficientScopeException {
@@ -185,6 +194,7 @@ public class ApiCommandsFacadeImpl implements ApiCommandsFacade {
         return requestPaymentP2P(accessToken, to, comment, message, label, params);
     }
 
+    @Override
     public RequestPaymentResponse requestPaymentP2PDue(String accessToken, String to, IdentifierType identifierType,
                                                        BigDecimal amountDue, String comment, String message,
                                                        String label)
@@ -223,6 +233,7 @@ public class ApiCommandsFacadeImpl implements ApiCommandsFacade {
                 params, accessToken, RequestPaymentResponse.class);
     }
 
+    @Override
     public RequestPaymentResponse requestPaymentShop(String accessToken,
                                                      String patternId, Map<String, String> params) throws IOException,
             InvalidTokenException, InsufficientScopeException {
@@ -237,12 +248,14 @@ public class ApiCommandsFacadeImpl implements ApiCommandsFacade {
                 RequestPaymentResponse.class);
     }
 
+    @Override
     public ProcessPaymentResponse processPaymentByWallet(String accessToken, String requestId)
             throws IOException, InsufficientScopeException, InvalidTokenException {
 
         return processPayment(accessToken, requestId, MoneySource.wallet, null);
     }
 
+    @Override
     public ProcessPaymentResponse processPaymentByCard(String accessToken, String requestId, String csc)
             throws IOException, InsufficientScopeException, InvalidTokenException {
 
@@ -264,6 +277,7 @@ public class ApiCommandsFacadeImpl implements ApiCommandsFacade {
                 params, accessToken, ProcessPaymentResponse.class);
     }
 
+    @Override
     public void revokeOAuthToken(String accessToken) throws InvalidTokenException, IOException {
         HttpResponse response = null;
         try {
