@@ -26,12 +26,12 @@ public class NotificationUtilsTest {
     public void testCheckHash() throws Exception {
         Map<String, String> map = createParamsMap();
 
-        assertEquals("b9d4dee98caec486a8a3b1a577fce7efd0e7f0fb", NOTIFICATION_UTILS.calculateHash(map, SECRET));
+        assertEquals("b9d4dee98caec486a8a3b1a577fce7efd0e7f0fb", NOTIFICATION_UTILS.calculateHash(map));
     }
 
     @Test
     public void testString() {
-        assertEquals(string, NOTIFICATION_UTILS.createStringForHash(createParamsMap(), SECRET));
+        assertEquals(string, NOTIFICATION_UTILS.createStringForHash(createParamsMap()));
     }
 
     private Map<String, String> createParamsMap() {
