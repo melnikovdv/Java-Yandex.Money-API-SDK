@@ -1,4 +1,4 @@
-<%@ page import="com.samples.client.Consts" %>
+<%@ page import="com.samples.client.Settings" %>
 <%@ page import="ru.yandex.money.api.YandexMoney" %>
 <%@ page import="ru.yandex.money.api.YandexMoneyImpl" %>
 <%@ page import="ru.yandex.money.api.enums.Destination" %>
@@ -14,7 +14,7 @@
 <body>
 Yandex.Money API OAuth request...
 <%
-    YandexMoney ym = new YandexMoneyImpl(Consts.CLIENT_ID);
+    YandexMoney ym = new YandexMoneyImpl(Settings.CLIENT_ID);
 
     Collection<Permission> scope = new LinkedList<Permission>();
     scope.add(new AccountInfo());
@@ -28,7 +28,7 @@ Yandex.Money API OAuth request...
     scope.add(new Payment(Destination.toPattern, "343", 1, "100"));
     scope.add(new Payment(Destination.toPattern, "928", 1, "100"));
 
-    response.sendRedirect(ym.authorizeUri(scope, Consts.REDIRECT_URI, false));
+    response.sendRedirect(ym.authorizeUri(scope, Settings.REDIRECT_URI, false));
 %>
 </body>
 </html>

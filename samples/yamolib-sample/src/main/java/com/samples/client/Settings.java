@@ -7,7 +7,7 @@ import java.util.Properties;
  * @author dvmelnikov
  */
 
-public class Consts {
+public class Settings {
 
     public static final String CLIENT_ID;
     public static final String REDIRECT_URI;
@@ -16,7 +16,7 @@ public class Consts {
     static {
         Properties properties = new Properties();
         try {
-            properties.load(Consts.class.getResourceAsStream("/settings.properties"));
+            properties.load(Settings.class.getResourceAsStream("/settings.properties"));
 
             CLIENT_ID = properties.getProperty("client_id");
             REDIRECT_URI = properties.getProperty("redirect_uri");

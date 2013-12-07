@@ -1,4 +1,4 @@
-<%@ page import="com.samples.client.Consts" %>
+<%@ page import="com.samples.client.Settings" %>
 <%@ page import="org.apache.http.client.methods.HttpGet" %>
 <%@ page import="org.apache.http.client.methods.HttpPost" %>
 <%@ page import="ru.yandex.money.api.YandexMoneyImpl" %>
@@ -58,7 +58,7 @@
             map.put("PROPERTY2", number);
             map.put(SUM, sum);
 
-            YandexMoneyImpl ym = new YandexMoneyImpl(Consts.CLIENT_ID);
+            YandexMoneyImpl ym = new YandexMoneyImpl(Settings.CLIENT_ID);
             String token = (String) session.getAttribute("token");
             try {
                 RequestPaymentResponse resp = ym.requestPaymentShop(token,

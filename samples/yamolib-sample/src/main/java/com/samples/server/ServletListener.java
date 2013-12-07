@@ -1,6 +1,6 @@
 package com.samples.server;
 
-import com.samples.client.Consts;
+import com.samples.client.Settings;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import ru.yandex.money.api.notifications.IncomingTransfer;
@@ -24,7 +24,7 @@ public class ServletListener implements ServletContextListener {
 
     @Override
     public void contextInitialized(ServletContextEvent sce) {
-        NotificationsServlet.setSecret(Consts.NOTIFICATION_SECRET);
+        NotificationsServlet.setSecret(Settings.NOTIFICATION_SECRET);
         NotificationsServlet.setListener(new IncomingTransferListener() {
             @Override
             public void processNotification(IncomingTransfer incomingTransfer) {
