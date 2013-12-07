@@ -23,19 +23,23 @@ import java.util.Map;
 public class NotificationsServlet extends HttpServlet {
 
     private static final Log LOG = LogFactory.getLog(NotificationsServlet.class);
-    public static final String SECRET = "12345";
 
     private final NotificationUtils notificationUtils = new NotificationUtils();
 
     private volatile static IncomingTransferListener listener;
+    private volatile static String secret;
 
     public static void setListener(IncomingTransferListener listener) {
         NotificationsServlet.listener = listener;
     }
 
+    public static void setSecret(String secret) {
+        NotificationsServlet.secret = secret;
+    }
+
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        if (listener == null) {
+        if (listener == null || secret == null) {
             throw new IllegalStateException("servlet state is not initialised");
         }
 
@@ -48,7 +52,7 @@ public class NotificationsServlet extends HttpServlet {
             return;
         }
 
-        if (!notificationUtils.isHashValid(parametersMap, SECRET)) {
+        if (!notificationUtils.isHashValid(parametersMap, secret)) {
             response.sendError(HttpServletResponse.SC_FORBIDDEN, "SHA-1 hash verification failed") ;
             LOG.warn("SHA-1 hash verification failed: " + compileLogRecord(request, parametersMap, null)) ;
             return;

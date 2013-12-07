@@ -8,7 +8,7 @@ package ru.yandex.money.api.notifications;
 *
 * @author OneHalf
 */
-interface IncomingTransferListener {
+public interface IncomingTransferListener {
 
     void processNotification(IncomingTransfer incomingTransfer);
 

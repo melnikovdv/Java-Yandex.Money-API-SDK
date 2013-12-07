@@ -2,6 +2,8 @@ package ru.yandex.money.api.notifications;
 
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -23,6 +25,7 @@ public class NotificationUtils implements Serializable {
             "label"};
 
     private static final String DELIMITER = "&";
+    public static final Log LOG = LogFactory.getLog(NotificationUtils.class);
 
 
     boolean isHashValid(Map<String, String> parameterMap, String secret) {
@@ -31,10 +34,14 @@ public class NotificationUtils implements Serializable {
 
         checkAllParametersNotNull(map);
 
-        String realHash = calculateHash(parameterMap);
-        String sha1HashParam = parameterMap.get("sha1_hash");
+        String realHash = calculateHash(map);
+        String sha1HashParam = map.get("sha1_hash");
 
-        return realHash.equalsIgnoreCase(sha1HashParam);
+        boolean equals = realHash.equalsIgnoreCase(sha1HashParam);
+        if (!equals) {
+            LOG.debug("the hashes are not equals. expected: " + realHash + ", but received: " + sha1HashParam);
+        }
+        return equals;
     }
 
     private void checkAllParametersNotNull(Map<String, String> map) {

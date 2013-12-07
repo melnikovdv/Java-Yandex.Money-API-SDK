@@ -1,6 +1,7 @@
 package ru.yandex.money.api.notifications;
 
 import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl;
+import ru.yandex.money.api.YamoneyAccount;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -19,14 +20,14 @@ public final class IncomingTransfer {
 
     private final Date datetime;
 
-    private final String sender;
+    private final YamoneyAccount sender;
 
     private final boolean codepro;
 
     private final String label;
 
     IncomingTransfer(String operationId, BigDecimal amount, int currency,
-                     Date datetime, String sender, boolean codepro, String label) {
+                     Date datetime, YamoneyAccount sender, boolean codepro, String label) {
         this.operationId = operationId;
         this.amount = amount;
         this.currency = currency;
@@ -43,7 +44,7 @@ public final class IncomingTransfer {
                 new BigDecimal(parametersMap.get("amount")),
                 Integer.parseInt(parametersMap.get("currency")),
                 XMLGregorianCalendarImpl.parse(parametersMap.get("datetime")).toGregorianCalendar().getTime(),
-                parametersMap.get("sender"),
+                new YamoneyAccount(parametersMap.get("sender")),
                 Boolean.parseBoolean(parametersMap.get("codepro")),
                 parametersMap.get("label"));
     }
@@ -79,7 +80,7 @@ public final class IncomingTransfer {
     /**
      *  Номер счета отправителя перевода.
      */
-    public String getSender() {
+    public YamoneyAccount getSender() {
         return sender;
     }
 

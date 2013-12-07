@@ -6,4 +6,17 @@
          version="2.5">
     <description>YandexMoney API examples</description>
     <display-name>YandexMoney API examples</display-name>
+
+    <listener>
+        <listener-class>com.samples.server.ServletListener</listener-class>
+    </listener>
+
+    <servlet>
+        <servlet-name>notificationServlet</servlet-name>
+        <servlet-class>ru.yandex.money.api.notifications.NotificationsServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>notificationServlet</servlet-name>
+        <url-pattern>/notification</url-pattern>
+    </servlet-mapping>
 </web-app>

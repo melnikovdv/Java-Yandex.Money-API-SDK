@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * <p/>
@@ -24,14 +25,22 @@ public class NotificationUtilsTest {
 
     @Test
     public void testCheckHash() throws Exception {
+        assertTrue(NOTIFICATION_UTILS.isHashValid(createParamsMap(), SECRET));
+    }
+
+    @Test
+    public void testCheckHash2() throws Exception {
         Map<String, String> map = createParamsMap();
+        map.put("notification_secret", SECRET);
 
         assertEquals("b9d4dee98caec486a8a3b1a577fce7efd0e7f0fb", NOTIFICATION_UTILS.calculateHash(map));
     }
 
     @Test
     public void testString() {
-        assertEquals(string, NOTIFICATION_UTILS.createStringForHash(createParamsMap()));
+        Map<String, String> paramsMap = createParamsMap();
+        paramsMap.put("notification_secret", SECRET);
+        assertEquals(string, NOTIFICATION_UTILS.createStringForHash(paramsMap));
     }
 
     private Map<String, String> createParamsMap() {
@@ -44,6 +53,8 @@ public class NotificationUtilsTest {
         map.put("sender", "410011608243693");
         map.put("codepro", "false");
         map.put("label", "12625");
+        map.put("sha1_hash", "b9d4dee98caec486a8a3b1a577fce7efd0e7f0fb");
+
         return map;
     }
 }
