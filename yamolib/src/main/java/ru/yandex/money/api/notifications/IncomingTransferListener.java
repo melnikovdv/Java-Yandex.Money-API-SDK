@@ -10,5 +10,7 @@ package ru.yandex.money.api.notifications;
 */
 interface IncomingTransferListener {
 
-    void process(IncomingTransfer incomingTransfer);
+    void processNotification(IncomingTransfer incomingTransfer);
+
+    void processTestNotification(IncomingTransfer incomingTransfer);
 }

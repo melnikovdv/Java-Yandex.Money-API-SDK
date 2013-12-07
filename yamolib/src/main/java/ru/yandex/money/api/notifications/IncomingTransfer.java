@@ -1,7 +1,10 @@
 package ru.yandex.money.api.notifications;
 
+import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl;
+
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.Map;
 
 /**
  * Уведомление о входящем переводе
@@ -31,6 +34,18 @@ public final class IncomingTransfer {
         this.sender = sender;
         this.codepro = codepro;
         this.label = label;
+    }
+
+    public static IncomingTransfer createByParameters(Map<String, String> parametersMap) {
+        // получить значения параметров уведомления
+        return new IncomingTransfer(
+                parametersMap.get("operation_id"),
+                new BigDecimal(parametersMap.get("amount")),
+                Integer.parseInt(parametersMap.get("currency")),
+                XMLGregorianCalendarImpl.parse(parametersMap.get("datetime")).toGregorianCalendar().getTime(),
+                parametersMap.get("sender"),
+                Boolean.parseBoolean(parametersMap.get("codepro")),
+                parametersMap.get("label"));
     }
 
     /**
