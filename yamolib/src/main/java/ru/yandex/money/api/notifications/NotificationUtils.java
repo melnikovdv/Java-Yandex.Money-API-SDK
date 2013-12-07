@@ -13,6 +13,8 @@ import java.util.Map;
 
 public class NotificationUtils implements Serializable {
 
+    private static final Log LOG = LogFactory.getLog(NotificationUtils.class);
+
     public static final String[] EXPECTED_PARAMS_ARRAY = new String[]{
             "notification_type",
             "operation_id",
@@ -25,8 +27,6 @@ public class NotificationUtils implements Serializable {
             "label"};
 
     private static final String DELIMITER = "&";
-    public static final Log LOG = LogFactory.getLog(NotificationUtils.class);
-
 
     boolean isHashValid(Map<String, String> parameterMap, String secret) {
         Map<String, String> map = new HashMap<String, String>(parameterMap);

@@ -1,12 +1,30 @@
 package com.samples.client;
 
+import java.io.IOException;
+import java.util.Properties;
+
 /**
  * @author dvmelnikov
  */
 
 public class Consts {
-//    public static final String CLIENT_ID = "DAB03C5EA45BD935365D4D619E7BB7F44328E37B0DCAF88350D2462EA6E59FE1";
-    public static final String CLIENT_ID = "62BB58E0297E645D15F3220665AF6098A10D054BEA222846587A7A270FE26954";
-    public static final String REDIRECT_URI = "http://localhost:8080/yamolib-sample/redirected.jsp";
-    public static final String NOTIFICATION_SECRET = "0UyvT/YmMb9ed8FA6rsrYXqP";
+
+    public static final String CLIENT_ID;
+    public static final String REDIRECT_URI;
+    public static final String NOTIFICATION_SECRET;
+
+    static {
+        Properties properties = new Properties();
+        try {
+            properties.load(Consts.class.getResourceAsStream("/settings.properties"));
+
+            CLIENT_ID = properties.getProperty("client_id");
+            REDIRECT_URI = properties.getProperty("redirect_uri");
+            NOTIFICATION_SECRET = properties.getProperty("notification_secret");
+
+        } catch (IOException e) {
+            throw new IllegalStateException(e);
+        }
+
+    }
 }

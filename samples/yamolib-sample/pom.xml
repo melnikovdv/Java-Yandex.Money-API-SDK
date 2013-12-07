@@ -43,6 +43,7 @@
             <resource>
                 <directory>src/main/config</directory>
                 <includes>
+                    <include>settings.properties</include>
                     <include>log4j.xml</include>
                 </includes>
             </resource>
