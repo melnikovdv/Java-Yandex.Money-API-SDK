@@ -35,49 +35,18 @@
 
     <h4>Отправить нотификацию</h4>
     <p>Текущий секрет нотификаций: <%= Settings.NOTIFICATION_SECRET %></p>
+    <p>Вы можете сымитировать запрос от Яндекс.Денег, воспользовавшись следующей формой:</p>
     <form id="notification_form" action="<%= Settings.NOTIFICATION_URI %>" method="get" target="_blank" onsubmit="onSubmitNotificationForm()">
         <table>
             <tbody>
-                <tr>
-                    <td><label for="notification_type"> Тип операции</label></td>
-                    <td><input id="notification_type" type="text" name="notification_type" value="p2p-incoming"/></td>
-                </tr>
-                <tr>
-                    <td><label for="operation_id"> Идентификатор операции </label></td>
-                    <td><input type="text" id="operation_id" name="operation_id"
-                           value="<%= getParameterForNotification(session, request, "operation_id", "818163584552108017") %>"/></td>
-                </tr>
-                <tr>
-                    <td><label for="amount"> Сумма операции </label></td>
-                    <td><input type="number" id="amount" name="amount" step="0.01"
-                           value="<%= getParameterForNotification(session, request, "amount", "2.23") %>"/></td>
-                </tr>
-                <tr>
-                    <td><label for="currency"> Валюта</label></td>
-                    <td><input type="number" id="currency" name="currency" value="643"/></td>
-                </tr>
-                <tr>
-                    <td><label for="datetime"> Дата проведения операции </label></td>
-                    <td><input type="datetime" id="datetime" name="datetime"
-                           value="<%= getParameterForNotification(session, request, "datetime", "2012-12-17T17:49:52Z") %>"/></td>
-                </tr>
-                <tr>
-                    <td><label for="sender"> Номер отправителя </label></td>
-                    <td><input type="text" id="sender" name="sender"
-                           value="<%= getParameterForNotification(session, request, "sender", "410011608243693") %>"/></td>
-                </tr>
-                <tr>
-                    <td><label for="codepro"> Был ли использован код протекции </label></td>
-                    <td><select id="codepro" name="codepro">
-                        <option value="false">false</option>
-                        <option value="true">true</option></select></td>
-
-                </tr>
-                <tr>
-                    <td><label for="label"> Метка платежа </label></td>
-                    <td><input type="text" id="label" name="label"
-                           value="<%= getParameterForNotification(session, request, "label", "12625") %>"/></td>
-                </tr>
+                <% printTableTextParamRow("Тип операции", "notification_type", "p2p-incoming", session, request, out); %>
+                <% printTableTextParamRow("Идентификатор операции", "operation_id", "818163584552108017", session, request, out); %>
+                <% printTableParamRow("Сумма операции", "amount", "2.23", "type='number' step='0.01'", session, request, out); %>
+                <% printTableParamRow("Валюта", "currency", "643", "type='text' ", session, request, out); %>
+                <% printTableParamRow("Дата проведения операции", "datetime", "2012-12-17T17:49:52Z", "type='datatime'", session, request, out); %>
+                <% printTableParamRow("Номер счета отправителя", "sender", "410011608243693", "type='number' ", session, request, out); %>
+                <% printTableBooleanParamRow("Был ли использован код протекции", "codepro", false, out, session, request); %>
+                <% printTableTextParamRow("Метка платежа", "label", "12625", session, request, out); %>
                 <tr>
                     <td><label for=sha1_hash> Хэш для нотификации </label></td>
                     <td>
@@ -87,12 +56,7 @@
                     </td>
 
                 </tr>
-                <tr>
-                    <td><label for="test_notification"> Является ли нотификация тестовой </label></td>
-                    <td><select id="test_notification" name="test_notification" >
-                        <option value="true">true</option>
-                        <option value="false">false</option></select></td>
-                </tr>
+                <% printTableBooleanParamRow("Является ли нотификация тестовой", "test_notification", false, out, session, request); %>
                 <tr>
                     <td colspan="2">
                         <input type="submit" name="send" value="Открыть в новой вкладке url нотификации"/>
@@ -127,7 +91,7 @@
         }
 
         function onSubmitNotificationForm() {
-            saveParamsToSession($('#notification_form'))
+            saveParamsToSession($('#notification_form'));
             setTimeout(function(){
                 location.reload()
             }, 1000);
@@ -139,7 +103,7 @@
             // serialize the data in the form
             var serializedData = $form.serialize();
 
-            var request = $.ajax({
+            $.ajax({
                 url: "${pageContext.request.contextPath}/calc_sha1_hash.jsp",
                 type: "post",
                 data: serializedData,
@@ -156,6 +120,19 @@
 
 </html>
 <%!
+    private void printTableTextParamRow(final String description, final String parameterName, final String defaultValue,
+                                        HttpSession session, HttpServletRequest request, JspWriter out) throws IOException {
+        printTableParamRow(description, parameterName, defaultValue, "type='text'", session, request, out);
+    }
+
+    private void printTableParamRow(final String description, final String parameterName, final String defaultValue, final String inpputAttribs, HttpSession session, HttpServletRequest request, JspWriter out) throws IOException {
+        out.print("<tr>");
+        out.print("<td><label for='" + parameterName + "'> " + description + "</label></td>");
+        out.print("<td><input id='" + parameterName + "' " + inpputAttribs + " name='" + parameterName
+                + "' value='" + getParameterForNotification(session, request, parameterName, defaultValue) + "'/></td>");
+        out.print("</tr>");
+    }
+
     private String getParameterForNotification(HttpSession session, HttpServletRequest request, String paramName, String defaultValue) {
         String attrName = "notification." + paramName;
         String parameter = request.getParameter(paramName);
@@ -182,4 +159,19 @@
             out.print("</p>");
         }
     }
+
+    private void printTableBooleanParamRow(final String description, String paramName, boolean defaultValue, JspWriter out, HttpSession session,
+                                           HttpServletRequest request) throws IOException {
+        out.print("<tr>");
+        out.print(String.format("<td><label for='%s'>%s</label></td>", paramName, description));
+        out.print(String.format("<td><select id='%s' name='%s'>", paramName, paramName));
+
+        boolean value = Boolean.parseBoolean(getParameterForNotification(session, request, paramName, String.valueOf(defaultValue)));
+        String selectedAttr = " selected='selected'";
+
+        out.print("<option value='false'" + (value ? "" : selectedAttr) + ">false</option>");
+        out.print("<option value='true'" + (value ? selectedAttr : "") + ">true</option></select></td>");
+        out.print("</tr>");
+    }
+
 %>
