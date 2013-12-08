@@ -21,7 +21,8 @@
     <h3 id="header">Последние полученные нотификации</h3>
 
     Ниже представлены данные по последним http-нотфикациям, полученным от Яндекс.Деньги.
-    Настройки нотификаций выполняются <a href="https://sp-money.yandex.ru/myservices/online.xml">здесь</a>
+    Настройки нотификаций выполняются <a href="https://sp-money.yandex.ru/myservices/online.xml">здесь</a>.
+    Документация по http-уведомлениям <a href="http://api.yandex.ru/money/doc/dg/reference/notification-p2p-incoming.xml" >здесь</a>
 
     <h4>Последние нотификации полученные без тестового признака</h4>
     <p class="output">
