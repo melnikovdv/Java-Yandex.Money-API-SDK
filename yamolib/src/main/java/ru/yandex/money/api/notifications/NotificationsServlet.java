@@ -71,7 +71,9 @@ public class NotificationsServlet extends HttpServlet {
             } else {
                 listener.processNotification(incomingTransfer) ;
             }
-            // response is HTTP 200 OK without content
+            response.getWriter().println("notification processed");
+            response.getWriter().println(incomingTransfer);
+            response.getWriter().println("is test notification: " + testNotification);
 
         } catch (IllegalArgumentException e) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage()) ;
