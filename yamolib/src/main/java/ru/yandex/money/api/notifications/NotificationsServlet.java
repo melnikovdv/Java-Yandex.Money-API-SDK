@@ -48,17 +48,17 @@ public class NotificationsServlet extends HttpServlet {
         final String notificationType = parametersMap.get("notification_type") ;
 
         if (!"p2p-incoming".equals(notificationType)) {
+            LOG.warn("Unsupported notification type: " + notificationType);
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Unsupported notification type: " + notificationType) ;
             return;
         }
 
-        if (!notificationUtils.isHashValid(parametersMap, secret)) {
-            response.sendError(HttpServletResponse.SC_FORBIDDEN, "SHA-1 hash verification failed") ;
-            LOG.warn("SHA-1 hash verification failed: " + compileLogRecord(request, parametersMap, null)) ;
-            return;
-        }
-
         try {
+            if (!notificationUtils.isHashValid(parametersMap, secret)) {
+                response.sendError(HttpServletResponse.SC_FORBIDDEN, "SHA-1 hash verification failed") ;
+                LOG.warn(compileLogRecord("SHA-1 hash verification failed", request, parametersMap)) ;
+                return;
+            }
 
             final boolean testNotification = Boolean.parseBoolean(request.getParameter("test_notification"));
 
@@ -75,7 +75,7 @@ public class NotificationsServlet extends HttpServlet {
 
         } catch (IllegalArgumentException e) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage()) ;
-            LOG.warn(compileLogRecord(request, parametersMap, e)) ;
+            LOG.warn(compileLogRecord(e.getMessage(), request, parametersMap)) ;
         }
     }
 
@@ -97,16 +97,9 @@ public class NotificationsServlet extends HttpServlet {
         return parametersMap;
     }
 
-    private static String compileLogRecord(HttpServletRequest request, Map<String, String> parametersMap, Throwable e) {
-        StringBuilder sb = new StringBuilder() ;
-        if (e != null) {
-            sb.append(e.getMessage()).append(" : ");
-        }
-        sb.append("HttpServletRequest={ IP:").append(request.getRemoteAddr())
-                .append(':').append(request.getRemotePort())
-                .append(" URL:").append(request.getRequestURL()) ;
-
-        sb.append("} Parameters=").append(parametersMap).append(" }") ;
-        return sb.toString();
+    private static String compileLogRecord(String message, HttpServletRequest request, Map<String, String> parametersMap) {
+        return message + ": "
+                + "HttpServletRequest={ IP:" + request.getRemoteAddr() + "} "
+                + "Parameters=" + parametersMap;
     }
 }

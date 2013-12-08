@@ -12,5 +12,5 @@ public interface IncomingTransferListener {
 
     void processNotification(IncomingTransfer incomingTransfer);
 
-    void processTestNotification(IncomingTransfer incomingTransfer);
+    void processTestNotification(IncomingTransfer testIncomingTransfer);
 }
