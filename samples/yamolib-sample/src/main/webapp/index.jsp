@@ -1,3 +1,4 @@
+<%@ page import="com.samples.client.Settings" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <html>
@@ -24,15 +25,15 @@
         </li>
 
         <li>Адрес сайта: http://localhost:8080/</li>
-        <li>Redirect URI: http://localhost:8080/yamolib-sample/redirected.jsp</li>
+        <li>Redirect URI: <%= Settings.REDIRECT_URI %></li>
     </ul>
     Если вы запускаетесь не на локальном сервере, а на хостинге, то стоит
     заменить localhost
     на адрес вашего сайта и указать правильный путь к redirected.jsp.
     <p>
         <b>Внимание: </b> затем нужно полученный идентификатор клиента
-        скопировать в файл client/Consts.java
-        в константу CLIENT_ID. Далее нужно указать REDIRECT_URL такой же, как
+        скопировать в файл client/settings.properties
+        в свойство client_id. Далее нужно указать redirect_url такой же, как
         указали в сервисе при регистрации.
     </p>
 

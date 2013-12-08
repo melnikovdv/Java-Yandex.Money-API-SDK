@@ -75,7 +75,7 @@
 
 Для выполнения операций со счетом через API необходимо получить разрешение пользователя, то есть токен. Его можно получить следующими вызовами (к примеру, с доступом на просмотр информации о счете и истории операций):
 
-      TokenRequester tokenRequester = new TokenRequesterImpl(Consts.CLIENT_ID, httpClient);
+      TokenRequester tokenRequester = new TokenRequesterImpl(Settings.CLIENT_ID, httpClient);
 
       // Указываем необходимые для работы приложения права 
       // на доступ к счету пользователя
@@ -83,18 +83,18 @@
       scope.add(new AccountInfo());
       scope.add(new OperationHistory());   
   
-      codeReqUri = tokenRequester.authorizeUri(scope, Consts.REDIRECT_URI);
+      codeReqUri = tokenRequester.authorizeUri(scope, Settings.REDIRECT_URI);
       response.sendRedirect(codeReqUri);
 
 Затем на странице редиректа выполняем обмен временного кода на постоянный токен доступа
 
       String code = request.getParameter("code");
-      ReceiveOAuthTokenResponse resp = tokenRequester.receiveOAuthToken(code, Consts.REDIRECT_URI);
+      ReceiveOAuthTokenResponse resp = tokenRequester.receiveOAuthToken(code, Settings.REDIRECT_URI);
       if (resp.isSuccess()) {
         out.println("Токен: " + resp.getAccessToken());
       }
 
-При создании объекта tokenRequester ему передается идентификатор приложения, который обычно прописывается в константах приложения (`client/Consts.java` в наших примерах). Затем проставляем права scope и делаем вызов полученного URI.
+При создании объекта tokenRequester ему передается идентификатор приложения, который обычно прописывается в настройках приложения (`settings.properties` в наших примерах). Затем проставляем права scope и делаем вызов полученного URI.
 
 #### account-info
 Чтобы получить информацию о счете пользователя, можно таким же образом создать объект, а затем вызвать метод, передав ему токен пользователя:
@@ -176,8 +176,8 @@
 
 Или собрать проект самостоятельно. Для этого:
 
-* зарегистрировать приложение, т.е. получить идентификатор клиента (https://sp-money.yandex.ru/myservices/new.xml) и прописать его в константы примеров (src\client\Consts.java);
-* изменить `REDIRECT_URI` (`src/client/Consts.java`), если отличается;
+* зарегистрировать приложение, т.е. получить идентификатор клиента (https://sp-money.yandex.ru/myservices/new.xml) и прописать его в настройки примеров (settings.properties);
+* изменить `REDIRECT_URI` (`settings.properties`), если отличается;
 * скомпилировать и запустить веб-приложение.
 
 #### Пример сборки maven war файла:
