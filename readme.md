@@ -37,6 +37,11 @@ GettingStarted Maven-плагина для Android [тут](http://code.google.c
 
 ### Changelog
 
+**08.12.13 yamolib 1.2.3**
+
+* Добавлен класс YamoneyAccount с логикой проверки корректности номера счета
+* Добавлены классы для обработки http-уведомлений о входящем платеже. (NotificationUtils, NotificationServlet)
+
 **27.11.13 yamolib 1.2.2**
 
 * Коды ошибок сделаны перечислениями (enum). Может сломать логику приложения, если вы используете выражения вида "response.getError().equals("limit_exceeded")"
@@ -84,7 +89,7 @@ GettingStarted Maven-плагина для Android [тут](http://code.google.c
 **20.03.2012 yamodroid 1.1.0**
 
 * добавлен класс YandexMoneyDroid и интерфейс лисенера для удобной обработки результатов работы методов API (onSuccess,
- onFail, onException, onCancel)
+  onFail, onException, onCancel)
 * добавлена обработка нажатия cancel (назад) на длительных операциях
 * изменен и оптимизирован интерфейс работы оплаты в магазины, добавлено новое activity PaymentConfirmActivity.
 
