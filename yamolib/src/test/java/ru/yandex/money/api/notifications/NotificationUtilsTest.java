@@ -31,9 +31,8 @@ public class NotificationUtilsTest {
     @Test
     public void testCheckHash2() throws Exception {
         Map<String, String> map = createParamsMap();
-        map.put("notification_secret", SECRET);
 
-        assertEquals("b9d4dee98caec486a8a3b1a577fce7efd0e7f0fb", NOTIFICATION_UTILS.calculateHash(map));
+        assertEquals("b9d4dee98caec486a8a3b1a577fce7efd0e7f0fb", NOTIFICATION_UTILS.calculateHash(map, SECRET));
     }
 
     @Test

@@ -60,7 +60,7 @@ public class NotificationUtils implements Serializable {
         return calculateHash(map);
     }
 
-    String calculateHash(Map<String, String> parameterMap) {
+    private String calculateHash(Map<String, String> parameterMap) {
         String stringForHash = createStringForHash(parameterMap);
         return Hex.encodeHexString(DigestUtils.sha1(stringForHash));
     }
