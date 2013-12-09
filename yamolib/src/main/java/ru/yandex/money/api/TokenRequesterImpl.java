@@ -52,10 +52,12 @@ public class TokenRequesterImpl implements TokenRequester {
         this.client = new YamoneyApiClient(client);
     }
 
+    @Override
     public String authorizeUri(Collection<Permission> permissions, String redirectUri, Boolean mobileMode) {
         return authorizeUri(makeScope(permissions), redirectUri, mobileMode);
     }
 
+    @Override
     public String authorizeUri(String scope, String redirectUri, Boolean mobileMode) {
         try {
             return (mobileMode ? URI_YM_AUTH_MOBILE : URI_YM_AUTH)
@@ -68,12 +70,14 @@ public class TokenRequesterImpl implements TokenRequester {
         }
     }
 
+    @Override
     public ReceiveOAuthTokenResponse receiveOAuthToken(String code,
                                                        String redirectUri) throws IOException, InsufficientScopeException {
         List<NameValuePair> params = new ArrayList<NameValuePair>();
         return receiveOAuthToken(code, redirectUri, params);
     }
 
+    @Override
     public ReceiveOAuthTokenResponse receiveOAuthToken(String code, String redirectUri,
                                                        String clientSecret) throws IOException, InsufficientScopeException {
         List<NameValuePair> params = new ArrayList<NameValuePair>();
@@ -90,6 +94,7 @@ public class TokenRequesterImpl implements TokenRequester {
         return client.executeForJsonObjectCommon(TokenRequester.URI_YM_TOKEN, params, ReceiveOAuthTokenResponse.class);
     }
 
+    @Override
     public String getClientId() {
         return clientId;
     }

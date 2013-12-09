@@ -13,6 +13,7 @@ public abstract class AbstractPermission implements Permission {
         this.name = name;
     }
 
+    @Override
     public String value() {
         return name;
     }

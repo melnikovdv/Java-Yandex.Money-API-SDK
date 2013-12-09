@@ -1,6 +1,7 @@
 package ru.yandex.money.api.response;
 
 import ru.yandex.money.api.response.util.Operation;
+import ru.yandex.money.api.response.util.OperationHistoryError;
 
 import java.io.Serializable;
 import java.util.List;
@@ -18,8 +19,9 @@ import java.util.List;
  * параметрами, добавив параметр startRecord и указав в нем порядковый
  * номер первой записи следующей страницы, полученный ранее
  * из параметра nextRecord.</p>
- * <b>Внимание</b>: при неуспешном результате операции все поля, кроме error и
- * status (если таковые присутствуют), равны null
+ * <p><b>Внимание</b>: при неуспешном результате операции все поля, кроме error и
+ * status (если таковые присутствуют), равны null</p>
+ *
  * @author dvmelnikov
  */
 
@@ -27,7 +29,7 @@ public class OperationHistoryResponse implements Serializable {
 
     private static final long serialVersionUID = 7329380614477144397L;
     
-    private String error;
+    private OperationHistoryError error;
     private Integer nextRecord;
     private List<Operation> operations;
 
@@ -54,7 +56,7 @@ public class OperationHistoryResponse implements Serializable {
      * <li>Все прочие значения: техническая ошибка, повторите вызов операции позднее.</li>
      * </ul>
      */
-    public String getError() {
+    public OperationHistoryError getError() {
         return error;
     }
 
@@ -80,7 +82,7 @@ public class OperationHistoryResponse implements Serializable {
         return "OperationHistoryResponse{" +
                 "error='" + error + '\'' +
                 ", nextRecord='" + nextRecord + '\'' +
-                ", operations count=" + operations.size() +
+                ", operations count=" + (operations == null ? "?" : operations.size()) +
                 '}';
     }
 }

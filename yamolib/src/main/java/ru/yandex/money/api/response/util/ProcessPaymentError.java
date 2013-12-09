@@ -96,6 +96,7 @@ public enum ProcessPaymentError implements PaymentErrorCode {
         this.code = code;
     }
 
+    @Override
     public String getCode() {
         return code;
     }

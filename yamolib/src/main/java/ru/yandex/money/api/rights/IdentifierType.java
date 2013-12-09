@@ -10,10 +10,5 @@ package ru.yandex.money.api.rights;
  */
 public enum IdentifierType {
 
-    EMAIL, ACCOUNT, PHONE;
-
-    @Override
-    public String toString() {
-        return name().toLowerCase();
-    }
+    email, account, phone
 }

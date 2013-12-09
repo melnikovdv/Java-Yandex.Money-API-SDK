@@ -1,6 +1,7 @@
 package ru.yandex.money.api.response.util;
 
 import ru.yandex.money.api.enums.MoneyDirection;
+import ru.yandex.money.api.rights.IdentifierType;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -14,16 +15,42 @@ import java.util.Date;
 public class Operation implements Serializable {
 
     private static final long serialVersionUID = -8165150792250463801L;
-    
+
+    public enum Status {
+
+        /**
+         * Платеж завершен успешно
+         */
+        success,
+
+        /**
+         * Платеж был отклонен получателем, либо истек срок получения платежа.
+         *
+         * Статус имеет смысл для платежей с кодом протекции и платежей до востребования
+         * (перевод на телефон/e-mail, когда у получателя еще нет счета)
+         */
+        refused,
+
+        /**
+         * Плтеж в процессе выполнения.
+         * Получатель может принять его, если укажет код протекции/заведет счет с привязанным телефоном/e-mail'ом
+         *
+         * Статус имеет смысл для платежей с кодом протекции  и платежей до востребования
+         * (перевод на телефон/e-mail, когда у получателя еще нет счета)
+         */
+        in_progress
+    }
+
     protected String operationId;
     protected String patternId;
-    protected String status;
+    protected Status status;
     protected MoneyDirection direction;
     protected BigDecimal amount;
     protected Date datetime;
     protected String title;
     protected String sender;
     protected String recipient;
+    protected IdentifierType recipientType;
     protected String message;
     protected Boolean codepro;
     protected String details;
@@ -103,6 +130,14 @@ public class Operation implements Serializable {
     }
 
     /**
+     * @return Тип идентификатора получателя перевода.
+     * Присутствует для исходящих переводов другим пользователям.
+     */
+    public IdentifierType getRecipientType() {
+        return recipientType;
+    }
+
+    /**
      * Поле присутствует только при запросе operation-history с параметром details=true,
      * или при запросе operation-detail
      *
@@ -115,17 +150,9 @@ public class Operation implements Serializable {
 
     /**
      * Получение статуса платежа. Присутствует для всех записей.
-     * Может принимать значения:
-     * <ul>
-     *     <li>success - платеж завершен успешно</li>
-     *     <li>in_progress - платеж выполнен, но не завершен.
-     *       Имеет смысл только плтежей с протекцией и платежей до востребования</li>
-     *     <li>refused - получатель отверг получение платежа,
-     *       либо истек срок действия платежа с протекцией/до востребования</li>
-     * </ul>
      * @return статус платежа
      */
-    public String getStatus() {
+    public Status getStatus() {
         return status;
     }
 
@@ -168,6 +195,7 @@ public class Operation implements Serializable {
                 ", datetime=" + datetime +
                 ", sender='" + sender + '\'' +
                 ", recipient='" + recipient + '\'' +
+                ", recipient_type='" + recipientType + '\'' +
                 ", message='" + message + '\'' +
                 ", codepro=" + codepro +
                 ", label='" + label + '\'' +

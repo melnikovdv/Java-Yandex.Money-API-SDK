@@ -1,5 +1,5 @@
 <%@ page import="ru.yandex.money.api.YandexMoneyImpl" %>
-<%@ page import="com.samples.client.Consts" %>
+<%@ page import="com.samples.client.Settings" %>
 <%@ page import="ru.yandex.money.api.response.ProcessPaymentResponse" %>
 <%--
   User: dvmelnikov
@@ -15,7 +15,7 @@
     <h3 id="header">Пример вызова API-функции process-payment</h3>
 
     <%
-        ru.yandex.money.api.YandexMoney ym = new YandexMoneyImpl(Consts.CLIENT_ID);
+        ru.yandex.money.api.YandexMoney ym = new YandexMoneyImpl(Settings.CLIENT_ID);
         String token = (String) session.getAttribute("token");
         String requestId = (String) session.getAttribute("requestId");
         try {

@@ -25,6 +25,9 @@ public class ProcessPaymentResponse implements Serializable {
     private String payer;
     private String payee;
     private BigDecimal creditAmount;
+    private String invoiceId;
+    private String pinSerial;
+    private String pinSecret;
     private Boolean testPayment;
 
     private ProcessPaymentResponse() {
@@ -127,6 +130,38 @@ public class ProcessPaymentResponse implements Serializable {
         return testPayment;
     }
 
+    /**
+     * @return Номер транзакции магазина в Яндекс.Деньгах.
+     *         Присутствует при успешном выполнении платежа в магазин.
+     */
+    public String getInvoiceId() {
+        return invoiceId;
+    }
+
+    /**
+     * Серийный номер (открытая часть) ПИН-кода.
+     * Присутствует при успешном выполнении платежа в магазин, продающий ПИН-коды.
+     *
+     * Пользователь также сможет увидеть этот намер в деталях платежа на портале Яндекс.Деньги.
+     *
+     * @return Серийный номер ПИН-кода.
+     */
+    public String getPinSerial() {
+        return pinSerial;
+    }
+
+    /**
+     * Секрет (закрытая часть) ПИН-кода.
+     * Присутствует при успешном выполнении платежа в магазин, продающий ПИН-коды
+     *
+     * Пользователь также сможет увидеть этот ПИН в деталях платежа на портале Яндекс.Деньги.
+
+     * @return ПИН-код
+     */
+    public String getPinSecret() {
+        return pinSecret;
+    }
+
     @Override
     public String toString() {
         return "ProcessPaymentResponse{" +
@@ -138,6 +173,8 @@ public class ProcessPaymentResponse implements Serializable {
                 ", payer='" + payer + '\'' +
                 ", payee='" + payee + '\'' +
                 ", creditAmount=" + creditAmount +
+                ", invoice_id=" + invoiceId +
+                ", pin_serial=" + pinSerial +
                 ", test_payment=" + testPayment +
                 '}';
     }

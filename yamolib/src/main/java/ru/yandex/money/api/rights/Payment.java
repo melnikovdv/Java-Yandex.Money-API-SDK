@@ -70,6 +70,7 @@ public class Payment extends AbstractLimitedPermission {
         return this;
     }
 
+    @Override
     public String value() {
         if (destination == null) {
             throw new IllegalStateException("destination is not specified");
