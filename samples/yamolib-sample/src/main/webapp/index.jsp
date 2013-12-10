@@ -1,3 +1,4 @@
+<%@ page import="com.samples.client.Settings" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <html>
@@ -16,7 +17,7 @@
         нужно получить идентификатор приложения. Для этого нужно перейти по
         <a href="https://sp-money.yandex.ru/myservices/new.xml">ссылке</a>
         и ввести следующие данные (для случая локального запуска на Apache
-        Tomcat с найтсройками по умолчанию):
+        Tomcat с настройками по умолчанию):
     </p>
     <ul>
         <li>Название: любое, но помните, что его будут видеть пользователи при
@@ -24,15 +25,15 @@
         </li>
 
         <li>Адрес сайта: http://localhost:8080/</li>
-        <li>Redirect URI: http://localhost:8080/ym/redirected.jsp</li>
+        <li>Redirect URI: <%= Settings.REDIRECT_URI %></li>
     </ul>
     Если вы запускаетесь не на локальном сервере, а на хостинге, то стоит
     заменить localhost
     на адрес вашего сайта и указать правильный путь к redirected.jsp.
     <p>
         <b>Внимание: </b> затем нужно полученный идентификатор клиента
-        скопировать в файл client/Consts.java
-        в константу CLIENT_ID. Далее нужно указать REDIRECT_URL такой же, как
+        скопировать в файл client/settings.properties
+        в свойство client_id. Далее нужно указать redirect_url такой же, как
         указали в сервисе при регистрации.
     </p>
 
@@ -48,16 +49,12 @@
     <form action="auth.jsp">
         <input type="submit" name="btnSendRequest" value="Отправить запрос"/>
     </form>
+
+    <p>
+        Примеры использования http-уведомлений можно посмотреть на странице
+        <a href="notifications.jsp">notifications.jsp</a>
+    </p>
 </div>
-
-<%!
-    public class Consts {
-        //    public static final String CLIENT_ID = "DAB03C5EA45BD935365D4D619E7BB7F44328E37B0DCAF88350D2462EA6E59FE1";
-        public static final String CLIENT_ID = "62BB58E0297E645D15F3220665AF6098A10D054BEA222846587A7A270FE26954";
-        public static final String REDIRECT_URI = "http://localhost:8080/ym/redirected.jsp";
-    }
-%>
-
 
 </body>
 </html>

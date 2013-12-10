@@ -1,4 +1,4 @@
-<%@ page import="com.samples.client.Consts" %>
+<%@ page import="com.samples.client.Settings" %>
 <%@ page import="ru.yandex.money.api.YandexMoneyImpl" %>
 <%@ page import="ru.yandex.money.api.response.OperationHistoryResponse" %>
 <%@ page import="ru.yandex.money.api.response.util.Operation" %>
@@ -17,7 +17,7 @@
 
     <%
         ru.yandex.money.api.YandexMoney ym =
-                new YandexMoneyImpl(Consts.CLIENT_ID);
+                new YandexMoneyImpl(Settings.CLIENT_ID);
         String token = (String) session.getAttribute("token");
         try {
             OperationHistoryResponse resp = ym.operationHistory(token, 1, 5);

@@ -1,4 +1,4 @@
-<%@ page import="com.samples.client.Consts" %>
+<%@ page import="com.samples.client.Settings" %>
 <%@ page import="ru.yandex.money.api.YandexMoney" %>
 <%@ page import="ru.yandex.money.api.YandexMoneyImpl" %>
 <%@ page import="ru.yandex.money.api.response.AccountInfoResponse" %>
@@ -18,7 +18,7 @@
         Результат выполнения:
     </p>
     <%
-        YandexMoney ym = new YandexMoneyImpl(Consts.CLIENT_ID);
+        YandexMoney ym = new YandexMoneyImpl(Settings.CLIENT_ID);
         String token = (String) session.getAttribute("token");
         AccountInfoResponse resp = null;
         try {

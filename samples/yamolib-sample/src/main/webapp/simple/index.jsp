@@ -21,13 +21,13 @@
 </head>
 <body>
 <%!
-    private static String PAR_DEST = "destination";
-    private static String PAR_SUM = "sum";
-    private static String PAR_TITLE = "title";
-    private static String PAR_MESS = "message";
-    private static String PAR_SHORT_MESS = "short-dest";
+    private final static String PAR_DEST = "destination";
+    private final static String PAR_SUM = "sum";
+    private final static String PAR_TITLE = "title";
+    private final static String PAR_MESS = "message";
+    private final static String PAR_SHORT_MESS = "short-dest";
 
-    private static String DIRECT_PAYMENT_URI =
+    private final static String DIRECT_PAYMENT_URI =
             "https://money.yandex.ru/direct-payment.xml?" +
                     "isDirectPaymentFormSubmit=true&" +
                     "ErrorTemplate=ym2xmlerror&" +

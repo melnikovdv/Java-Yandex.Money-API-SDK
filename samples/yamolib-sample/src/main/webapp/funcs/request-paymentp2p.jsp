@@ -1,4 +1,4 @@
-<%@ page import="com.samples.client.Consts" %>
+<%@ page import="com.samples.client.Settings" %>
 <%@ page import="ru.yandex.money.api.YandexMoney" %>
 <%@ page import="ru.yandex.money.api.YandexMoneyImpl" %>
 <%@ page import="ru.yandex.money.api.enums.MoneySource" %>
@@ -18,7 +18,7 @@
     <h3 id="header">Пример вызова API-функции request-paymentP2P</h3>
 
     <%
-        YandexMoney ym = new YandexMoneyImpl(Consts.CLIENT_ID);
+        YandexMoney ym = new YandexMoneyImpl(Settings.CLIENT_ID);
         String token = (String) session.getAttribute("token");
         try {
             RequestPaymentResponse resp = ym.requestPaymentP2P(token,

@@ -1,4 +1,4 @@
-<%@ page import="com.samples.client.Consts" %>
+<%@ page import="com.samples.client.Settings" %>
 <%@ page import="ru.yandex.money.api.InsufficientScopeException" %>
 <%@ page import="ru.yandex.money.api.InternalServerErrorException" %>
 <%@ page import="ru.yandex.money.api.YandexMoneyImpl" %>
@@ -33,10 +33,10 @@
 
     Затем меняем его на постоянный токен. Результат выполнения:
     <%
-        YandexMoneyImpl ym = new YandexMoneyImpl(Consts.CLIENT_ID);
+        YandexMoneyImpl ym = new YandexMoneyImpl(Settings.CLIENT_ID);
         try {
             ReceiveOAuthTokenResponse resp =
-                    ym.receiveOAuthToken(code, Consts.REDIRECT_URI);
+                    ym.receiveOAuthToken(code, Settings.REDIRECT_URI);
             if (resp.isSuccess()) {
                 session.setAttribute("token", resp.getAccessToken());
     %>
