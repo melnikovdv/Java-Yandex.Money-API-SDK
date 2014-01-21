@@ -30,7 +30,7 @@ public class ApiCommandsFacadeTestModeTest {
     public static void setUpClass() {
         urlHolder = new TestUrlHolder();
         urlHolder.setTestCard("available");
-        facade = new ApiCommandsFacadeImpl(YandexMoneyImpl.createHttpClient(60000), urlHolder);
+        facade = new ApiCommandsFacadeImpl(YamoneyApiClient.createHttpClient(60000), urlHolder);
     }
 
     @Test

@@ -29,7 +29,7 @@ public class ApiCommandsFacadeTest {
 
     @BeforeClass
     public static void setUpClass() {
-        facade = new ApiCommandsFacadeImpl(YandexMoneyImpl.createHttpClient(60000));
+        facade = new ApiCommandsFacadeImpl(YamoneyApiClient.createHttpClient(60000));
     }
 
     @Test
