@@ -13,7 +13,6 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import ru.yandex.money.api.InsufficientScopeException;
 import ru.yandex.money.api.YandexMoney;
 import ru.yandex.money.api.response.ReceiveOAuthTokenResponse;
 
@@ -110,8 +109,6 @@ public class AuthActivity extends Activity {
                 resp = ym.receiveOAuthToken(code, redirectUri, clientSecret);
             return new ReceiveTokenResp(resp, null);            
         } catch (IOException e) {
-            return new ReceiveTokenResp(null, e);
-        } catch (InsufficientScopeException e) {
             return new ReceiveTokenResp(null, e);
         } finally {
             client.close();
