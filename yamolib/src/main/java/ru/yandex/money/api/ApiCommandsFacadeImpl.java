@@ -40,7 +40,7 @@ public class ApiCommandsFacadeImpl implements ApiCommandsFacade {
     public static final String REVOKE_COMMAND_NAME = "revoke";
     public static final String FUNDRAISING_STATS_COMMAND_NAME = "fundraising-stats";
 
-    static final ThreadLocal<SimpleDateFormat> RFC_3339 = new ThreadLocal<SimpleDateFormat>() {
+    private static final ThreadLocal<SimpleDateFormat> RFC_3339 = new ThreadLocal<SimpleDateFormat>() {
         @Override
         protected SimpleDateFormat initialValue() {
             return new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
@@ -308,8 +308,11 @@ public class ApiCommandsFacadeImpl implements ApiCommandsFacade {
         if (date == null) {
             return;
         }
-        String value = RFC_3339.get().format(date).replaceAll("(\\d\\d)(\\d\\d)$", "$1:$2");
-        params.add(new BasicNameValuePair(paramName, value));
+        params.add(new BasicNameValuePair(paramName, formatDate(date)));
+    }
+
+    String formatDate(Date date) {
+        return RFC_3339.get().format(date).replaceAll("(\\d\\d)(\\d\\d)$", "$1:$2");
     }
 
     private String joinHistoryTypes(Set<OperationHistoryType> operationsType) {

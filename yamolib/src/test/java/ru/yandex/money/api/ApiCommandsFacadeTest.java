@@ -25,7 +25,7 @@ public class ApiCommandsFacadeTest {
 
     private static final String AUTH_TOKEN = "410011077359617.E64E40E29C059741C8E11CA862CA2DE1B4F1CFF331CA7098CA07F4279AA385EE947DC1C60357BFE41F1170AA41B60D8B358A31B037F1ECB2982DA6D319D3B3DC041D6B5791766C1A46C1754BDC817F16CB4EC03B38D0FB1E24874322507E559472DE7E042F9E1851E426FE7A4607A412AA893ACA6B9B95E122538C69AB814705";
 
-    private static ApiCommandsFacade facade;
+    private static ApiCommandsFacadeImpl facade;
 
     @BeforeClass
     public static void setUpClass() {
@@ -87,14 +87,13 @@ public class ApiCommandsFacadeTest {
         facade.revokeOAuthToken(AUTH_TOKEN);
     }
 
-
     @Test
     public void testRfc3339() throws Exception {
-        assertEquals("2013-10-11T23:00:00+0400",
-                ApiCommandsFacadeImpl.RFC_3339.get().format(createDate(2013, 10, 11, 23, 0)));
+        assertEquals("2013-10-11T23:00:00+04:00",
+                facade.formatDate(createDate(2013, 10, 11, 23, 0)));
 
-        assertEquals("2013-10-11T01:00:00+0400",
-                ApiCommandsFacadeImpl.RFC_3339.get().format(createDate(2013, 10, 11,  1, 0)));
+        assertEquals("2013-10-11T01:00:00+04:00",
+                facade.formatDate(createDate(2013, 10, 11,  1, 0)));
     }
 
     private Date createDate(int year, int month, int day, int hours, int minutes) {
