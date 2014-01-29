@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -145,13 +146,17 @@ class YamoneyApiClient {
         checkCommonResponse(httpResp);
     }
 
-    <T> T executeForJsonObjectFunc(String url, List<NameValuePair> params, String accessToken, Class<T> classOfT)
+    <T> T executeForJsonObjectFunc(CommandUrlHolder urlHolder, String commandName, List<NameValuePair> params,
+                                   String accessToken, Class<T> classOfT)
             throws InsufficientScopeException, IOException, InvalidTokenException {
 
         HttpResponse response = null;
 
         try {
-            response = execPostRequest(new HttpPost(url), accessToken, params);
+
+            response = execPostRequest(new HttpPost(urlHolder.getUrlForCommand(commandName)),
+                    accessToken, params(params, urlHolder));
+
             checkApiCommandResponse(response);
 
             return parseJson(response.getEntity(), classOfT);
@@ -160,5 +165,11 @@ class YamoneyApiClient {
                 EntityUtils.consume(response.getEntity());
             }
         }
+    }
+
+    private List<NameValuePair> params(List<NameValuePair> params, CommandUrlHolder urlHolder) {
+        List<NameValuePair> result = new ArrayList<NameValuePair>(params);
+        result.addAll(urlHolder.getAdditionalParams());
+        return result;
     }
 }
