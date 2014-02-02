@@ -10,12 +10,16 @@ import org.apache.http.*;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.CoreProtocolPNames;
+import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,6 +32,7 @@ class YamoneyApiClient {
     private static final String CHARSET = "UTF-8";
 
     private static final Log LOGGER = LogFactory.getLog(YamoneyApiClient.class);
+    private static final String USER_AGENT = "yamolib";
 
     private final HttpClient httpClient;
 
@@ -35,8 +40,15 @@ class YamoneyApiClient {
         this.httpClient = httpClient;
     }
 
-    <T> T executeForJsonObjectCommon(String url, List<NameValuePair> params, Class<T> classOfT)
-            throws InsufficientScopeException, IOException {
+    static HttpClient createHttpClient(int socketTimeout) {
+        DefaultHttpClient httpClient = new DefaultHttpClient();
+        httpClient.getParams().setParameter(CoreProtocolPNames.USER_AGENT, USER_AGENT);
+        HttpConnectionParams.setConnectionTimeout(httpClient.getParams(), 4000);
+        HttpConnectionParams.setSoTimeout(httpClient.getParams(), socketTimeout);
+        return httpClient;
+    }
+
+    <T> T executeForJsonObjectCommon(String url, List<NameValuePair> params, Class<T> classOfT) throws IOException {
 
         HttpResponse response = null;
         try {
@@ -91,14 +103,11 @@ class YamoneyApiClient {
         LOGGER.info("request url '" + uri +"' with parameters: " + paramsForLog);
     }
 
-    void checkCommonResponse(HttpResponse httpResp) throws
-            InternalServerErrorException, InsufficientScopeException {
+    void checkCommonResponse(HttpResponse httpResp) throws InternalServerErrorException {
 
         switch (httpResp.getStatusLine().getStatusCode()) {
             case HttpStatus.SC_BAD_REQUEST:
                 throw new ProtocolRequestException("invalid request");
-            case HttpStatus.SC_FORBIDDEN:
-                throw new InsufficientScopeException("insufficient scope");
             case HttpStatus.SC_INTERNAL_SERVER_ERROR:
                 throw new InternalServerErrorException("internal yandex.money server error");
         }
@@ -125,23 +134,30 @@ class YamoneyApiClient {
     }
 
 
-    void checkFuncResponse(HttpResponse httpResp) throws InvalidTokenException,
+    void checkApiCommandResponse(HttpResponse httpResp) throws InvalidTokenException,
             InsufficientScopeException, InternalServerErrorException {
 
-        if (httpResp.getStatusLine().getStatusCode() == 401) {
+        if (httpResp.getStatusLine().getStatusCode() == HttpStatus.SC_UNAUTHORIZED) {
             throw new InvalidTokenException("invalid token");
+        }
+        if (httpResp.getStatusLine().getStatusCode() == HttpStatus.SC_FORBIDDEN) {
+            throw new InsufficientScopeException("insufficient scope");
         }
         checkCommonResponse(httpResp);
     }
 
-    <T> T executeForJsonObjectFunc(String url, List<NameValuePair> params, String accessToken, Class<T> classOfT)
+    <T> T executeForJsonObjectFunc(CommandUrlHolder urlHolder, String commandName, List<NameValuePair> params,
+                                   String accessToken, Class<T> classOfT)
             throws InsufficientScopeException, IOException, InvalidTokenException {
 
         HttpResponse response = null;
 
         try {
-            response = execPostRequest(new HttpPost(url), accessToken, params);
-            checkFuncResponse(response);
+
+            response = execPostRequest(new HttpPost(urlHolder.getUrlForCommand(commandName)),
+                    accessToken, params(params, urlHolder));
+
+            checkApiCommandResponse(response);
 
             return parseJson(response.getEntity(), classOfT);
         } finally {
@@ -149,5 +165,11 @@ class YamoneyApiClient {
                 EntityUtils.consume(response.getEntity());
             }
         }
+    }
+
+    private List<NameValuePair> params(List<NameValuePair> params, CommandUrlHolder urlHolder) {
+        List<NameValuePair> result = new ArrayList<NameValuePair>(params);
+        result.addAll(urlHolder.getAdditionalParams());
+        return result;
     }
 }

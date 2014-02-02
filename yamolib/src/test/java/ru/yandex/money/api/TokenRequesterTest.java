@@ -24,7 +24,7 @@ public class TokenRequesterTest {
 
     @BeforeClass
     public static void setUpClass() {
-        requester = new TokenRequesterImpl(CLIENT_ID, YandexMoneyImpl.createHttpClient(4000));
+        requester = new TokenRequesterImpl(CLIENT_ID, YamoneyApiClient.createHttpClient(4000));
     }
 
     @Test
@@ -46,7 +46,7 @@ public class TokenRequesterTest {
     }
 
     @Test @Ignore("Не работает автоматически")
-    public void testGetAuthToken() throws IOException, InsufficientScopeException {
+    public void testGetAuthToken() throws IOException {
         String reqToken = "584A416FB6A6E06944A968B92B671BAE151F45109311894A28A913FEAB77D59FA89111714441A2F76EC324997CB2753411F12372141AA4FE8CF2484E657FFB3C77A601C21473542221D1C9B37E9B0E187F47839D3E4BEDEC199903460B887464C3B7131C74B9F48C6FCB9489A334A678E62ABD2A3099033A1F5A59A3AD712D5A";
         ReceiveOAuthTokenResponse receiveOAuthTokenResponse = requester.receiveOAuthToken(reqToken, "http://ya.ru");
         assertTrue(receiveOAuthTokenResponse.isSuccess());

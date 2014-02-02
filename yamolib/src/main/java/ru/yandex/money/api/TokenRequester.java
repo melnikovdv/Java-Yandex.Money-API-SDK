@@ -85,15 +85,13 @@ public interface TokenRequester {
      *                    должно быть идентично значению redirectUri, ранее переданному в метод authorize.
      * @return экземпляр класса {@link ru.yandex.money.api.response.ReceiveOAuthTokenResponse}
      * @throws java.io.IOException          ошибка связи с сервером Яндекс.Денег
-     * @throws ru.yandex.money.api.InsufficientScopeException   запрошена операция, на которую у
-     *                                      токена нет прав.
      * @throws ru.yandex.money.api.InternalServerErrorException техническая ошибка сервера Яндекс.Денег
      */
     ReceiveOAuthTokenResponse receiveOAuthToken(String code,
-                                                String redirectUri) throws IOException, InsufficientScopeException;
+                                                String redirectUri) throws IOException;
 
     ReceiveOAuthTokenResponse receiveOAuthToken(String code,
-                                                String redirectUri, String clientSecret) throws IOException, InsufficientScopeException;
+                                                String redirectUri, String clientSecret) throws IOException;
 
     /**
      * Метод возвращает идентификатор приложения в системе API Яндекс.Деньги,
@@ -102,4 +100,6 @@ public interface TokenRequester {
      * @return идентификатор приложения
      */
     String getClientId();
+
+    String makeScope(Collection<Permission> permissions);
 }

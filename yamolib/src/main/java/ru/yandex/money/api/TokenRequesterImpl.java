@@ -72,21 +72,21 @@ public class TokenRequesterImpl implements TokenRequester {
 
     @Override
     public ReceiveOAuthTokenResponse receiveOAuthToken(String code,
-                                                       String redirectUri) throws IOException, InsufficientScopeException {
+                                                       String redirectUri) throws IOException {
         List<NameValuePair> params = new ArrayList<NameValuePair>();
         return receiveOAuthToken(code, redirectUri, params);
     }
 
     @Override
     public ReceiveOAuthTokenResponse receiveOAuthToken(String code, String redirectUri,
-                                                       String clientSecret) throws IOException, InsufficientScopeException {
+                                                       String clientSecret) throws IOException {
         List<NameValuePair> params = new ArrayList<NameValuePair>();
         params.add(new BasicNameValuePair("client_secret", clientSecret));
         return receiveOAuthToken(code, redirectUri, params);
     }
 
     private ReceiveOAuthTokenResponse receiveOAuthToken(String code, String redirectUri,
-                                                        List<NameValuePair> params) throws InsufficientScopeException, IOException {
+                                                        List<NameValuePair> params) throws IOException {
         params.add(new BasicNameValuePair("grant_type", "authorization_code"));
         params.add(new BasicNameValuePair("client_id", clientId));
         params.add(new BasicNameValuePair("code", code));
@@ -99,7 +99,8 @@ public class TokenRequesterImpl implements TokenRequester {
         return clientId;
     }
 
-    private String makeScope(Collection<Permission> permissions) {
+    @Override
+    public String makeScope(Collection<Permission> permissions) {
         if (permissions == null) {
             throw new IllegalArgumentException("permissions expected");
         }

@@ -40,7 +40,7 @@ public class ApiCommandsFacadeImpl implements ApiCommandsFacade {
     public static final String REVOKE_COMMAND_NAME = "revoke";
     public static final String FUNDRAISING_STATS_COMMAND_NAME = "fundraising-stats";
 
-    static final ThreadLocal<SimpleDateFormat> RFC_3339 = new ThreadLocal<SimpleDateFormat>() {
+    private static final ThreadLocal<SimpleDateFormat> RFC_3339 = new ThreadLocal<SimpleDateFormat>() {
         @Override
         protected SimpleDateFormat initialValue() {
             return new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
@@ -100,8 +100,7 @@ public class ApiCommandsFacadeImpl implements ApiCommandsFacade {
     @Override
     public AccountInfoResponse accountInfo(String accessToken)
             throws IOException, InvalidTokenException, InsufficientScopeException {
-        return yamoneyApiClient.executeForJsonObjectFunc(uri.getUrlForCommand(ACCOUNT_INFO_COMMAND_NAME),
-                Collections.<NameValuePair>emptyList(), accessToken, AccountInfoResponse.class);
+        return yamoneyApiClient.executeForJsonObjectFunc(uri, ACCOUNT_INFO_COMMAND_NAME, Collections.<NameValuePair>emptyList(), accessToken, AccountInfoResponse.class);
     }
 
     @Override
@@ -147,8 +146,7 @@ public class ApiCommandsFacadeImpl implements ApiCommandsFacade {
         addParamIfNotNull("till", till, params);
         addParamIfNotNull("label", label, params);
 
-        return yamoneyApiClient.executeForJsonObjectFunc(uri.getUrlForCommand(OPERATION_HISTORY_COMMAND_NAME), params, accessToken,
-                OperationHistoryResponse.class);
+        return yamoneyApiClient.executeForJsonObjectFunc(uri, OPERATION_HISTORY_COMMAND_NAME, params, accessToken, OperationHistoryResponse.class);
     }
 
     @Override
@@ -157,8 +155,7 @@ public class ApiCommandsFacadeImpl implements ApiCommandsFacade {
 
         ArrayList<NameValuePair> params = new ArrayList<NameValuePair>();
         params.add(new BasicNameValuePair("label", label));
-        return yamoneyApiClient.executeForJsonObjectFunc(
-                uri.getUrlForCommand(FUNDRAISING_STATS_COMMAND_NAME), params, accessToken, FundraisingStatsResponse.class);
+        return yamoneyApiClient.executeForJsonObjectFunc(uri, FUNDRAISING_STATS_COMMAND_NAME, params, accessToken, FundraisingStatsResponse.class);
     }
 
     @Override
@@ -169,8 +166,7 @@ public class ApiCommandsFacadeImpl implements ApiCommandsFacade {
         List<NameValuePair> params = new ArrayList<NameValuePair>();
         params.add(new BasicNameValuePair("operation_id", operationId));
 
-        return yamoneyApiClient.executeForJsonObjectFunc(uri.getUrlForCommand(OPERATION_DETAILS_COMMAND_NAME),
-                params, accessToken, OperationDetailResponse.class);
+        return yamoneyApiClient.executeForJsonObjectFunc(uri, OPERATION_DETAILS_COMMAND_NAME, params, accessToken, OperationDetailResponse.class);
     }
 
     @Override
@@ -217,8 +213,7 @@ public class ApiCommandsFacadeImpl implements ApiCommandsFacade {
         addParamIfNotNull("message", message, params);
         addParamIfNotNull("label", label, params);
 
-        return yamoneyApiClient.executeForJsonObjectFunc(uri.getUrlForCommand(REQUEST_PAYMENT_COMMAND_NAME),
-                params, accessToken, RequestPaymentResponse.class);
+        return yamoneyApiClient.executeForJsonObjectFunc(uri, REQUEST_PAYMENT_COMMAND_NAME, params, accessToken, RequestPaymentResponse.class);
     }
 
     @Override
@@ -229,8 +224,7 @@ public class ApiCommandsFacadeImpl implements ApiCommandsFacade {
         params.add(new BasicNameValuePair("pattern_id", "phone-topup"));
         params.add(new BasicNameValuePair("phone-number", phone));
         params.add(new BasicNameValuePair("amount", String.valueOf(amount)));
-        return yamoneyApiClient.executeForJsonObjectFunc(uri.getUrlForCommand(REQUEST_PAYMENT_COMMAND_NAME),
-                params, accessToken, RequestPaymentResponse.class);
+        return yamoneyApiClient.executeForJsonObjectFunc(uri, REQUEST_PAYMENT_COMMAND_NAME, params, accessToken, RequestPaymentResponse.class);
     }
 
     @Override
@@ -244,8 +238,7 @@ public class ApiCommandsFacadeImpl implements ApiCommandsFacade {
             pars.add(new BasicNameValuePair(name, params.get(name)));
         }
 
-        return yamoneyApiClient.executeForJsonObjectFunc(uri.getUrlForCommand(REQUEST_PAYMENT_COMMAND_NAME), pars, accessToken,
-                RequestPaymentResponse.class);
+        return yamoneyApiClient.executeForJsonObjectFunc(uri, REQUEST_PAYMENT_COMMAND_NAME, pars, accessToken, RequestPaymentResponse.class);
     }
 
     @Override
@@ -273,8 +266,7 @@ public class ApiCommandsFacadeImpl implements ApiCommandsFacade {
         if (csc != null && (moneySource.equals(MoneySource.card))) {
             params.add(new BasicNameValuePair("csc", csc));
         }
-        return yamoneyApiClient.executeForJsonObjectFunc(uri.getUrlForCommand(PROCESS_PAYMENT_COMMAND_NAME),
-                params, accessToken, ProcessPaymentResponse.class);
+        return yamoneyApiClient.executeForJsonObjectFunc(uri, PROCESS_PAYMENT_COMMAND_NAME, params, accessToken, ProcessPaymentResponse.class);
     }
 
     @Override
@@ -308,8 +300,11 @@ public class ApiCommandsFacadeImpl implements ApiCommandsFacade {
         if (date == null) {
             return;
         }
-        String value = RFC_3339.get().format(date).replaceAll("(\\d\\d)(\\d\\d)$", "$1:$2");
-        params.add(new BasicNameValuePair(paramName, value));
+        params.add(new BasicNameValuePair(paramName, formatDate(date)));
+    }
+
+    String formatDate(Date date) {
+        return RFC_3339.get().format(date).replaceAll("(\\d\\d)(\\d\\d)$", "$1:$2");
     }
 
     private String joinHistoryTypes(Set<OperationHistoryType> operationsType) {
