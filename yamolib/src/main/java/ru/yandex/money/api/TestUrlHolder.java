@@ -95,7 +95,7 @@ public class TestUrlHolder implements CommandUrlHolder {
             result.add(new BasicNameValuePair("test_card", testCard));
         }
         if (testResult != null) {
-            result.add(new BasicNameValuePair("test_result", testResult.toString()));
+            result.add(new BasicNameValuePair("test_result", testResult.getCode()));
         }
         return result;
     }
