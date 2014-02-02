@@ -40,6 +40,7 @@ GettingStarted Maven-плагина для Android [тут](http://code.google.c
 **02.02.14 yamolib 1.2.4**
 
 * Поправлена логика тестовых платежей. (Убрано использование GET-параметров)
+* Убрано исключение InsufficientScopeException из команд запроса токена
 
 **08.12.13 yamolib 1.2.3**
 
