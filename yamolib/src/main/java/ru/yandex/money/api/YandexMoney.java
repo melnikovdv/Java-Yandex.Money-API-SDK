@@ -5,6 +5,7 @@ package ru.yandex.money.api;
  *
  * @author dvmelnikov
  */
+@Deprecated
 public interface YandexMoney extends TokenRequester, ApiCommandsFacade {
 
 }

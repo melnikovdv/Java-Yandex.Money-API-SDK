@@ -232,10 +232,21 @@ public class ApiCommandsFacadeImpl implements ApiCommandsFacade {
                                                      String patternId, Map<String, String> params) throws IOException,
             InvalidTokenException, InsufficientScopeException {
 
+        return requestPaymentShop(accessToken, patternId, params, false);
+    }
+
+    @Override
+    public RequestPaymentResponse requestPaymentShop(String accessToken, String patternId,
+                                                     Map<String, String> params, boolean showContractDetails) throws IOException,
+            InvalidTokenException, InsufficientScopeException {
+
         List<NameValuePair> pars = new ArrayList<NameValuePair>();
         pars.add(new BasicNameValuePair("pattern_id", patternId));
         for (String name : params.keySet()) {
             pars.add(new BasicNameValuePair(name, params.get(name)));
+        }
+        if (showContractDetails) {
+            pars.add(new BasicNameValuePair("show_contract_details", "true"));
         }
 
         return yamoneyApiClient.executeForJsonObjectFunc(uri, REQUEST_PAYMENT_COMMAND_NAME, pars, accessToken, RequestPaymentResponse.class);

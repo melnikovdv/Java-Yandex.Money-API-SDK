@@ -294,6 +294,30 @@ public interface ApiCommandsFacade {
             InvalidTokenException, InsufficientScopeException;
 
     /**
+     * Запрос оплаты в магазин.
+     *
+     * @param accessToken         токен авторизации пользователя
+     * @param patternId           идентификатор шаблона платежа
+     * @param params              пользовательские параметры шаблона платежа, требуемые
+     *                            магазином.
+     * @param showContractDetails Обображать ли дополнительные парметры контракта,
+     *                            которые могут быть присланы магазином
+     * @return возвращает экземпляр класса {@link ru.yandex.money.api.response.RequestPaymentResponse}
+     * @throws java.io.IOException ошибка связи с сервером Яндекс.Денег
+     * @throws ru.yandex.money.api.InsufficientScopeException
+     *                             запрошена операция, на которую у
+     *                             токена нет прав.
+     * @throws ru.yandex.money.api.InvalidTokenException
+     *                             указан несуществующий, просроченный, или отозванный токен.
+     * @throws ru.yandex.money.api.InternalServerErrorException
+     *                             техническая ошибка сервера Яндекс.Денег
+     */
+    RequestPaymentResponse requestPaymentShop(String accessToken,
+                                              String patternId, Map<String, String> params,
+                                              boolean showContractDetails) throws IOException,
+            InvalidTokenException, InsufficientScopeException;
+
+    /**
      * Запрос на пополнение счета мобильного телефона.
      * Яндекс.Деньги определят оператора по номеру телефона
      *

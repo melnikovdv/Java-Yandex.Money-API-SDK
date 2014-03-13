@@ -25,7 +25,7 @@ import java.util.Set;
  *
  * @author dvmelnikov
  */
-
+@Deprecated
 public class YandexMoneyImpl implements YandexMoney {
 
     private final TokenRequester tokenRequester;
@@ -198,5 +198,13 @@ public class YandexMoneyImpl implements YandexMoney {
     @Override
     public String makeScope(Collection<Permission> permissions) {
         return tokenRequester.makeScope(permissions);
+    }
+
+    @Override
+    public RequestPaymentResponse requestPaymentShop(String accessToken, String patternId,
+                                                     Map<String, String> params,
+                                                     boolean showContractDetails) throws IOException,
+            InvalidTokenException, InsufficientScopeException {
+        return apiCommandsFacade.requestPaymentShop(accessToken, patternId, params, showContractDetails);
     }
 }
