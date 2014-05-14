@@ -68,6 +68,15 @@ public enum  RequestPaymentError implements PaymentErrorCode {
     PHONE_UNKNOWN("phone_unknown"),
 
     /**
+     * Требуется отправить пользователя на uri, указанный в поле ext_action_uri.
+     * Только после этого пользователь сможет выполнить запрошенный платеж.
+     *
+     * На текущий момент ошибка проявляется только при p2p-переводе или при платеже в магазин-нерезидент РФ,
+     * в случае, если плательщик не заполнял свои персональные данные на сайте Яндекс.Денег
+     */
+    EXT_ACTION_REQUIRED("ext_action_required"),
+
+    /**
      * Прочие ошибки
      */
     TECHNICAL_ERROR("technical_error");

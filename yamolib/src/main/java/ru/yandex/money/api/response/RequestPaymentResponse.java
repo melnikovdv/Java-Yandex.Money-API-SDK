@@ -31,6 +31,7 @@ public class RequestPaymentResponse implements Serializable {
     private String recipient_account_type;
     private Boolean test_payment;
     private Map<String, String> contract_details;
+    private String ext_action_uri;
 
     private RequestPaymentResponse() {
     }
@@ -158,6 +159,15 @@ public class RequestPaymentResponse implements Serializable {
      */
     public Map<String, String> getContractDetails() {
         return contract_details;
+    }
+
+    /**
+     * Uri, по которому нужно отправить пользователя в случае,
+     * если на request-payment вернулась ошибка "ext_action_required"
+     * @return
+     */
+    public String getExtActionUri() {
+        return ext_action_uri;
     }
 
     @Override
